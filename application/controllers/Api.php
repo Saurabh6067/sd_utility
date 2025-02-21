@@ -53,7 +53,7 @@ class Api extends CI_Controller
         if ($usercheck) {
             $this->response['res'] = 'success';
             $this->response['msg'] = 'Login successful.';
-            $this->response['data'] = $usercheck;
+            $this->response['data'] = $usercheck->id;
         } else {
             $this->response['msg'] = 'Invalid Employee Id.';
         }
@@ -61,7 +61,8 @@ class Api extends CI_Controller
         echo json_encode($this->response);
     }
 
-    public function Markattendance(){
+    public function Markattendance()
+    {
         $input = $this->getJsonInput();
         $branch_id = $input['branch_id'] ?? null;
         $operation = $input['operation'] ?? null;
@@ -113,6 +114,9 @@ class Api extends CI_Controller
             echo json_encode(['res' => 'error', 'msg' => 'Current Time is required.']);
             return;
         }
+
+
+
 
     }
 
