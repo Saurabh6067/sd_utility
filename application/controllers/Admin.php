@@ -44,15 +44,18 @@ class Admin extends CI_Controller
                 return;
             }
 
-            $this->db->where('password', $password);
-            $passwordExists = $this->db->get('employee')->row_array();
+            $this->db->where('mobile', $mobile);
+            $mobileExist = $this->db->get('employee')->row_array();
 
-            if ($passwordExists) {
-                echo json_encode(['status' => 'error', 'message' => 'Password already exists.']);
+            if ($mobileExist) {
+                echo json_encode(['status' => 'error', 'message' => 'Mobile Number already exists.']);
                 return;
             }
 
+            $emp_id = "sd" . rand(10000, 99999) . substr($mobile, 6);
+
             $data = [
+                'empid' => $emp_id,
                 'name' => $name,
                 'email' => $email,
                 'mobile' => $mobile,
@@ -298,7 +301,7 @@ class Admin extends CI_Controller
     {
         $this->load->view('Home/warning');
     }
-    public function EmpDashbaord()      
+    public function EmpDashbaord()
     {
         $currentbrach = $this->session->userdata('user');
         $this->db->select('*');
