@@ -24,7 +24,8 @@ class Api extends CI_Controller
     public function Test()
     {
 
-        $res = $this->db->query('ALTER TABLE `tbl_payment_history` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT, add PRIMARY KEY (`id`)');
+        $res = $this->db->query('SELECT * FROM `employee`')->result();
+        echo json_encode($res);
         print_r($res);
         die();
     }
@@ -60,6 +61,10 @@ class Api extends CI_Controller
 
         echo json_encode($this->response);
     }
+
+
+
+
 
 
 }
