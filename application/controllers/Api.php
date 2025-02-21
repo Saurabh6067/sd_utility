@@ -25,7 +25,6 @@ class Api extends CI_Controller
     {
 
         $res = $this->db->query('SELECT * FROM `employee`')->result();
-        echo json_encode($res);
         print_r($res);
         die();
     }
