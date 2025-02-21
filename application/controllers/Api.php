@@ -147,7 +147,13 @@ class Api extends CI_Controller
         $distance = $this->calculateDistance($branch_lat, $branch_lon, $user_lat, $user_lon);
 
         $distance_in_meter = $distance * 1000;
-        echo json_encode(['res' => 'success', 'distance_meter' => $distance_in_meter]);
+        
+        if($distance_in_meter > 100){
+            echo json_encode(['res' => 'error', 'msg' => 'You are not in branch location.']);
+            return;
+        }else{
+            
+        }
 
 
 
