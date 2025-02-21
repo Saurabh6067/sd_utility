@@ -114,8 +114,8 @@ class Api extends CI_Controller
             echo json_encode(['res' => 'error', 'msg' => 'Current Time is required.']);
             return;
         }
-        $checkbranckexist = $this->db->get_where('branch', ['id' => $branch_id, 'status' => $status])->row();
-        
+        $checkbranckexist = $this->db->get_where('branch', ['id' => $branch_id, 'status' => 'true'])->row();
+
         if (empty($checkbranckexist)) {
             echo json_encode(['res' => 'error', 'msg' => 'Branch not exist.']);
             return;
