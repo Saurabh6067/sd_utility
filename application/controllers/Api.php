@@ -68,7 +68,6 @@ class Api extends CI_Controller
         $operation = $input['operation'] ?? null;
         $branch_lat = $input['branch_lat'] ?? null;
         $branch_lon = $input['branch_lon'] ?? null;
-        $status = $input['status'] ?? null;
         $user_id = $input['user_id'] ?? null;
         $user_lat = $input['user_lat'] ?? null;
         $user_lon = $input['user_lon'] ?? null;
@@ -88,10 +87,6 @@ class Api extends CI_Controller
         }
         if (empty($branch_lon)) {
             echo json_encode(['res' => 'error', 'msg' => 'Branch Longitude is required.']);
-            return;
-        }
-        if (empty($status)) {
-            echo json_encode(['res' => 'error', 'msg' => 'Status is required.']);
             return;
         }
         if (empty($user_id)) {
