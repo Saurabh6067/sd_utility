@@ -61,6 +61,61 @@ class Api extends CI_Controller
         echo json_encode($this->response);
     }
 
+    public function Markattendance(){
+        $input = $this->getJsonInput();
+        $branch_id = $input['branch_id'] ?? null;
+        $operation = $input['operation'] ?? null;
+        $branch_lat = $input['branch_lat'] ?? null;
+        $branch_lon = $input['branch_lon'] ?? null;
+        $status = $input['status'] ?? null;
+        $user_id = $input['user_id'] ?? null;
+        $user_lat = $input['user_lat'] ?? null;
+        $user_lon = $input['user_lon'] ?? null;
+        $current_date = $input['current_date'] ?? null;
+        $current_time = $input['current_time'] ?? null;
+        if (empty($branch_id)) {
+            echo json_encode(['res' => 'error', 'msg' => 'Branch Id is required.']);
+            return;
+        }
+        if (empty($operation)) {
+            echo json_encode(['res' => 'error', 'msg' => 'Operation is required.']);
+            return;
+        }
+        if (empty($branch_lat)) {
+            echo json_encode(['res' => 'error', 'msg' => 'Branch Latitude is required.']);
+            return;
+        }
+        if (empty($branch_lon)) {
+            echo json_encode(['res' => 'error', 'msg' => 'Branch Longitude is required.']);
+            return;
+        }
+        if (empty($status)) {
+            echo json_encode(['res' => 'error', 'msg' => 'Status is required.']);
+            return;
+        }
+        if (empty($user_id)) {
+            echo json_encode(['res' => 'error', 'msg' => 'User Id is required.']);
+            return;
+        }
+        if (empty($user_lat)) {
+            echo json_encode(['res' => 'error', 'msg' => 'User Latitude is required.']);
+            return;
+        }
+        if (empty($user_lon)) {
+            echo json_encode(['res' => 'error', 'msg' => 'User Longitude is required.']);
+            return;
+        }
+        if (empty($current_date)) {
+            echo json_encode(['res' => 'error', 'msg' => 'Current Date is required.']);
+            return;
+        }
+        if (empty($current_time)) {
+            echo json_encode(['res' => 'error', 'msg' => 'Current Time is required.']);
+            return;
+        }
+
+    }
+
 
 
 
