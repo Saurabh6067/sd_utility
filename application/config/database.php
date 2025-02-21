@@ -76,9 +76,9 @@ $query_builder = TRUE;
 $db['default'] = array(
 	'dsn' => '',
 	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'sd_utility',
+	'username' => 'u851737195_sdutility',
+	'password' => '>eV@Gk#=Gv0C',
+	'database' => 'u851737195_sdutility',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
