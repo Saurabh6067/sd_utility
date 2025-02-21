@@ -53,7 +53,7 @@ class Api extends CI_Controller
         if ($usercheck) {
             $this->response['res'] = 'success';
             $this->response['msg'] = 'Login successful.';
-            $this->response['data'] = $usercheck->id;
+            $this->response['data'] = $usercheck;
         } else {
             $this->response['msg'] = 'Invalid Employee Id.';
         }
