@@ -69,6 +69,7 @@ class Api extends CI_Controller
         $branch_lat = $input['branch_lat'] ?? null;
         $branch_lon = $input['branch_lon'] ?? null;
         $user_id = $input['user_id'] ?? null;
+        $emp_id = $input['emp_id'] ?? null;
         $user_lat = $input['user_lat'] ?? null;
         $user_lon = $input['user_lon'] ?? null;
         $current_date = $input['current_date'] ?? null;
@@ -91,6 +92,10 @@ class Api extends CI_Controller
         }
         if (empty($user_id)) {
             echo json_encode(['res' => 'error', 'msg' => 'User Id is required.']);
+            return;
+        }
+        if (empty($emp_id)) {
+            echo json_encode(['res' => 'error', 'msg' => 'Employee Id is required.']);
             return;
         }
         if (empty($user_lat)) {
