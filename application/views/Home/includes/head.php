@@ -1,0 +1,27 @@
+<link rel="shortcut icon" type="image/x-icon" href="<?= base_url('assets/Home/images/logo/favicon-32x32.png') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/vendor/bootstrap.min.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/vendor/animate.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/plugins/apexcharts.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/plugins/jquery-jvectormap-2.0.5.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/plugins/swiper-bundle.min.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/vendor/magnific-popup.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/vendor/icomoon.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/vendor/fontawesome-pro.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/vendor/rating.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/vendor/dropzone.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/plugins/dropify.min.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/vendor/spacing.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/plugins/datatables.min.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/plugins/buttons.bootstrap5.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/plugins/jquery.dataTables.min.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/plugins/select2.min.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/plugins/jquery.timepicker.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/plugins/tagify.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/plugins/flatpickr.min.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/plugins/jquery-ui.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/plugins/fullcalendar.min.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/plugins/ion.rangeSlider.min.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/plugins/simplebar.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/plugins/waves.min.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/plugins/nano.min.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/Home/css/main.css') ?>">

@@ -1,0 +1,501 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class Admin extends CI_Controller
+{
+    public function __construct()
+    {
+        parent::__construct();
+        date_default_timezone_set('Asia/Kolkata');
+        if (!$this->session->userdata('user')) {
+            redirect(base_url('Auth'));
+        }
+
+
+    }
+    public function index()
+    {
+
+        $this->load->view('Home/index');
+    }
+    public function Employeadd()
+    {
+        $segment = $this->uri->segment(3);
+        if ($segment === 'add' && $this->input->server('REQUEST_METHOD') === 'POST') {
+            $name = $this->input->post('name');
+            $email = $this->input->post('email');
+            $mobile = $this->input->post('mobile');
+            $password = $this->input->post('password');
+            $operation = $this->input->post('circleName');
+            $branch = $this->input->post('branchName');
+            $role = $this->input->post('role');
+            $domain = $this->input->post('domain');
+
+            if (empty($name) || empty($email) || empty($mobile) || empty($password) || empty($operation) || empty($role)) {
+                echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
+                return;
+            }
+
+            $this->db->where('email', $email);
+            $emailExists = $this->db->get('employee')->row_array();
+
+            if ($emailExists) {
+                echo json_encode(['status' => 'error', 'message' => 'Email already exists.']);
+                return;
+            }
+
+            $this->db->where('password', $password);
+            $passwordExists = $this->db->get('employee')->row_array();
+
+            if ($passwordExists) {
+                echo json_encode(['status' => 'error', 'message' => 'Password already exists.']);
+                return;
+            }
+
+            $data = [
+                'name' => $name,
+                'email' => $email,
+                'mobile' => $mobile,
+                'password' => $password,
+                'operation' => $operation,
+                'branch' => $branch,
+                'role' => $role,
+                'domain' => $domain,
+                'created_at_time' => date('H:i:s'),
+                'created_at_date' => date('d-m-y'),
+            ];
+
+            // Insert data into the database
+            $insert = $this->db->insert('employee', $data);
+
+            if ($insert) {
+                echo json_encode(['status' => 'success', 'message' => 'Employee added successfully.']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to add employee.']);
+            }
+        } else {
+            $this->db->select('*');
+            $this->db->from('branch');
+            $this->db->order_by('id', 'DESC');
+            $this->db->where('status', 'true');
+            $query = $this->db->get()->result_array();
+            $data['branch'] = $query;
+
+            $this->load->view('Home/emp_add');
+        }
+    }
+    public function Operation()
+    {
+        $segment = $this->uri->segment(3);
+        if ($segment === 'add' && $this->input->server('REQUEST_METHOD') === 'POST') {
+
+            $circleName = $this->input->post('circleName');
+            $circleAddress = $this->input->post('circleAddress');
+            $latitude = $this->input->post('latitude');
+            $longitude = $this->input->post('longitude');
+
+            if (empty($circleName) || empty($circleAddress) || empty($latitude) || empty($longitude)) {
+                echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
+                return;
+            }
+
+
+            $data = [
+                'operation_city' => $circleName,
+                'operation_address' => $circleAddress,
+                'operation_lat' => $latitude,
+                'operation_lon' => $longitude,
+                'created_at_time' => date('H:i:s'),
+                'created_at_date' => date('Y-m-d'),
+            ];
+
+            // Insert data into the database
+            $insert = $this->db->insert('operation', $data);
+
+            if ($insert) {
+                echo json_encode(['status' => 'success', 'message' => 'Circle saved successfully.']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to save circle.']);
+            }
+        } else {
+            $this->db->select('*');
+            $this->db->from('operation');
+            $this->db->order_by('id', 'DESC');
+            $this->db->where('status', 'true');
+            $query = $this->db->get()->result_array();
+            $data['operation'] = $query;
+
+            $this->load->view('Home/opration', $data);
+        }
+    }
+    public function Branch()
+    {
+        $segment = $this->uri->segment(3);
+
+        if ($segment === 'add' && $this->input->server('REQUEST_METHOD') === 'POST') {
+            if ($this->input->is_ajax_request()) {
+                $circleName = $this->input->post('circleName');
+                $branch = $this->input->post('branch');
+                $lat = $this->input->post('lat');
+                $lon = $this->input->post('lon');
+
+                if (empty($circleName) || empty($branch) || empty($lat) || empty($lon)) {
+                    echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
+                    return;
+                }
+
+                $data = [
+                    'operation' => $circleName,
+                    'branch_name' => $branch,
+                    'lat' => $lat,
+                    'lon' => $lon,
+                    'created_at_time' => date('H:i:s'),
+                    'created_at_date' => date('Y-m-d'),
+                ];
+
+                // Insert data into the database
+                $insert = $this->db->insert('branch', $data);
+
+                if ($insert) {
+                    echo json_encode(['status' => 'success', 'message' => 'Branch Created successfully.']);
+                } else {
+                    echo json_encode(['status' => 'error', 'message' => 'Failed to save Branch.']);
+                }
+            } else {
+                // If not an AJAX request, show the regular page
+                $this->load->view('Home/branch');
+            }
+        } else {
+            // Show the list of branches or handle other request types
+            $this->db->select('branch.*, operation.operation_city AS operation_city');
+            $this->db->from('branch');
+            $this->db->join('operation', 'operation.id = branch.operation', 'left');
+            $this->db->where('branch.status', 'true');
+            $this->db->order_by('branch.id', 'DESC');
+            $query = $this->db->get()->result_array();
+
+            $data['branch'] = $query;
+
+            $this->load->view('Home/branch', $data);
+        }
+    }
+    public function getBranchesByOperation()
+    {
+        $operationId = $this->input->post('operation_id');
+
+        if (empty($operationId)) {
+            echo json_encode(['status' => 'error', 'message' => 'Operation ID is required.']);
+            return;
+        }
+
+        // Fetch branches based on operation ID
+        $this->db->select('*');
+        $this->db->from('branch');
+        $this->db->where('operation', $operationId);
+        $this->db->where('status', 'true');
+        $query = $this->db->get()->result_array();
+
+        if (!empty($query)) {
+            echo json_encode(['status' => 'success', 'branches' => $query]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'No branches found for this operation.']);
+        }
+    }
+    public function addempmaually()
+    {
+        $operation['operation'] = $this->db->get('operation')->result_array();
+        $this->load->view('Home/addempmaually', $operation);
+    }
+    public function Role()
+    {
+        $segment = $this->uri->segment(3);
+        if ($segment === 'add' && $this->input->server('REQUEST_METHOD') === 'POST') {
+            $circleName = $this->input->post('circleName');
+            $branch = $this->input->post('branch');
+
+
+            if (empty($circleName) || empty($branch)) {
+                echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
+                return;
+            }
+
+
+            $data = [
+                'operation' => $circleName,
+                'branch_name' => $branch,
+                'created_at_time' => date('H:i:s'),
+                'created_at_date' => date('d-m-y'),
+            ];
+
+            // Insert data into the database
+            $insert = $this->db->insert('branch', $data);
+
+            if ($insert) {
+                echo json_encode(['status' => 'success', 'message' => 'Branch Created successfully.']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to save Branch.']);
+            }
+        } else {
+            $this->db->select('*');
+            $this->db->from('branch');
+            $this->db->order_by('id', 'DESC');
+            $this->db->where('status', 'true');
+            $query = $this->db->get()->result_array();
+            $data['branch'] = $query;
+
+            $this->load->view('Home/branch', $data);
+        }
+    }
+    public function Allempprofile()
+    {
+        $this->load->view('Home/emp_profile');
+    }
+    public function Attendance()
+    {
+        $this->load->view('Home/attendance');
+    }
+    public function AddLeaveType()
+    {
+        $segment = $this->uri->segment(3);
+        if ($segment === 'add' && $this->input->server('REQUEST_METHOD') === 'POST') {
+
+            $leavetype = $this->input->post('leavetype');
+            $day = $this->input->post('day');
+
+
+            if (empty($leavetype) || empty($day)) {
+                echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
+                return;
+            }
+
+
+            $data = [
+                'leavetype' => $leavetype,
+                'day' => $day,
+                'created_at_time' => date('H:i:s'),
+                'created_at_date' => date('Y-m-d'),
+            ];
+
+            $insert = $this->db->insert('tbl_leavetype', $data);
+
+            if ($insert) {
+                echo json_encode(['status' => 'success', 'message' => 'Leave Type save successfully.']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to save Leave Type.']);
+            }
+        } else {
+            $data['tbl_leavetype'] = $this->db->query("Select * from `leavetype` where `status` = 'true'")->result_array();
+            $this->load->view('Home/add_leavetype', $data);
+        }
+
+
+    }
+    public function Leave()
+    {
+        $this->load->view('Home/admin_leave');
+    }
+    public function Addwarning()
+    {
+        $this->load->view('Home/warning');
+    }
+    public function EmpDashbaord()      
+    {
+        $currentbrach = $this->session->userdata('user');
+        $this->db->select('*');
+        $this->db->from('branch');
+        $this->db->where('id', $currentbrach['branch']);
+        $query = $this->db->get()->row_array();
+        $data['branch'] = $query;
+        $this->load->view('Home/employee-dashboard', $data);
+    }
+    public function EmpAttendance()
+    {
+        $currentbrach = $this->session->userdata('user');
+        $userId = $currentbrach['id'];
+
+        // Query to fetch the latest record for each date
+        $this->db->select('*');
+        $this->db->from('attendance');
+        $this->db->where('user_id', $userId);
+        $this->db->order_by('created_at_date', 'ASC');
+        $this->db->order_by('created_at_time', 'DESC');
+        $this->db->group_by('created_at_date');
+
+        $query = $this->db->get()->result_array();
+
+        $attendance = $query;
+        $totalPresent = 0;
+        $totalHalfDays = 0;
+
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+
+        foreach ($attendance as $record) {
+            $recordDate = DateTime::createFromFormat('d-m-y', $record['created_at_date']);
+            if (
+                $recordDate->format('m') == $currentMonth &&
+                $recordDate->format('Y') == $currentYear
+            ) {
+                if ($record['remark'] === 'present') {
+                    if (
+                        empty($record['punch_in']) ||
+                        empty($record['punch_out']) ||
+                        strtotime($record['punch_in']) > strtotime('10:00:00')
+                    ) {
+                        $totalHalfDays += 1;
+                    } else {
+                        $totalPresent++;
+                    }
+                }
+            }
+        }
+
+        $data['attendance'] = $attendance;
+        $data['user_name'] = $currentbrach['name'];
+        $data['total_present'] = $totalPresent;
+        $data['total_half_days'] = $totalHalfDays;
+
+        $this->load->view('Home/emp_attendance', $data);
+    }
+    public function EmpLeave()
+    {
+
+        $segment = $this->uri->segment(3);
+        if ($segment === 'add' && $this->input->server('REQUEST_METHOD') === 'POST') {
+
+            $leavetype = $this->input->post('leavetype');
+            $numberDays = $this->input->post('numberDays');
+            $from = $this->input->post('from');
+            $to = $this->input->post('to');
+            $reason = $this->input->post('reason');
+
+
+            if (empty($leavetype) || empty($numberDays) || empty($from) || empty($to) || empty($reason)) {
+                echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
+                return;
+            }
+
+
+            $data = [
+                'leavetype_id' => $leavetype,
+                'day' => $numberDays,
+                'from_date' => $from,
+                'to_date' => $to,
+                'reason' => $reason,
+                'created_at_time' => date('H:i:s'),
+                'created_at_date' => date('Y-m-d'),
+            ];
+
+            $insert = $this->db->insert('emp_leave_request', $data);
+            if ($insert) {
+                echo json_encode(['status' => 'success', 'message' => 'Leave Request Added successfully.']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to save Leave Request.']);
+            }
+        } else {
+            $data['leavetype'] = $this->db->query("Select * from `tbl_leavetype` where `status` = 'true'")->result_array();
+
+            $this->db->select('emp_leave_request.*, tbl_leavetype.leavetype');
+            $this->db->from('emp_leave_request');
+            $this->db->join('tbl_leavetype', 'emp_leave_request.leavetype_id = tbl_leavetype.id', 'left');
+            $this->db->where('emp_leave_request.status', 'true');
+            $data['requests'] = $this->db->get()->result_array();
+
+            $this->load->view('Home/emp_leave', $data);
+        }
+    }
+    public function createBranch()
+    {
+        $operation['operation'] = $this->db->get('operation')->result_array();
+        $this->load->view('Home/createbranch', $operation);
+    }
+    public function geoloaction()
+    {
+        $this->load->view('Home/geolocation');
+    }
+    public function attendanceMark()
+    {
+        $segment = $this->uri->segment(3);
+        if ($segment === 'add' && $this->input->server('REQUEST_METHOD') === 'POST') {
+            $remake = $this->input->post('remark');
+            $user_id = $this->input->post('user_id');
+            $operation_id = $this->input->post('operation_id');
+            $branch_id = $this->input->post('branch_id');
+            $punch_in = $this->input->post('punch_in');
+            $punch_out = $this->input->post('punch_out');
+
+            if (empty($remake) || empty($user_id) || empty($operation_id) || empty($branch_id)) {
+                echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
+                return;
+            }
+
+            $data = [
+                'remark' => $remake,
+                'user_id' => $user_id,
+                'operation_id' => $operation_id,
+                'branch_id' => $branch_id,
+                'punch_in' => $punch_in,
+                'punch_out' => $punch_out,
+                'created_at_time' => date('H:i:s'),
+                'created_at_date' => date('Y-m-d'),
+            ];
+
+            $insert = $this->db->insert('attendance', $data);
+
+            if ($insert) {
+                echo json_encode(['status' => 'success', 'message' => 'Attendance Mark successfully.']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to Attendance Mark.']);
+            }
+        } else {
+
+        }
+    }
+    public function branchAttendance()
+    {
+        $sessiondata = $this->session->userdata('user');
+        $branch_id = $sessiondata['branch'];
+
+        $today_date = date('d-m-y');
+
+        // Query to count total employees in the branch
+        $this->db->select('*');
+        $this->db->from('employee');
+        $this->db->where('branch', $branch_id);
+        $totalbranch_emp = $this->db->get()->num_rows();
+
+        $data['users'] = $this->db->query("Select `name` from employee where branch = '$branch_id'")->result_array();
+
+        // Query to count present remarks (with date filter)
+        $this->db->select('COUNT(DISTINCT user_id) as totalbranch_present');
+        $this->db->from('attendance');
+        $this->db->where('branch_id', $branch_id);
+        $this->db->where('remark', 'present');
+        $this->db->where('created_at_date', $today_date);
+        $totalbranch_present = $this->db->get()->row()->totalbranch_present;
+
+        // Query to count halfday remarks (with date filter)
+        $this->db->select('COUNT(DISTINCT user_id) as totalbranch_halfday');
+        $this->db->from('attendance');
+        $this->db->where('branch_id', $branch_id);
+        $this->db->where('remark', 'halfday');
+        $this->db->where('created_at_date', $today_date);
+        $totalbranch_halfday = $this->db->get()->row()->totalbranch_halfday;
+
+        // Calculate absent employees
+        $totalbranch_absent = $totalbranch_emp - ($totalbranch_present + $totalbranch_halfday);
+
+        $data['totalbranch_emp'] = $totalbranch_emp;
+        $data['totalbranch_present'] = $totalbranch_present;
+        $data['totalbranch_absent'] = $totalbranch_absent;
+        $data['totalbranch_halfday'] = $totalbranch_halfday;
+
+        $this->load->view('Home/branchAttendance', $data);
+    }
+
+
+
+
+}
+
+?>
