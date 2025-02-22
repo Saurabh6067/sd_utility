@@ -12,7 +12,7 @@
             <ul class="main-menu">
                 <li class="sidebar__menu-category"><span class="category-name">Main</span></li>
                 <li class="slide">
-                    <a href="<?= base_url('Admin/Dashboard') ?>" class="sidebar__menu-item">
+                    <a href="<?= base_url('Admin') ?>" class="sidebar__menu-item">
                         <div class="side-menu__icon"><i class="icon-house"></i></div>
                         <span class="sidebar__menu-label">Dashboard</span>
                     </a>
