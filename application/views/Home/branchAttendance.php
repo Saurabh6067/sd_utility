@@ -160,7 +160,7 @@
                             // Organize attendance records in an associative array
                             $attendance_map = [];
                             foreach ($attendance_data as $row) {
-                                $attendance_map[$row->user_id][$row->day] = $row->remark;
+                                $attendance_map[$row['user_id']][$row['day']] = $row['remark'];
                             }
                             ?>
 
