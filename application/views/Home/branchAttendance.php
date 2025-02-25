@@ -51,7 +51,7 @@
                                 <div class="card__title-wrap">
                                     <h6 class="card__sub-title mb-10">Total Employee</h6>
                                     <div class="card__content">
-                                        <h3 class="card__title mb-5"><?= $totalbranch_emp ?></h3>
+                                        <h3 class="card__title mb-5"><?= $totalbranch_emp ?? '0' ?></h3>
                                     </div>
                                 </div>
                             </div>
@@ -66,7 +66,7 @@
                                 <div class="card__title-wrap">
                                     <h6 class="card__sub-title mb-10">Total Present</h6>
                                     <div class="card__content">
-                                        <h3 class="card__title mb-5"><?= $totalbranch_present ?>
+                                        <h3 class="card__title mb-5"><?= $totalbranch_present ?? '0' ?>
                                         </h3>
                                     </div>
                                 </div>
@@ -82,7 +82,7 @@
                                 <div class="card__title-wrap">
                                     <h6 class="card__sub-title mb-10">Total Half Day</h6>
                                     <div class="card__content">
-                                        <h3 class="card__title mb-5"><?= $totalbranch_halfday ?>
+                                        <h3 class="card__title mb-5"><?= $totalbranch_halfday ?? '0' ?>
                                         </h3>
                                     </div>
                                 </div>
@@ -98,7 +98,7 @@
                                 <div class="card__title-wrap">
                                     <h6 class="card__sub-title mb-10">Total Absent</h6>
                                     <div class="card__content">
-                                        <h3 class="card__title mb-5"><?= $totalbranch_absent ?>
+                                        <h3 class="card__title mb-5"><?= $totalbranch_absent ?? '0' ?>
                                         </h3>
                                     </div>
                                 </div>
