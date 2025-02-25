@@ -140,6 +140,30 @@
                                     </div>
                                 </div>
                             </div>
+                            <?php
+                            $current_month = date('m');
+                            $current_year = date('Y');
+                            $total_days = cal_days_in_month(CAL_GREGORIAN, $current_month, $current_year);
+
+                            // Fetch employees
+                            $employees = $this->db->where('branch', $branch_id)->get('employee')->result_array();
+
+                            // Fetch attendance records for the current month
+                            $attendance_data = $this->db->query("
+    SELECT user_id, DAY(today_date) as day, remark
+    FROM attendance 
+    WHERE branch_id = '$branch_id' 
+    AND MONTH(today_date) = '$current_month' 
+    AND YEAR(today_date) = '$current_year'
+")->result_array();
+
+                            // Organize attendance records in an associative array
+                            $attendance_map = [];
+                            foreach ($attendance_data as $row) {
+                                $attendance_map[$row->user_id][$row->day] = $row->remark;
+                            }
+                            ?>
+
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="table-responsive">
@@ -147,132 +171,34 @@
                                             <thead>
                                                 <tr>
                                                     <th>Employee</th>
-                                                    <th>1</th>
-                                                    <th>2</th>
-                                                    <th>3</th>
-                                                    <th>4</th>
-                                                    <th>5</th>
-                                                    <th>6</th>
-                                                    <th>7</th>
-                                                    <th>8</th>
-                                                    <th>9</th>
-                                                    <th>10</th>
-                                                    <th>11</th>
-                                                    <th>12</th>
-                                                    <th>13</th>
-                                                    <th>14</th>
-                                                    <th>15</th>
-                                                    <th>16</th>
-                                                    <th>17</th>
-                                                    <th>18</th>
-                                                    <th>19</th>
-                                                    <th>20</th>
-                                                    <th>22</th>
-                                                    <th>23</th>
-                                                    <th>24</th>
-                                                    <th>25</th>
-                                                    <th>26</th>
-                                                    <th>27</th>
-                                                    <th>28</th>
-                                                    <th>29</th>
-                                                    <th>30</th>
-                                                    <th>31</th>
+                                                    <?php for ($i = 1; $i <= $total_days; $i++) { ?>
+                                                        <th><?= $i ?></th>
+                                                    <?php } ?>
                                                 </tr>
                                             </thead>
                                             <tbody class="table__body">
-                                                <?php foreach ($users as $item) {
-                                                    ?>
+                                                <?php foreach ($employees as $emp) { ?>
                                                     <tr>
                                                         <td>
                                                             <span class="table-avatar">
-                                                                <a href="#"><?= $item['name'] ?></a>
+                                                                <a href="#"><?= $emp['name'] ?></a>
                                                             </span>
                                                         </td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><i class="fa fa-exclamation-circle text-warning"></i></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><i class="fa fa-close text-danger"></i> </td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><i class="fa fa-star-half-alt text-info"></i> </td>
-                                                        <td><i class="fa fa-calendar-week text-secondary"></i> </td>
-                                                        <td><i class="fa fa-star text-theme"></i> </td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><i class="fa fa-plane-departure text-link"></i> </td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
-                                                        <td><a href="javascript:void(0);" data-bs-toggle="modal"
-                                                                data-bs-target="#attendance_info"><i
-                                                                    class="fa-solid fa-check text-success"></i></a></td>
+                                                        <?php for ($day = 1; $day <= $total_days; $day++) {
+                                                            $status = isset($attendance_map[$emp['id']][$day]) ? $attendance_map[$emp['id']][$day] : 'Absent';
+                                                            ?>
+                                                            <td>
+                                                                <?php if ($status == 'Full Day') { ?>
+                                                                    <i class="fa-solid fa-check text-success"></i>
+                                                                <?php } elseif ($status == 'Half Day') { ?>
+                                                                    <i class="fa fa-star-half-alt text-info"></i>
+                                                                <?php } else { ?>
+                                                                    <i class="fa fa-close text-danger"></i>
+                                                                <?php } ?>
+                                                            </td>
+                                                        <?php } ?>
                                                     </tr>
-                                                    <?php
-                                                } ?>
-
-
-
-
+                                                <?php } ?>
                                             </tbody>
                                         </table>
                                     </div>
