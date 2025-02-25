@@ -190,7 +190,7 @@
                                                         $dayName = date('D', strtotime("$current_year-$current_month-$i"));
                                                         ?>
                                                         <th
-                                                            class="<?= in_array($i, $sundays) ? 'bg-warning text-dark' : '' ?>">
+                                                            class="<?= in_array($i, $sundays) ? 'bg-dark text-light' : '' ?>">
                                                             <?= $dayName ?></th>
                                                     <?php } ?>
                                                 </tr>
