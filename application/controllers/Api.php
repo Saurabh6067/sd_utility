@@ -45,24 +45,37 @@ class Api extends CI_Controller
     public function markAbsent()
     {
         $current_date = date('Y-m-d');
-
+    
+        // Check if absent records are already marked for today
+        $this->db->where('today_date', $current_date);
+        $this->db->where('remark', 'Absent');
+        $already_marked = $this->db->get('attendance')->num_rows();
+    
+        if ($already_marked > 0) {
+            echo "Absent records are already marked for today.";
+            return;
+        }
+    
+        // Fetch all employees
         $employees = $this->db->get('employee')->result_array();
-
+    
         foreach ($employees as $emp) {
             $emp_id = $emp['id'];
             $emp_branch = $emp['branch'];
             $emp_operation = $emp['operation'];
-
+    
+            // Check if employee already has attendance marked for today
             $this->db->where('user_id', $emp_id);
             $this->db->where('today_date', $current_date);
             $attendance = $this->db->get('attendance')->row_array();
-
+    
             // If no attendance record found, mark absent
             if (!$attendance) {
                 $data = [
                     'emp_id' => $emp_id,
-                    'punch_in_date' => $current_date,
-                    'punch_out_date' => $current_date,
+                    'user_id' => $emp_id,
+                    'punch_in_date' => null, // No punch-in
+                    'punch_out_date' => null, // No punch-out
                     'remark' => 'Absent',
                     'status' => 'true',
                     'today_date' => $current_date,
@@ -74,6 +87,7 @@ class Api extends CI_Controller
         }
         echo "Absent records updated successfully!";
     }
+    
 
 
 
