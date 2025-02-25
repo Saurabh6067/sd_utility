@@ -458,42 +458,50 @@ class Admin extends CI_Controller
     {
         $sessiondata = $this->session->userdata('user');
         $branch_id = $sessiondata['branch'];
-
-        $today_date = date('d-m-y');
-
-        $this->db->select('*');
-        $this->db->from('employee');
+        
+        $today_date = date('Y-m-d');
+        $current_month = date('m');
+        $current_year = date('Y');
+    
+        // Get total days in the current month
+        $total_days = cal_days_in_month(CAL_GREGORIAN, $current_month, $current_year);
+    
+        // Get total employees in the branch
         $this->db->where('branch', $branch_id);
-        $totalbranch_emp = $this->db->get()->num_rows();
-
-        $data['users'] = $this->db->query("Select `name` from employee where branch = '$branch_id'")->result_array();
-
-        // Query to count present remarks (with date filter)
+        $totalbranch_emp = $this->db->count_all_results('employee');
+    
+        // Get total present employees (Full Day)
         $this->db->select('COUNT(DISTINCT user_id) as totalbranch_present');
         $this->db->from('attendance');
         $this->db->where('branch_id', $branch_id);
         $this->db->where('remark', 'Full Day');
-        $this->db->where('today_date', $today_date);
+        $this->db->where("MONTH(today_date) = $current_month AND YEAR(today_date) = $current_year");
         $totalbranch_present = $this->db->get()->row()->totalbranch_present;
-
-        // Query to count halfday remarks (with date filter)
+    
+        // Get total half-day employees
         $this->db->select('COUNT(DISTINCT user_id) as totalbranch_halfday');
         $this->db->from('attendance');
         $this->db->where('branch_id', $branch_id);
         $this->db->where('remark', 'Half Day');
-        $this->db->where('today_date', $today_date);
+        $this->db->where("MONTH(today_date) = $current_month AND YEAR(today_date) = $current_year");
         $totalbranch_halfday = $this->db->get()->row()->totalbranch_halfday;
-
-        // Calculate absent employees
+    
+        // Calculate total absent employees
         $totalbranch_absent = $totalbranch_emp - ($totalbranch_present + $totalbranch_halfday);
-
-        $data['totalbranch_emp'] = $totalbranch_emp;
-        $data['totalbranch_present'] = $totalbranch_present;
-        $data['totalbranch_absent'] = $totalbranch_absent;
-        $data['totalbranch_halfday'] = $totalbranch_halfday;
-
+    
+        // Prepare response data
+        $data = [
+            'totalbranch_emp' => $totalbranch_emp,
+            'totalbranch_present' => $totalbranch_present,
+            'totalbranch_halfday' => $totalbranch_halfday,
+            'totalbranch_absent' => $totalbranch_absent,
+            'total_days' => $total_days
+        ];
+    
+        // Load view with attendance data
         $this->load->view('Home/branchAttendance', $data);
     }
+    
 
 
 
