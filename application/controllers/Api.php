@@ -213,7 +213,7 @@ class Api extends CI_Controller
         $current_date = date('Y-m-d'); 
     
         if (!$user_id) {
-            echo json_encode(['res' => 'error', 'msg' => 'Employee ID is required.']);
+            echo json_encode(['res' => 'error', 'msg' => 'User ID is required.']);
             return;
         }
     
@@ -227,7 +227,7 @@ class Api extends CI_Controller
             } elseif (empty($attendance['punch_out_date']) || empty($attendance['punch_out_time'])) {
                 echo json_encode(['res' => 'error', 'msg' => 'User has not punched out today.']);
             } else {
-                echo json_encode(['res' => 'success', 'data' => $attendance, 'msg' => 'User has completed both Punch In and Punch Out.']);
+                echo json_encode(['res' => 'success', 'msg' => 'User has completed both Punch In and Punch Out.']);
             }
         } else {
             echo json_encode(['res' => 'error', 'msg' => 'No attendance record found for today.']);
