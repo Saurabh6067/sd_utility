@@ -46,48 +46,41 @@ class Api extends CI_Controller
     {
         $current_date = date('Y-m-d');
     
-        // Check if absent records are already marked for today
-        $this->db->where('today_date', $current_date);
-        $this->db->where('remark', 'Absent');
-        $already_marked = $this->db->get('attendance')->num_rows();
+        // Fetch all employees who have no attendance record for today
+        $this->db->select('id, empid, branch, operation');
+        $this->db->from('employee');
+        $this->db->where("id NOT IN (SELECT user_id FROM attendance WHERE today_date = '$current_date')", null, false);
+        $employees = $this->db->get()->result_array();
     
-        if ($already_marked > 0) {
-            echo "Absent records are already marked for today.";
+        if (empty($employees)) {
+            echo "No new absentees to mark.";
             return;
         }
-    
-        // Fetch all employees
-        $employees = $this->db->get('employee')->result_array();
     
         foreach ($employees as $emp) {
             $user_id = $emp['id'];
             $emp_id = $emp['empid'];
-
             $emp_branch = $emp['branch'];
             $emp_operation = $emp['operation'];
     
-            $this->db->where('user_id', $user_id);
-            $this->db->where('today_date', $current_date);
-            $attendance = $this->db->get('attendance')->row_array();
-    
-            // If no attendance record found, mark absent
-            if (!$attendance) {
-                $data = [
-                    'emp_id' => $emp_id,
-                    'user_id' => $user_id,
-                    'punch_in_date' => null, // No punch-in
-                    'punch_out_date' => null, // No punch-out
-                    'remark' => 'Absent',
-                    'status' => 'true',
-                    'today_date' => $current_date,
-                    'branch_id' => $emp_branch,
-                    'operation_id' => $emp_operation,
-                ];
-                $this->db->insert('attendance', $data);
-            }
+            // Insert absent record only for missing users
+            $data = [
+                'emp_id' => $emp_id,
+                'user_id' => $user_id,
+                'punch_in_date' => null, // No punch-in
+                'punch_out_date' => null, // No punch-out
+                'remark' => 'Absent',
+                'status' => 'true',
+                'today_date' => $current_date,
+                'branch_id' => $emp_branch,
+                'operation_id' => $emp_operation,
+            ];
+            $this->db->insert('attendance', $data);
         }
+    
         echo "Absent records updated successfully!";
     }
+    
     
 
 
