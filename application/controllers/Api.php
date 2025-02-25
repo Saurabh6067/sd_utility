@@ -50,6 +50,8 @@ class Api extends CI_Controller
 
         foreach ($employees as $emp) {
             $emp_id = $emp['id'];
+            $emp_branch = $emp['branch'];
+            $emp_operation = $emp['operation'];
 
             $this->db->where('user_id', $emp_id);
             $this->db->where('today_date', $current_date);
@@ -63,7 +65,9 @@ class Api extends CI_Controller
                     'punch_out_date' => $current_date,
                     'remark' => 'Absent',
                     'status' => 'false',
-                    'today_date' => $current_date
+                    'today_date' => $current_date,
+                    'branch_id' => $emp_branch,
+                    'operation_id' => $emp_operation,
                 ];
                 $this->db->insert('attendance', $data);
             }
