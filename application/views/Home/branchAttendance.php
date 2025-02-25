@@ -105,6 +105,38 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                        <div class="card__wrapper">
+                            <div class="d-flex align-items-center gap-sm">
+                                <div class="card__icon">
+                                    <span><i class="fa-sharp fa-regular fa-user"></i></span>
+                                </div>
+                                <div class="card__title-wrap">
+                                    <h6 class="card__sub-title mb-10">Total Days</h6>
+                                    <div class="card__content">
+                                        <h3 class="card__title mb-5"><?= $total_days ?? '0' ?>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                        <div class="card__wrapper">
+                            <div class="d-flex align-items-center gap-sm">
+                                <div class="card__icon">
+                                    <span><i class="fa-sharp fa-regular fa-user"></i></span>
+                                </div>
+                                <div class="card__title-wrap">
+                                    <h6 class="card__sub-title mb-10">Total Days</h6>
+                                    <div class="card__content">
+                                        <h3 class="card__title mb-5"><?= $month_name ?? '0' ?>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-xxl-12">
                         <div class="card__wrapper">
                             <div class="row g-20 gy-20 mb-20 justify-content-between align-items-end">

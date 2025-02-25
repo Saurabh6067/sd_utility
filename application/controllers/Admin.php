@@ -458,10 +458,11 @@ class Admin extends CI_Controller
     {
         $sessiondata = $this->session->userdata('user');
         $branch_id = $sessiondata['branch'];
-        
+    
         $today_date = date('Y-m-d');
         $current_month = date('m');
         $current_year = date('Y');
+        $month_name = date('F'); // Get full month name (e.g., "February")
     
         // Get total days in the current month
         $total_days = cal_days_in_month(CAL_GREGORIAN, $current_month, $current_year);
@@ -497,11 +498,13 @@ class Admin extends CI_Controller
             'totalbranch_absent' => $totalbranch_absent,
             'total_days' => $total_days,
             'branch_id' => $branch_id,
+            'month_name' => $month_name, // Add current month name
         ];
     
         // Load view with attendance data
         $this->load->view('Home/branchAttendance', $data);
     }
+    
     
 
 
