@@ -48,7 +48,7 @@ class Api extends CI_Controller
         $day_of_week = date('w', strtotime($current_date)); // Get numeric day (0 = Sunday, 6 = Saturday)
         
         // Determine the remark based on the day
-        $remark = ($day_of_week == 0) ? 'Present' : 'Absent'; // If Sunday, mark Present; otherwise, Absent
+        $remark = ($day_of_week == 0) ? 'Full Day' : 'Absent'; // If Sunday, mark Present; otherwise, Absent
     
         // Fetch all employees who have no attendance record for today
         $this->db->select('id, empid, branch, operation');
