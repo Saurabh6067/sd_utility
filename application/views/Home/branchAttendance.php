@@ -150,17 +150,17 @@
 
                             // Fetch attendance records for the current month
                             $attendance_data = $this->db->query("
-                            SELECT user_id, DAY(today_date) as day, remark
-                            FROM attendance 
-                            WHERE branch_id = '$branch_id' 
-                            AND MONTH(today_date) = '$current_month' 
-                            AND YEAR(today_date) = '$current_year'
-                        ")->result_array();
+    SELECT user_id, DAY(today_date) as day, remark
+    FROM attendance 
+    WHERE branch_id = '$branch_id' 
+    AND MONTH(today_date) = '$current_month' 
+    AND YEAR(today_date) = '$current_year'
+")->result_array();
 
                             // Organize attendance records in an associative array
                             $attendance_map = [];
                             foreach ($attendance_data as $row) {
-                                $attendance_map[$row['user_id']][$row['day']] = $row['remark']; // ✅ Corrected
+                                $attendance_map[$row['user_id']][$row['day']] = $row['remark']; // ✅ Fixed array indexing issue
                             }
 
                             // Find Sundays in the current month
@@ -178,11 +178,20 @@
                                         <table class="table table-striped table-nowrap mb-0">
                                             <thead>
                                                 <tr>
-                                                    <th>Employee</th>
+                                                    <th rowspan="2">Employee</th>
                                                     <?php for ($i = 1; $i <= $total_days; $i++) { ?>
                                                         <th
                                                             class="<?= in_array($i, $sundays) ? 'bg-warning text-dark' : '' ?>">
                                                             <?= $i ?></th>
+                                                    <?php } ?>
+                                                </tr>
+                                                <tr>
+                                                    <?php for ($i = 1; $i <= $total_days; $i++) {
+                                                        $dayName = date('D', strtotime("$current_year-$current_month-$i"));
+                                                        ?>
+                                                        <th
+                                                            class="<?= in_array($i, $sundays) ? 'bg-warning text-dark' : '' ?>">
+                                                            <?= $dayName ?></th>
                                                     <?php } ?>
                                                 </tr>
                                             </thead>
@@ -215,6 +224,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
