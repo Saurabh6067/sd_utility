@@ -42,6 +42,37 @@ class Api extends CI_Controller
         return $earthRadius * $c;
     }
 
+    public function markAbsent() {
+        $current_date = date('Y-m-d'); // Aaj ki date le rahe hain
+
+        // Get all employees
+        $employees = $this->db->get('employee')->result_array();
+
+        foreach ($employees as $emp) {
+            $emp_id = $emp['empid']; // Employee ID
+
+            // Check if employee has any punch-in record for today
+            $this->db->where('emp_id', $emp_id);
+            $this->db->where('today_date', $current_date);
+            $attendance = $this->db->get('attendance')->row_array();
+
+            if (!$attendance) { // Agar record nahi mila to Absent mark karein
+                $data = [
+                    'emp_id' => $emp_id,
+                    'punch_in_date' => $current_date,
+                    'punch_out_date' => $current_date,
+                    'remark' => 'Absent',
+                    'status' => 'true',
+                    'today_date' => $current_date
+                ];
+                $this->db->insert('attendance', $data);
+            }
+        }
+        echo "Absent records updated successfully!";
+    }
+
+
+
 
     public function Test()
     {
@@ -82,7 +113,6 @@ class Api extends CI_Controller
 
         echo json_encode($this->response);
     }
-
     public function Markattendance()
     {
         $input = $this->getJsonInput();
@@ -97,28 +127,28 @@ class Api extends CI_Controller
         $user_lon = $input['user_lon'] ?? null;
         $current_date = $input['current_date'] ?? null;
         $current_time = $input['current_time'] ?? null;
-    
+
         if (!$branch_id || !$attandance_type || !$operation || !$branch_lat || !$branch_lon || !$user_id || !$emp_id || !$user_lat || !$user_lon || !$current_date || !$current_time) {
             echo json_encode(['res' => 'error', 'msg' => 'All fields are required.']);
             return;
         }
-    
+
         // Calculate distance
         $distance = $this->calculateDistance($branch_lat, $branch_lon, $user_lat, $user_lon);
         $distance_in_meter = round($distance * 1000) . " meter";
         $check_distance = round($distance * 1000);
-    
+
         if ($check_distance >= 100) {
             echo json_encode(['res' => 'error', 'data' => $distance_in_meter, 'msg' => 'You are not in branch location.']);
             return;
         }
-    
+
         if ($attandance_type == 'punchIn') {
             $punch_in_time = strtotime($current_time);
             $ten_am = strtotime("10:00:00");
-    
+
             $remark = ($punch_in_time > $ten_am) ? 'Half Day' : 'Full Day';
-    
+
             $data = [
                 'emp_id' => $emp_id,
                 'user_id' => $user_id,
@@ -132,7 +162,7 @@ class Api extends CI_Controller
                 'remark' => $remark,
                 'status' => 'true'
             ];
-    
+
             $this->db->insert('attendance', $data);
             echo json_encode(['res' => 'success', 'data' => $distance_in_meter, 'msg' => 'Punch In Recorded Successfully.']);
         } elseif ($attandance_type == 'punchOut') {
@@ -140,19 +170,19 @@ class Api extends CI_Controller
                 'punch_out_date' => $current_date,
                 'punch_out_time' => $current_time,
             ];
-    
+
             $this->db->where('emp_id', $emp_id);
             $this->db->where('today_date', $current_date);
             $this->db->update('attendance', $updateData);
-    
+
             echo json_encode(['res' => 'success', 'data' => $distance_in_meter, 'msg' => 'Punch Out Recorded Successfully.']);
         } else {
             echo json_encode(['res' => 'error', 'msg' => 'Invalid Attendance Type.']);
         }
     }
-    
-    
-    
+
+
+
 
 
 
