@@ -60,12 +60,13 @@ class Api extends CI_Controller
         $employees = $this->db->get('employee')->result_array();
     
         foreach ($employees as $emp) {
-            $emp_id = $emp['id'];
+            $user_id = $emp['id'];
+            $emp_id = $emp['empid'];
+
             $emp_branch = $emp['branch'];
             $emp_operation = $emp['operation'];
     
-            // Check if employee already has attendance marked for today
-            $this->db->where('user_id', $emp_id);
+            $this->db->where('user_id', $user_id);
             $this->db->where('today_date', $current_date);
             $attendance = $this->db->get('attendance')->row_array();
     
@@ -73,7 +74,7 @@ class Api extends CI_Controller
             if (!$attendance) {
                 $data = [
                     'emp_id' => $emp_id,
-                    'user_id' => $emp_id,
+                    'user_id' => $user_id,
                     'punch_in_date' => null, // No punch-in
                     'punch_out_date' => null, // No punch-out
                     'remark' => 'Absent',
