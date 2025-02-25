@@ -48,10 +48,9 @@ class Api extends CI_Controller
         $employees = $this->db->get('employee')->result_array();
     
         foreach ($employees as $emp) {
-            $emp_id = $emp['empid']; 
+            $emp_id = $emp['id']; 
     
-            // Check if employee has any punch-in or punch-out record for today
-            $this->db->where('emp_id', $emp_id);
+            $this->db->where('user_id', $emp_id);
             $this->db->where('today_date', $current_date);
             $attendance = $this->db->get('attendance')->row_array();
     
