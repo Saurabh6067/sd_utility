@@ -128,9 +128,9 @@
                                     <span><i class="fa-sharp fa-regular fa-user"></i></span>
                                 </div>
                                 <div class="card__title-wrap">
-                                    <h6 class="card__sub-title mb-10">Total Days</h6>
+                                    <h6 class="card__sub-title mb-10">Current Month Year</h6>
                                     <div class="card__content">
-                                        <h3 class="card__title mb-5"><?= $month_name ?? '0' ?>
+                                        <h3 class="card__title mb-5"><?= $month_name . ' ' . $current_year ?? '0' ?>
                                         </h3>
                                     </div>
                                 </div>
