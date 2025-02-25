@@ -61,7 +61,7 @@ class Api extends CI_Controller
                     'punch_in_date' => $current_date,
                     'punch_out_date' => $current_date,
                     'remark' => 'Absent',
-                    'status' => 'false', // "false" because absent
+                    'status' => 'false', 
                     'today_date' => $current_date
                 ];
                 $this->db->insert('attendance', $data);
@@ -143,7 +143,17 @@ class Api extends CI_Controller
             return;
         }
     
+        // Check if attendance record already exists for today
+        $this->db->where('emp_id', $emp_id);
+        $this->db->where('today_date', $current_date);
+        $attendance = $this->db->get('attendance')->row_array();
+    
         if ($attandance_type == 'punchIn') {
+            if ($attendance) {
+                echo json_encode(['res' => 'error', 'msg' => 'Attendance already marked for today.']);
+                return;
+            }
+    
             $punch_in_time = strtotime($current_time);
             $ten_am = strtotime("10:00:00");
     
@@ -167,52 +177,36 @@ class Api extends CI_Controller
             echo json_encode(['res' => 'success', 'data' => $distance_in_meter, 'msg' => 'Punch In Recorded Successfully.']);
     
         } elseif ($attandance_type == 'punchOut') {
-            // First, check if punch-in record exists
+            if (!$attendance) {
+                echo json_encode(['res' => 'error', 'msg' => 'Punch In is required before Punch Out.']);
+                return;
+            }
+    
+            if (!empty($attendance['punch_out_time'])) {
+                echo json_encode(['res' => 'error', 'msg' => 'Punch Out already recorded for today.']);
+                return;
+            }
+    
+            // Update existing record
+            $updateData = [
+                'punch_out_date' => $current_date,
+                'punch_out_time' => $current_time,
+            ];
+    
             $this->db->where('emp_id', $emp_id);
             $this->db->where('today_date', $current_date);
-            $attendance = $this->db->get('attendance')->row_array();
+            $this->db->update('attendance', $updateData);
     
-            if ($attendance) {
-                // Update existing record
-                $updateData = [
-                    'punch_out_date' => $current_date,
-                    'punch_out_time' => $current_time,
-                ];
-    
-                $this->db->where('emp_id', $emp_id);
-                $this->db->where('today_date', $current_date);
-                $this->db->update('attendance', $updateData);
-    
-                if ($this->db->affected_rows() > 0) {
-                    echo json_encode(['res' => 'success', 'data' => $distance_in_meter, 'msg' => 'Punch Out Recorded Successfully.']);
-                } else {
-                    echo json_encode(['res' => 'error', 'msg' => 'Failed to update Punch Out.']);
-                }
+            if ($this->db->affected_rows() > 0) {
+                echo json_encode(['res' => 'success', 'data' => $distance_in_meter, 'msg' => 'Punch Out Recorded Successfully.']);
             } else {
-                // If no punch-in record, insert new row with punch-out
-                $data = [
-                    'emp_id' => $emp_id,
-                    'user_id' => $user_id,
-                    'user_lat' => $user_lat,
-                    'user_lon' => $user_lon,
-                    'punch_in_date' => null, // No punch-in
-                    'punch_in_time' => null,
-                    'punch_out_date' => $current_date,
-                    'punch_out_time' => $current_time,
-                    'today_date' => $current_date,
-                    'operation_id' => $operation,
-                    'branch_id' => $branch_id,
-                    'remark' => 'Punch Out Only',
-                    'status' => 'true'
-                ];
-    
-                $this->db->insert('attendance', $data);
-                echo json_encode(['res' => 'success', 'data' => $distance_in_meter, 'msg' => 'Punch Out Recorded Successfully (No Punch In).']);
+                echo json_encode(['res' => 'error', 'msg' => 'Failed to update Punch Out.']);
             }
         } else {
             echo json_encode(['res' => 'error', 'msg' => 'Invalid Attendance Type.']);
         }
     }
+    
     
 
 
