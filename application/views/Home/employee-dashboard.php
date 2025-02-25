@@ -125,7 +125,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xxl-4 col-xl-12 col-lg-12">
+                    <div class="col-xxl-12 col-xl-12 col-lg-12">
                         <div class="card__wrapper">
                             <div class="card__title-wrap d-flex align-items-center justify-content-between mb-20">
                                 <h5 class="card__heading-title">Mark Attendance</h5>
