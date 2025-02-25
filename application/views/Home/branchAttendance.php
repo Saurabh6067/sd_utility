@@ -150,12 +150,12 @@
 
                             // Fetch attendance records for the current month
                             $attendance_data = $this->db->query("
-    SELECT user_id, DAY(today_date) as day, remark
-    FROM attendance 
-    WHERE branch_id = '$branch_id' 
-    AND MONTH(today_date) = '$current_month' 
-    AND YEAR(today_date) = '$current_year'
-")->result_array();
+                                SELECT user_id, DAY(today_date) as day, remark
+                                FROM attendance 
+                                WHERE branch_id = '$branch_id' 
+                                AND MONTH(today_date) = '$current_month' 
+                                AND YEAR(today_date) = '$current_year'
+                            ")->result_array();
 
                             // Organize attendance records in an associative array
                             $attendance_map = [];

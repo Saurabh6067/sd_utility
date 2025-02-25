@@ -495,7 +495,8 @@ class Admin extends CI_Controller
             'totalbranch_present' => $totalbranch_present,
             'totalbranch_halfday' => $totalbranch_halfday,
             'totalbranch_absent' => $totalbranch_absent,
-            'total_days' => $total_days
+            'total_days' => $total_days,
+            'branch_id' => $branch_id,
         ];
     
         // Load view with attendance data
