@@ -461,7 +461,6 @@ class Admin extends CI_Controller
 
         $today_date = date('d-m-y');
 
-        // Query to count total employees in the branch
         $this->db->select('*');
         $this->db->from('employee');
         $this->db->where('branch', $branch_id);
@@ -473,16 +472,16 @@ class Admin extends CI_Controller
         $this->db->select('COUNT(DISTINCT user_id) as totalbranch_present');
         $this->db->from('attendance');
         $this->db->where('branch_id', $branch_id);
-        $this->db->where('remark', 'present');
-        $this->db->where('created_at_date', $today_date);
+        $this->db->where('remark', 'Full Day');
+        $this->db->where('today_date', $today_date);
         $totalbranch_present = $this->db->get()->row()->totalbranch_present;
 
         // Query to count halfday remarks (with date filter)
         $this->db->select('COUNT(DISTINCT user_id) as totalbranch_halfday');
         $this->db->from('attendance');
         $this->db->where('branch_id', $branch_id);
-        $this->db->where('remark', 'halfday');
-        $this->db->where('created_at_date', $today_date);
+        $this->db->where('remark', 'Half Day');
+        $this->db->where('today_date', $today_date);
         $totalbranch_halfday = $this->db->get()->row()->totalbranch_halfday;
 
         // Calculate absent employees
