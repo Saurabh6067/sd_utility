@@ -86,80 +86,99 @@ class Api extends CI_Controller
     public function Markattendance()
     {
         $input = $this->getJsonInput();
-        $branch_id = $input['branch_id'] ?? null;
-        $operation = $input['operation'] ?? null;
-        $branch_lat = $input['branch_lat'] ?? null;
-        $branch_lon = $input['branch_lon'] ?? null;
-        $user_id = $input['user_id'] ?? null;
-        $emp_id = $input['emp_id'] ?? null;
-        $user_lat = $input['user_lat'] ?? null;
-        $user_lon = $input['user_lon'] ?? null;
-        $current_date = $input['current_date'] ?? null;
-        $current_time = $input['current_time'] ?? null;
-
-        if (empty($branch_id)) {
-            echo json_encode(['res' => 'error', 'msg' => 'Branch Id is required.']);
-            return;
+        
+        // Required fields
+        $required_fields = [
+            'branch_id', 'attandance_type', 'operation', 'branch_lat', 'branch_lon', 
+            'user_id', 'emp_id', 'user_lat', 'user_lon', 'current_date', 'current_time'
+        ];
+        
+        // Validate all required fields in one go
+        foreach ($required_fields as $field) {
+            if (empty($input[$field])) {
+                echo json_encode(['res' => 'error', 'msg' => ucfirst(str_replace('_', ' ', $field)) . ' is required.']);
+                return;
+            }
         }
-        if (empty($operation)) {
-            echo json_encode(['res' => 'error', 'msg' => 'Operation is required.']);
-            return;
-        }
-        if (empty($branch_lat)) {
-            echo json_encode(['res' => 'error', 'msg' => 'Branch Latitude is required.']);
-            return;
-        }
-        if (empty($branch_lon)) {
-            echo json_encode(['res' => 'error', 'msg' => 'Branch Longitude is required.']);
-            return;
-        }
-        if (empty($user_id)) {
-            echo json_encode(['res' => 'error', 'msg' => 'User Id is required.']);
-            return;
-        }
-        if (empty($emp_id)) {
-            echo json_encode(['res' => 'error', 'msg' => 'Employee Id is required.']);
-            return;
-        }
-        if (empty($user_lat)) {
-            echo json_encode(['res' => 'error', 'msg' => 'User Latitude is required.']);
-            return;
-        }
-        if (empty($user_lon)) {
-            echo json_encode(['res' => 'error', 'msg' => 'User Longitude is required.']);
-            return;
-        }
-        if (empty($current_date)) {
-            echo json_encode(['res' => 'error', 'msg' => 'Current Date is required.']);
-            return;
-        }
-        if (empty($current_time)) {
-            echo json_encode(['res' => 'error', 'msg' => 'Current Time is required.']);
-            return;
-        }
+    
+        // Extract variables after validation
+        $branch_id = $input['branch_id'];
+        $attandance_type = $input['attandance_type'];
+        $operation = $input['operation'];
+        $branch_lat = $input['branch_lat'];
+        $branch_lon = $input['branch_lon'];
+        $user_id = $input['user_id'];
+        $emp_id = $input['emp_id'];
+        $user_lat = $input['user_lat'];
+        $user_lon = $input['user_lon'];
+        $current_date = $input['current_date'];
+        $current_time = $input['current_time'];
+    
+        // Check if branch exists
         $checkbranckexist = $this->db->get_where('branch', ['id' => $branch_id, 'status' => 'true'])->row();
-
         if (empty($checkbranckexist)) {
-            echo json_encode(['res' => 'error', 'msg' => 'Branch not exist.']);
+            echo json_encode(['res' => 'error', 'msg' => 'Branch does not exist.']);
             return;
         }
-
+    
+        // Calculate distance
         $distance = $this->calculateDistance($branch_lat, $branch_lon, $user_lat, $user_lon);
-
-        $distance_in_meter = round($distance * 1000)  . "meter";
+        $distance_in_meter = round($distance * 1000) . " meter";
         $check_distance = round($distance * 1000);
-
+    
         if ($check_distance >= 100) {
             echo json_encode(['res' => 'error', 'data' => $distance_in_meter, 'msg' => 'You are not in branch location.']);
             return;
-        } else {
-            echo json_encode(['res' => 'success', 'data' => $distance_in_meter, 'msg' => 'You are in branch location.']);
         }
-
-
-
-
+    
+        if ($attandance_type == 'punchIn') {
+            $remark = '';
+            $punch_in_time = strtotime($current_time);
+            $ten_am = strtotime("10:00:00");
+    
+            if ($punch_in_time > $ten_am) {
+                $remark = 'Half Day';
+            }
+    
+            $data = [
+                'emp_id' => $emp_id,
+                'user_id' => $user_id,
+                'user_lat' => $user_lat,
+                'user_log' => $user_lon,
+                'punch_in_date' => $current_date,
+                'punch_in_time' => $current_time,
+                'punch_out_date' => null,
+                'punch_out_time' => null,
+                'today_date' => $current_date,
+                'operation_id' => $operation,
+                'branch_id' => $branch_id,
+                'remark' => $remark,
+                'status' => 'true',
+            ];
+    
+            $this->db->insert('attendance', $data);
+            echo json_encode(['res' => 'success', 'data' => $distance_in_meter, 'msg' => 'Punch In Recorded Successfully.']);
+            return;
+        }
+    
+        if ($attandance_type == 'punchOut') {
+            $this->db->where('emp_id', $emp_id)
+                     ->where('user_id', $user_id)
+                     ->where('branch_id', $branch_id)
+                     ->where('today_date', $current_date)
+                     ->update('attendance', [
+                         'punch_out_date' => $current_date,
+                         'punch_out_time' => $current_time
+                     ]);
+    
+            echo json_encode(['res' => 'success', 'data' => $distance_in_meter, 'msg' => 'Punch Out Recorded Successfully.']);
+            return;
+        }
+    
+        echo json_encode(['res' => 'error', 'msg' => 'Invalid attendance type.']);
     }
+    
+    
 
 
 
