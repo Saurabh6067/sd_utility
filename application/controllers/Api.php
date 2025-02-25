@@ -43,26 +43,26 @@ class Api extends CI_Controller
     }
 
     public function markAbsent() {
-        $current_date = date('Y-m-d'); // Aaj ki date le rahe hain
+        $current_date = date('Y-m-d'); 
 
-        // Get all employees
         $employees = $this->db->get('employee')->result_array();
-
+    
         foreach ($employees as $emp) {
-            $emp_id = $emp['empid']; // Employee ID
-
-            // Check if employee has any punch-in record for today
+            $emp_id = $emp['empid']; 
+    
+            // Check if employee has any punch-in or punch-out record for today
             $this->db->where('emp_id', $emp_id);
             $this->db->where('today_date', $current_date);
             $attendance = $this->db->get('attendance')->row_array();
-
-            if (!$attendance) { // Agar record nahi mila to Absent mark karein
+    
+            // If no attendance record found, mark absent
+            if (!$attendance) {
                 $data = [
                     'emp_id' => $emp_id,
                     'punch_in_date' => $current_date,
                     'punch_out_date' => $current_date,
                     'remark' => 'Absent',
-                    'status' => 'true',
+                    'status' => 'false', // "false" because absent
                     'today_date' => $current_date
                 ];
                 $this->db->insert('attendance', $data);
@@ -70,6 +70,7 @@ class Api extends CI_Controller
         }
         echo "Absent records updated successfully!";
     }
+    
 
 
 
@@ -156,7 +157,7 @@ class Api extends CI_Controller
                 'user_lon' => $user_lon,
                 'punch_in_date' => $current_date,
                 'punch_in_time' => $current_time,
-                'today_date' => $current_date,
+                'today_date' => date('Y-m-d'),
                 'operation_id' => $operation,
                 'branch_id' => $branch_id,
                 'remark' => $remark,
