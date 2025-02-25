@@ -178,20 +178,14 @@
                                         <table class="table table-striped table-nowrap mb-0">
                                             <thead>
                                                 <tr>
-                                                    <th rowspan="2">Employee</th>
-                                                    <?php for ($i = 1; $i <= $total_days; $i++) { ?>
-                                                        <th
-                                                            class="<?= in_array($i, $sundays) ? 'bg-warning text-dark' : '' ?>">
-                                                            <?= $i ?></th>
-                                                    <?php } ?>
-                                                </tr>
-                                                <tr>
+                                                    <th>Employee</th>
                                                     <?php for ($i = 1; $i <= $total_days; $i++) {
                                                         $dayName = date('D', strtotime("$current_year-$current_month-$i"));
+                                                        $is_sunday = in_array($i, $sundays);
                                                         ?>
-                                                        <th
-                                                            class="<?= in_array($i, $sundays) ? 'bg-info text-light' : '' ?>">
-                                                            <?= $dayName ?></th>
+                                                        <th class="<?= $is_sunday ? 'bg-warning text-dark' : '' ?>">
+                                                            <?= $i ?> <br> <small><?= $dayName ?></small>
+                                                        </th>
                                                     <?php } ?>
                                                 </tr>
                                             </thead>
@@ -207,7 +201,7 @@
                                                             $status = isset($attendance_map[$emp['id']][$day]) ? $attendance_map[$emp['id']][$day] : 'Absent';
                                                             $is_sunday = in_array($day, $sundays);
                                                             ?>
-                                                            <td class="<?= $is_sunday ? 'bg-info text-light' : '' ?>">
+                                                            <td class="<?= $is_sunday ? 'bg-warning text-dark' : '' ?>">
                                                                 <?php if ($status == 'Full Day') { ?>
                                                                     <i class="fa-solid fa-check text-success"></i>
                                                                 <?php } elseif ($status == 'Half Day') { ?>
@@ -224,7 +218,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
