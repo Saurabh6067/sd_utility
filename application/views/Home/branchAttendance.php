@@ -150,17 +150,25 @@
 
                             // Fetch attendance records for the current month
                             $attendance_data = $this->db->query("
-                                SELECT user_id, DAY(today_date) as day, remark
-                                FROM attendance 
-                                WHERE branch_id = '$branch_id' 
-                                AND MONTH(today_date) = '$current_month' 
-                                AND YEAR(today_date) = '$current_year'
-                            ")->result_array();
+                            SELECT user_id, DAY(today_date) as day, remark
+                            FROM attendance 
+                            WHERE branch_id = '$branch_id' 
+                            AND MONTH(today_date) = '$current_month' 
+                            AND YEAR(today_date) = '$current_year'
+                        ")->result_array();
 
                             // Organize attendance records in an associative array
                             $attendance_map = [];
                             foreach ($attendance_data as $row) {
-                                $attendance_map[$row['user_id']][$row['day']] = $row['remark'];
+                                $attendance_map[$row['user_id']][$row['day']] = $row['remark']; // ✅ Corrected
+                            }
+
+                            // Find Sundays in the current month
+                            $sundays = [];
+                            for ($day = 1; $day <= $total_days; $day++) {
+                                if (date('N', strtotime("$current_year-$current_month-$day")) == 7) { // Sunday
+                                    $sundays[] = $day;
+                                }
                             }
                             ?>
 
@@ -172,7 +180,9 @@
                                                 <tr>
                                                     <th>Employee</th>
                                                     <?php for ($i = 1; $i <= $total_days; $i++) { ?>
-                                                        <th><?= $i ?></th>
+                                                        <th
+                                                            class="<?= in_array($i, $sundays) ? 'bg-warning text-dark' : '' ?>">
+                                                            <?= $i ?></th>
                                                     <?php } ?>
                                                 </tr>
                                             </thead>
@@ -186,8 +196,9 @@
                                                         </td>
                                                         <?php for ($day = 1; $day <= $total_days; $day++) {
                                                             $status = isset($attendance_map[$emp['id']][$day]) ? $attendance_map[$emp['id']][$day] : 'Absent';
+                                                            $is_sunday = in_array($day, $sundays);
                                                             ?>
-                                                            <td>
+                                                            <td class="<?= $is_sunday ? 'bg-warning text-dark' : '' ?>">
                                                                 <?php if ($status == 'Full Day') { ?>
                                                                     <i class="fa-solid fa-check text-success"></i>
                                                                 <?php } elseif ($status == 'Half Day') { ?>
