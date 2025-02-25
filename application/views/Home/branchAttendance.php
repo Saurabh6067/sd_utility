@@ -190,7 +190,7 @@
                                                         $dayName = date('D', strtotime("$current_year-$current_month-$i"));
                                                         ?>
                                                         <th
-                                                            class="<?= in_array($i, $sundays) ? 'bg-dark text-light' : '' ?>">
+                                                            class="<?= in_array($i, $sundays) ? 'bg-info text-light' : '' ?>">
                                                             <?= $dayName ?></th>
                                                     <?php } ?>
                                                 </tr>
@@ -207,7 +207,7 @@
                                                             $status = isset($attendance_map[$emp['id']][$day]) ? $attendance_map[$emp['id']][$day] : 'Absent';
                                                             $is_sunday = in_array($day, $sundays);
                                                             ?>
-                                                            <td class="<?= $is_sunday ? 'bg-warning text-dark' : '' ?>">
+                                                            <td class="<?= $is_sunday ? 'bg-info text-light' : '' ?>">
                                                                 <?php if ($status == 'Full Day') { ?>
                                                                     <i class="fa-solid fa-check text-success"></i>
                                                                 <?php } elseif ($status == 'Half Day') { ?>
