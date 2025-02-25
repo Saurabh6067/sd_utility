@@ -64,7 +64,7 @@ class Api extends CI_Controller
                     'punch_in_date' => $current_date,
                     'punch_out_date' => $current_date,
                     'remark' => 'Absent',
-                    'status' => 'false',
+                    'status' => 'true',
                     'today_date' => $current_date,
                     'branch_id' => $emp_branch,
                     'operation_id' => $emp_operation,
