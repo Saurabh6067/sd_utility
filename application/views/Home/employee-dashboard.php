@@ -126,16 +126,6 @@
                         </div>
                     </div>
                     <div class="col-xxl-4 col-xl-12 col-lg-12">
-                        <!-- <div class="card__thumb employee-bg d-flex align-items-center mb-20"
-                            data-background="assets/images/bg/personal.png">
-                            <div class="card__thumb-content">
-                                <span class="card__thumb-subtitle">Welcome Back</span>
-                                <h1 class="card__thumb-title mb-20">Thomas<span class="text-warning"> Edison</span></h1>
-                                <div class="card__thumb-btn">
-                                    <a class="btn btn-white rounded-pill" href="#">Explore Now</a>
-                                </div>
-                            </div>
-                        </div> -->
                         <div class="card__wrapper">
                             <div class="card__title-wrap d-flex align-items-center justify-content-between mb-20">
                                 <h5 class="card__heading-title">Mark Attendance</h5>
@@ -144,7 +134,7 @@
                             <div id="qrcode" class="mx-auto" style="width: 100px; height: 100px; margin: 0 auto;"></div>
                         </div>
                     </div>
-                    <div class="col-xxl-4 col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                    <!-- <div class="col-xxl-4 col-xl-6 col-lg-6 col-md-6 col-sm-6">
                         <div class="card__wrapper mb-20">
                             <div class="card__title-wrap d-flex align-items-center justify-content-between mb-20">
                                 <h5 class="card__heading-title">Attendance & Leaves</h5>
@@ -188,7 +178,7 @@
                                     Apply Leave</a>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <!-- App side area end -->
