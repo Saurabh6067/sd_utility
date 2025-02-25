@@ -86,38 +86,20 @@ class Api extends CI_Controller
     public function Markattendance()
     {
         $input = $this->getJsonInput();
-        
-        // Required fields
-        $required_fields = [
-            'branch_id', 'attandance_type', 'operation', 'branch_lat', 'branch_lon', 
-            'user_id', 'emp_id', 'user_lat', 'user_lon', 'current_date', 'current_time'
-        ];
-        
-        // Validate all required fields in one go
-        foreach ($required_fields as $field) {
-            if (empty($input[$field])) {
-                echo json_encode(['res' => 'error', 'msg' => ucfirst(str_replace('_', ' ', $field)) . ' is required.']);
-                return;
-            }
-        }
+        $branch_id = $input['branch_id'] ?? null;
+        $attandance_type = $input['attandance_type'] ?? null;
+        $operation = $input['operation'] ?? null;
+        $branch_lat = $input['branch_lat'] ?? null;
+        $branch_lon = $input['branch_lon'] ?? null;
+        $user_id = $input['user_id'] ?? null;
+        $emp_id = $input['emp_id'] ?? null;
+        $user_lat = $input['user_lat'] ?? null;
+        $user_lon = $input['user_lon'] ?? null;
+        $current_date = $input['current_date'] ?? null;
+        $current_time = $input['current_time'] ?? null;
     
-        // Extract variables after validation
-        $branch_id = $input['branch_id'];
-        $attandance_type = $input['attandance_type'];
-        $operation = $input['operation'];
-        $branch_lat = $input['branch_lat'];
-        $branch_lon = $input['branch_lon'];
-        $user_id = $input['user_id'];
-        $emp_id = $input['emp_id'];
-        $user_lat = $input['user_lat'];
-        $user_lon = $input['user_lon'];
-        $current_date = $input['current_date'];
-        $current_time = $input['current_time'];
-    
-        // Check if branch exists
-        $checkbranckexist = $this->db->get_where('branch', ['id' => $branch_id, 'status' => 'true'])->row();
-        if (empty($checkbranckexist)) {
-            echo json_encode(['res' => 'error', 'msg' => 'Branch does not exist.']);
+        if (!$branch_id || !$attandance_type || !$operation || !$branch_lat || !$branch_lon || !$user_id || !$emp_id || !$user_lat || !$user_lon || !$current_date || !$current_time) {
+            echo json_encode(['res' => 'error', 'msg' => 'All fields are required.']);
             return;
         }
     
@@ -132,51 +114,43 @@ class Api extends CI_Controller
         }
     
         if ($attandance_type == 'punchIn') {
-            $remark = '';
             $punch_in_time = strtotime($current_time);
             $ten_am = strtotime("10:00:00");
     
-            if ($punch_in_time > $ten_am) {
-                $remark = 'Half Day';
-            }
+            $remark = ($punch_in_time > $ten_am) ? 'Half Day' : 'Full Day';
     
             $data = [
                 'emp_id' => $emp_id,
                 'user_id' => $user_id,
                 'user_lat' => $user_lat,
-                'user_log' => $user_lon,
+                'user_lon' => $user_lon,
                 'punch_in_date' => $current_date,
                 'punch_in_time' => $current_time,
-                'punch_out_date' => null,
-                'punch_out_time' => null,
                 'today_date' => $current_date,
                 'operation_id' => $operation,
                 'branch_id' => $branch_id,
                 'remark' => $remark,
-                'status' => 'true',
+                'status' => 'true'
             ];
     
             $this->db->insert('attendance', $data);
             echo json_encode(['res' => 'success', 'data' => $distance_in_meter, 'msg' => 'Punch In Recorded Successfully.']);
-            return;
-        }
+        } elseif ($attandance_type == 'punchOut') {
+            $updateData = [
+                'punch_out_date' => $current_date,
+                'punch_out_time' => $current_time,
+            ];
     
-        if ($attandance_type == 'punchOut') {
-            $this->db->where('emp_id', $emp_id)
-                     ->where('user_id', $user_id)
-                     ->where('branch_id', $branch_id)
-                     ->where('today_date', $current_date)
-                     ->update('attendance', [
-                         'punch_out_date' => $current_date,
-                         'punch_out_time' => $current_time
-                     ]);
+            $this->db->where('emp_id', $emp_id);
+            $this->db->where('today_date', $current_date);
+            $this->db->update('attendance', $updateData);
     
             echo json_encode(['res' => 'success', 'data' => $distance_in_meter, 'msg' => 'Punch Out Recorded Successfully.']);
-            return;
+        } else {
+            echo json_encode(['res' => 'error', 'msg' => 'Invalid Attendance Type.']);
         }
-    
-        echo json_encode(['res' => 'error', 'msg' => 'Invalid attendance type.']);
     }
+    
     
     
 
