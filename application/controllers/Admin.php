@@ -464,6 +464,9 @@ class Admin extends CI_Controller
         $current_year = date('Y');
         $month_name = date('F'); // Get full month name (e.g., "February")
     
+        // ✅ Get total days in the current month
+        $total_days = cal_days_in_month(CAL_GREGORIAN, $current_month, $current_year);
+    
         // ✅ Get total employees in the branch
         $this->db->where('branch', $branch_id);
         $totalbranch_emp = $this->db->count_all_results('employee');
@@ -524,17 +527,19 @@ class Admin extends CI_Controller
             'totalbranch_present' => $totalbranch_present, // Present
             'totalbranch_halfday' => $totalbranch_halfday, // Half Day
             'totalbranch_absent' => $totalbranch_absent, // Absent count
+            'total_days' => $total_days, // ✅ Total days in the current month
             'branch_id' => $branch_id,
             'month_name' => $month_name,
             'current_year' => $current_year,
-            'employee_list' => $all_employees, // All employees (full list)
-            'absent_emp_list' => $absent_emp_list, // Employees marked absent
+            'employee_list' => $all_employees, 
+            'absent_emp_list' => $absent_emp_list,
             'today_date' => $today_date
         ];
     
         // ✅ Load view with attendance data
         $this->load->view('Home/branchAttendance', $data);
     }
+    
     
     
     
