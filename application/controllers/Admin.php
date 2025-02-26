@@ -465,7 +465,8 @@ class Admin extends CI_Controller
         $month_name = date('F'); // Get full month name (e.g., "February")
     
         // Get employees who have attendance for today
-        $this->db->select('DISTINCT user_id');
+        $this->db->distinct();
+        $this->db->select('user_id');
         $this->db->from('attendance');
         $this->db->where('branch_id', $branch_id);
         $this->db->where('today_date', $today_date);
@@ -475,10 +476,14 @@ class Admin extends CI_Controller
         $employee_ids = array_column($employees, 'user_id');
     
         // Fetch employee details based on attendance
-        $this->db->select('id, name');
-        $this->db->from('employee');
-        $this->db->where_in('id', $employee_ids); // Filter employees who have attendance today
-        $employee_list = $this->db->get()->result_array();
+        if (!empty($employee_ids)) {
+            $this->db->select('id, name');
+            $this->db->from('employee');
+            $this->db->where_in('id', $employee_ids);
+            $employee_list = $this->db->get()->result_array();
+        } else {
+            $employee_list = []; // No employees marked today
+        }
     
         // Get total employees marked today
         $totalbranch_emp = count($employee_list);
