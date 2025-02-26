@@ -464,7 +464,11 @@ class Admin extends CI_Controller
         $current_year = date('Y');
         $month_name = date('F'); // Get full month name (e.g., "February")
     
-        // Get employees who have attendance for today
+        // ✅ Get total employees in the branch
+        $this->db->where('branch', $branch_id);
+        $totalbranch_emp = $this->db->count_all_results('employee');
+    
+        // ✅ Get employees who have attendance for today
         $this->db->distinct();
         $this->db->select('user_id');
         $this->db->from('attendance');
@@ -472,23 +476,30 @@ class Admin extends CI_Controller
         $this->db->where('today_date', $today_date);
         $employees = $this->db->get()->result_array();
     
-        // Extract user IDs from attendance records
+        // ✅ Extract user IDs from attendance records
         $employee_ids = array_column($employees, 'user_id');
     
-        // Fetch employee details based on attendance
-        if (!empty($employee_ids)) {
-            $this->db->select('id, name');
-            $this->db->from('employee');
-            $this->db->where_in('id', $employee_ids);
-            $employee_list = $this->db->get()->result_array();
-        } else {
-            $employee_list = []; // No employees marked today
+        // ✅ Fetch details of all employees in the branch
+        $this->db->select('id, name');
+        $this->db->from('employee');
+        $this->db->where('branch', $branch_id);
+        $all_employees = $this->db->get()->result_array();
+    
+        // ✅ Classify employees based on attendance
+        $present_emp_ids = $employee_ids;  // Employees who have marked attendance
+        $absent_emp_list = [];
+    
+        foreach ($all_employees as $emp) {
+            if (!in_array($emp['id'], $present_emp_ids)) {
+                $absent_emp_list[] = [
+                    'id' => $emp['id'],
+                    'name' => $emp['name'],
+                    'status' => 'Absent'
+                ];
+            }
         }
     
-        // Get total employees marked today
-        $totalbranch_emp = count($employee_list);
-    
-        // Get present employees (Full Day)
+        // ✅ Get present employees (Full Day)
         $this->db->select('COUNT(DISTINCT user_id) as totalbranch_present');
         $this->db->from('attendance');
         $this->db->where('branch_id', $branch_id);
@@ -496,7 +507,7 @@ class Admin extends CI_Controller
         $this->db->where('today_date', $today_date);
         $totalbranch_present = $this->db->get()->row()->totalbranch_present;
     
-        // Get half-day employees
+        // ✅ Get half-day employees
         $this->db->select('COUNT(DISTINCT user_id) as totalbranch_halfday');
         $this->db->from('attendance');
         $this->db->where('branch_id', $branch_id);
@@ -504,25 +515,27 @@ class Admin extends CI_Controller
         $this->db->where('today_date', $today_date);
         $totalbranch_halfday = $this->db->get()->row()->totalbranch_halfday;
     
-        // Calculate absent employees
+        // ✅ Calculate total absent employees
         $totalbranch_absent = $totalbranch_emp - ($totalbranch_present + $totalbranch_halfday);
     
-        // Prepare response data
+        // ✅ Prepare response data
         $data = [
-            'totalbranch_emp' => $totalbranch_emp,
-            'totalbranch_present' => $totalbranch_present,
-            'totalbranch_halfday' => $totalbranch_halfday,
-            'totalbranch_absent' => $totalbranch_absent,
+            'totalbranch_emp' => $totalbranch_emp, // Total employees
+            'totalbranch_present' => $totalbranch_present, // Present
+            'totalbranch_halfday' => $totalbranch_halfday, // Half Day
+            'totalbranch_absent' => $totalbranch_absent, // Absent count
             'branch_id' => $branch_id,
-            'month_name' => $month_name, 
+            'month_name' => $month_name,
             'current_year' => $current_year,
-            'employee_list' => $employee_list, // Send filtered employee list to the view
-            'today_date' => $today_date // Send current date to view
+            'employee_list' => $all_employees, // All employees (full list)
+            'absent_emp_list' => $absent_emp_list, // Employees marked absent
+            'today_date' => $today_date
         ];
     
-        // Load view with attendance data
+        // ✅ Load view with attendance data
         $this->load->view('Home/branchAttendance', $data);
     }
+    
     
     
     
