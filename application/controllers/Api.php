@@ -275,41 +275,50 @@ class Api extends CI_Controller
             echo json_encode(['res' => 'error', 'msg' => 'Employee ID is required.']);
             return;
         }
-
+    
         // Get current month & year
         $current_month = date('m');
         $current_year = date('Y');
         $total_days = cal_days_in_month(CAL_GREGORIAN, $current_month, $current_year);
-
+    
         // Fetch total present days
         $this->db->where('user_id', $user_id);
         $this->db->where('MONTH(today_date)', $current_month);
         $this->db->where('YEAR(today_date)', $current_year);
         $this->db->where('remark', 'Full Day');
         $total_present = $this->db->count_all_results('attendance');
-
+    
         // Fetch total half-day entries
         $this->db->where('user_id', $user_id);
         $this->db->where('MONTH(today_date)', $current_month);
         $this->db->where('YEAR(today_date)', $current_year);
         $this->db->where('remark', 'Half Day');
         $total_halfday = $this->db->count_all_results('attendance');
-
+    
         // Calculate total absent days
         $total_attendance_days = $total_present + $total_halfday;
         $total_absent = $total_days - $total_attendance_days;
-
+    
+        // Calculate percentages
+        $present_percentage = ($total_present / $total_days) * 100;
+        $halfday_percentage = ($total_halfday / $total_days) * 100;
+        $absent_percentage = ($total_absent / $total_days) * 100;
+    
         // Prepare response
         $response = [
             'user_id' => $user_id,
             'total_days_in_month' => $total_days,
             'total_present' => $total_present,
+            'total_present_percentage' => round($present_percentage, 2) . '%',
             'total_halfday' => $total_halfday,
-            'total_absent' => $total_absent
+            'total_halfday_percentage' => round($halfday_percentage, 2) . '%',
+            'total_absent' => $total_absent,
+            'total_absent_percentage' => round($absent_percentage, 2) . '%'
         ];
-
+    
         echo json_encode(['res' => 'success', 'data' => $response, 'msg' => 'Attendance details retrieved successfully.']);
     }
+    
 
 
 }
