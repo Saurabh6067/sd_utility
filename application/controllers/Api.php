@@ -267,6 +267,49 @@ class Api extends CI_Controller
         }
     }
 
+    public function getUserMonthlyAttendance() {
+        $input = $this->getJsonInput();
+        $user_id = $input['user_id'] ?? null;
+        
+        if (!$user_id) {
+            echo json_encode(['res' => 'error', 'msg' => 'Employee ID is required.']);
+            return;
+        }
+
+        // Get current month & year
+        $current_month = date('m');
+        $current_year = date('Y');
+        $total_days = cal_days_in_month(CAL_GREGORIAN, $current_month, $current_year);
+
+        // Fetch total present days
+        $this->db->where('user_id', $user_id);
+        $this->db->where('MONTH(today_date)', $current_month);
+        $this->db->where('YEAR(today_date)', $current_year);
+        $this->db->where('remark', 'Full Day');
+        $total_present = $this->db->count_all_results('attendance');
+
+        // Fetch total half-day entries
+        $this->db->where('user_id', $user_id);
+        $this->db->where('MONTH(today_date)', $current_month);
+        $this->db->where('YEAR(today_date)', $current_year);
+        $this->db->where('remark', 'Half Day');
+        $total_halfday = $this->db->count_all_results('attendance');
+
+        // Calculate total absent days
+        $total_attendance_days = $total_present + $total_halfday;
+        $total_absent = $total_days - $total_attendance_days;
+
+        // Prepare response
+        $response = [
+            'user_id' => $user_id,
+            'total_days_in_month' => $total_days,
+            'total_present' => $total_present,
+            'total_halfday' => $total_halfday,
+            'total_absent' => $total_absent
+        ];
+
+        echo json_encode(['res' => 'success', 'data' => $response, 'msg' => 'Attendance details retrieved successfully.']);
+    }
 
 
 }
