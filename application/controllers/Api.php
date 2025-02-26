@@ -85,12 +85,6 @@ class Api extends CI_Controller
         echo "Attendance records updated successfully!";
     }
     
-    
-    
-
-
-
-
 
     public function Test()
     {
@@ -251,7 +245,6 @@ class Api extends CI_Controller
             echo json_encode(['res' => 'error', 'msg' => 'No attendance record found for today.']);
         }
     }
-
     public function getTodayAttendance()
     {
         $input = $this->getJsonInput();

@@ -464,30 +464,42 @@ class Admin extends CI_Controller
         $current_year = date('Y');
         $month_name = date('F'); // Get full month name (e.g., "February")
     
-        // Get total days in the current month
-        $total_days = cal_days_in_month(CAL_GREGORIAN, $current_month, $current_year);
+        // Get employees who have attendance for today
+        $this->db->select('DISTINCT user_id');
+        $this->db->from('attendance');
+        $this->db->where('branch_id', $branch_id);
+        $this->db->where('today_date', $today_date);
+        $employees = $this->db->get()->result_array();
     
-        // Get total employees in the branch
-        $this->db->where('branch', $branch_id);
-        $totalbranch_emp = $this->db->count_all_results('employee');
+        // Extract user IDs from attendance records
+        $employee_ids = array_column($employees, 'user_id');
     
-        // Get total present employees (Full Day)
+        // Fetch employee details based on attendance
+        $this->db->select('id, name');
+        $this->db->from('employee');
+        $this->db->where_in('id', $employee_ids); // Filter employees who have attendance today
+        $employee_list = $this->db->get()->result_array();
+    
+        // Get total employees marked today
+        $totalbranch_emp = count($employee_list);
+    
+        // Get present employees (Full Day)
         $this->db->select('COUNT(DISTINCT user_id) as totalbranch_present');
         $this->db->from('attendance');
         $this->db->where('branch_id', $branch_id);
         $this->db->where('remark', 'Full Day');
-        $this->db->where("MONTH(today_date) = $current_month AND YEAR(today_date) = $current_year");
+        $this->db->where('today_date', $today_date);
         $totalbranch_present = $this->db->get()->row()->totalbranch_present;
     
-        // Get total half-day employees
+        // Get half-day employees
         $this->db->select('COUNT(DISTINCT user_id) as totalbranch_halfday');
         $this->db->from('attendance');
         $this->db->where('branch_id', $branch_id);
         $this->db->where('remark', 'Half Day');
-        $this->db->where("MONTH(today_date) = $current_month AND YEAR(today_date) = $current_year");
+        $this->db->where('today_date', $today_date);
         $totalbranch_halfday = $this->db->get()->row()->totalbranch_halfday;
     
-        // Calculate total absent employees
+        // Calculate absent employees
         $totalbranch_absent = $totalbranch_emp - ($totalbranch_present + $totalbranch_halfday);
     
         // Prepare response data
@@ -496,15 +508,17 @@ class Admin extends CI_Controller
             'totalbranch_present' => $totalbranch_present,
             'totalbranch_halfday' => $totalbranch_halfday,
             'totalbranch_absent' => $totalbranch_absent,
-            'total_days' => $total_days,
             'branch_id' => $branch_id,
             'month_name' => $month_name, 
-            'current_year' => $current_year
+            'current_year' => $current_year,
+            'employee_list' => $employee_list, // Send filtered employee list to the view
+            'today_date' => $today_date // Send current date to view
         ];
     
         // Load view with attendance data
         $this->load->view('Home/branchAttendance', $data);
     }
+    
     
     
 
