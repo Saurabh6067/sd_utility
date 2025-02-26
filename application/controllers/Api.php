@@ -266,7 +266,6 @@ class Api extends CI_Controller
             echo json_encode(['res' => 'error', 'msg' => 'No attendance record found for today.']);
         }
     }
-
     public function getUserMonthlyAttendance() {
         $input = $this->getJsonInput();
         $user_id = $input['user_id'] ?? null;
