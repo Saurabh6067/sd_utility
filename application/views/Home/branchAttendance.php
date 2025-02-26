@@ -177,18 +177,19 @@
                             $current_month = date('m');
                             $current_year = date('Y');
                             $total_days = cal_days_in_month(CAL_GREGORIAN, $current_month, $current_year);
-
+                            $current_day = date('j'); // Get today's date (without leading zero)
+                            
                             // Fetch employees
                             $employees = $this->db->where('branch', $branch_id)->get('employee')->result_array();
 
                             // Fetch attendance records for the current month
                             $attendance_data = $this->db->query("
-    SELECT user_id, DAY(today_date) as day, remark
-    FROM attendance 
-    WHERE branch_id = '$branch_id' 
-    AND MONTH(today_date) = '$current_month' 
-    AND YEAR(today_date) = '$current_year'
-")->result_array();
+                                SELECT user_id, DAY(today_date) as day, remark
+                                FROM attendance 
+                                WHERE branch_id = '$branch_id' 
+                                AND MONTH(today_date) = '$current_month' 
+                                AND YEAR(today_date) = '$current_year'
+                            ")->result_array();
 
                             // Organize attendance records in an associative array
                             $attendance_map = [];
@@ -231,16 +232,24 @@
                                                             </span>
                                                         </td>
                                                         <?php for ($day = 1; $day <= $total_days; $day++) {
-                                                            $status = isset($attendance_map[$emp['id']][$day]) ? $attendance_map[$emp['id']][$day] : 'Absent';
                                                             $is_sunday = in_array($day, $sundays);
+
+                                                            // ✅ Future dates should remain blank
+                                                            if ($day > $current_day) {
+                                                                $status = '';
+                                                            } else {
+                                                                $status = isset($attendance_map[$emp['id']][$day]) ? $attendance_map[$emp['id']][$day] : 'Absent';
+                                                            }
                                                             ?>
                                                             <td class="<?= $is_sunday ? 'bg-warning text-dark' : '' ?>">
                                                                 <?php if ($status == 'Full Day') { ?>
                                                                     <i class="fa-solid fa-check text-success"></i>
                                                                 <?php } elseif ($status == 'Half Day') { ?>
                                                                     <i class="fa fa-star-half-alt text-info"></i>
-                                                                <?php } else { ?>
+                                                                <?php } elseif ($status == 'Absent') { ?>
                                                                     <i class="fa fa-close text-danger"></i>
+                                                                <?php } else { ?>
+                                                                    <!-- Future dates will be blank -->
                                                                 <?php } ?>
                                                             </td>
                                                         <?php } ?>
@@ -251,6 +260,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
