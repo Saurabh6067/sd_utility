@@ -1,3 +1,10 @@
+<?php
+$user = $this->session->userdata('user');
+$user_role = $user['role'];
+echo $user_role;
+die();
+?>
+
 <div class="app-sidebar" id="sidebar">
     <div class="main-sidebar-header">
         <a href="index.html" class="header-logo">
