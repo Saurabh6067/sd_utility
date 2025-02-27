@@ -178,23 +178,24 @@
                             $current_year = date('Y');
                             $total_days = cal_days_in_month(CAL_GREGORIAN, $current_month, $current_year);
                             $current_day = date('j'); // Get today's date (without leading zero)
+                            $month_name = date('F'); // Get full month name
                             
                             // Fetch employees
                             $employees = $this->db->where('branch', $branch_id)->get('employee')->result_array();
 
                             // Fetch attendance records for the current month
                             $attendance_data = $this->db->query("
-                                SELECT user_id, DAY(today_date) as day, remark
-                                FROM attendance 
-                                WHERE branch_id = '$branch_id' 
-                                AND MONTH(today_date) = '$current_month' 
-                                AND YEAR(today_date) = '$current_year'
-                            ")->result_array();
+                            SELECT user_id, DAY(today_date) as day, remark
+                            FROM attendance 
+                            WHERE branch_id = '$branch_id' 
+                            AND MONTH(today_date) = '$current_month' 
+                            AND YEAR(today_date) = '$current_year'
+                        ")->result_array();
 
                             // Organize attendance records in an associative array
                             $attendance_map = [];
                             foreach ($attendance_data as $row) {
-                                $attendance_map[$row['user_id']][$row['day']] = $row['remark']; // ✅ Fixed array indexing issue
+                                $attendance_map[$row['user_id']][$row['day']] = $row['remark'];
                             }
 
                             // Find Sundays in the current month
@@ -213,6 +214,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Employee</th>
+                                                    <th>Month</th> <!-- ✅ Added new column for Month Name -->
                                                     <?php for ($i = 1; $i <= $total_days; $i++) {
                                                         $dayName = date('D', strtotime("$current_year-$current_month-$i"));
                                                         $is_sunday = in_array($i, $sundays);
@@ -221,16 +223,25 @@
                                                             <?= $i ?> <br> <small><?= $dayName ?></small>
                                                         </th>
                                                     <?php } ?>
+                                                    <th>Total Days</th> <!-- ✅ New column for total working days -->
+                                                    <th>Present</th> <!-- ✅ New column for total present days -->
+                                                    <th>Absent</th> <!-- ✅ New column for total absent days -->
+                                                    <th>Half Day</th> <!-- ✅ New column for total half days -->
                                                 </tr>
                                             </thead>
                                             <tbody class="table__body">
-                                                <?php foreach ($employees as $emp) { ?>
+                                                <?php foreach ($employees as $emp) {
+                                                    $total_present = 0;
+                                                    $total_absent = 0;
+                                                    $total_half_day = 0;
+                                                    ?>
                                                     <tr>
                                                         <td>
                                                             <span class="table-avatar">
                                                                 <a href="#"><?= $emp['name'] ?></a>
                                                             </span>
                                                         </td>
+                                                        <td><?= $month_name ?></td> <!-- ✅ Month Name added -->
                                                         <?php for ($day = 1; $day <= $total_days; $day++) {
                                                             $is_sunday = in_array($day, $sundays);
 
@@ -248,18 +259,28 @@
                                                             if ($status == 'Full Day') {
                                                                 $status_text = '1'; // ✅ Present
                                                                 $status_class = 'text-success'; // ✅ Green
+                                                                $total_present++; // ✅ Count Present
                                                             } elseif ($status == 'Half Day') {
                                                                 $status_text = '0.5'; // ✅ Half Day
                                                                 $status_class = 'text-warning'; // ✅ Orange
+                                                                $total_half_day++; // ✅ Count Half Days
                                                             } elseif ($status == 'Absent') {
                                                                 $status_text = '0'; // ✅ Absent
                                                                 $status_class = 'text-danger'; // ✅ Red
+                                                                $total_absent++; // ✅ Count Absent
                                                             }
                                                             ?>
                                                             <td class="<?= $is_sunday ? 'bg-warning text-dark' : '' ?>">
                                                                 <span class="<?= $status_class ?>"><?= $status_text ?></span>
                                                             </td>
                                                         <?php } ?>
+                                                        <td><?= $total_days ?></td> <!-- ✅ Total working days -->
+                                                        <td class="text-success"><?= $total_present ?></td>
+                                                        <!-- ✅ Total Present -->
+                                                        <td class="text-danger"><?= $total_absent ?></td>
+                                                        <!-- ✅ Total Absent -->
+                                                        <td class="text-warning"><?= $total_half_day ?></td>
+                                                        <!-- ✅ Total Half Days -->
                                                     </tr>
                                                 <?php } ?>
                                             </tbody>
@@ -267,6 +288,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
