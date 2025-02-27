@@ -1791,24 +1791,35 @@
 	$(document).ready(function () {
 		$("#dataTableDefualt").DataTable({
 			dom: 'Bfrtip',
-
 			bFilter: true,
 			ordering: true,
 			lengthChange: true,
+			responsive: true, // ✅ Table responsive bana diya
+			autoWidth: false, // ✅ Width issue fix
+			scrollX: false, // ✅ Scrolling hata diya
 			buttons: [
-                {
-                    extend: 'excelHtml5',
-                    text: 'Download Excel',
-                    className: 'btn btn-success'
-                },
-                {
-                    extend: 'pdfHtml5',
-                    text: 'Download PDF',
-                    className: 'btn btn-danger'
-                }
-            ]
+				{
+					extend: 'excelHtml5',
+					text: '<i class="fa fa-file-excel"></i> Excel', // ✅ Icon added
+					className: 'btn btn-success'
+				},
+				{
+					extend: 'pdfHtml5',
+					text: '<i class="fa fa-file-pdf"></i> PDF', // ✅ Icon added
+					className: 'btn btn-danger',
+					orientation: 'landscape', // ✅ PDF ko landscape mode me export karega
+					pageSize: 'A4', // ✅ PDF A4 size ka hoga
+					customize: function (doc) {
+						doc.defaultStyle.fontSize = 10; // ✅ Font size chhota kiya
+						doc.styles.tableHeader.fontSize = 12; // ✅ Header ka font bada kiya
+						doc.styles.tableHeader.alignment = 'center'; // ✅ Header center align kiya
+						doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+					}
+				}
+			]
 		});
 	});
+	
 	// projectDocuments
 	$(document).ready(function () {
 		$("#projectDocuments").DataTable({
