@@ -1,8 +1,6 @@
 <?php
 $user = $this->session->userdata('user');
 $user_role = $user['role'];
-echo $user_role;
-die();
 ?>
 
 <div class="app-sidebar" id="sidebar">
@@ -24,44 +22,47 @@ die();
                         <span class="sidebar__menu-label">Dashboard</span>
                     </a>
                 </li>
-                <li class="slide has-sub">
-                    <a href="javascript:void(0);" class="sidebar__menu-item">
-                        <i class="fa-regular fa-angle-down side-menu__angle"></i>
-                        <div class="side-menu__icon"><i class="icon-hrm"></i></div>
-                        <span class="sidebar__menu-label">HRM</span>
-                    </a>
-                    <ul class="sidebar-menu child1">
-                        <li class="slide">
-                            <a class="sidebar__menu-item" href="<?= base_url('Admin/Operation') ?>">Operation</a>
-                        </li>
-                        <li class="slide">
-                            <a class="sidebar__menu-item" href="<?= base_url('Admin/Branch') ?>">Branch</a>
-                        </li>
-                        <li class="slide">
-                            <a class="sidebar__menu-item" href="<?= base_url('Admin/Employeadd') ?>">Employee</a>
-                        </li>
-                        <li class="slide">
-                            <a class="sidebar__menu-item" href="<?= base_url('Admin/Allempprofile') ?>">Employee
-                                Profile</a>
-                        </li>
 
-                        <li class="slide">
-                            <a class="sidebar__menu-item" href="<?= base_url('Admin/Attendance') ?>">Attendance</a>
-                        </li>
+                <?php if ($user_role === 'Admin'):  ?>
+                    <li class="slide has-sub">
+                        <a href="javascript:void(0);" class="sidebar__menu-item">
+                            <i class="fa-regular fa-angle-down side-menu__angle"></i>
+                            <div class="side-menu__icon"><i class="icon-hrm"></i></div>
+                            <span class="sidebar__menu-label">HRM</span>
+                        </a>
+                        <ul class="sidebar-menu child1">
+                            <li class="slide">
+                                <a class="sidebar__menu-item" href="<?= base_url('Admin/Operation') ?>">Operation</a>
+                            </li>
+                            <li class="slide">
+                                <a class="sidebar__menu-item" href="<?= base_url('Admin/Branch') ?>">Branch</a>
+                            </li>
+                            <li class="slide">
+                                <a class="sidebar__menu-item" href="<?= base_url('Admin/Employeadd') ?>">Employee</a>
+                            </li>
+                            <li class="slide">
+                                <a class="sidebar__menu-item" href="<?= base_url('Admin/Allempprofile') ?>">Employee
+                                    Profile</a>
+                            </li>
 
-                        <li class="slide">
-                            <a class="sidebar__menu-item" href="<?= base_url('Admin/Leave') ?>">leaves</a>
-                        </li>
-                        <li class="slide">
-                            <a class="sidebar__menu-item" href="<?= base_url('Admin/AddLeaveType') ?>">Add Leave
-                                Type</a>
-                        </li>
+                            <li class="slide">
+                                <a class="sidebar__menu-item" href="<?= base_url('Admin/Attendance') ?>">Attendance</a>
+                            </li>
 
-                        <li class="slide">
-                            <a class="sidebar__menu-item" href="<?= base_url('Admin/Addwarning') ?>">Warning</a>
-                        </li>
-                    </ul>
-                </li>
+                            <li class="slide">
+                                <a class="sidebar__menu-item" href="<?= base_url('Admin/Leave') ?>">leaves</a>
+                            </li>
+                            <li class="slide">
+                                <a class="sidebar__menu-item" href="<?= base_url('Admin/AddLeaveType') ?>">Add Leave
+                                    Type</a>
+                            </li>
+
+                            <li class="slide">
+                                <a class="sidebar__menu-item" href="<?= base_url('Admin/Addwarning') ?>">Warning</a>
+                            </li>
+                        </ul>
+                    </li>
+                <?php endif; ?>
                 <li class="slide has-sub">
                     <a href="javascript:void(0);" class="sidebar__menu-item">
                         <i class="fa-regular fa-angle-down side-menu__angle"></i>
