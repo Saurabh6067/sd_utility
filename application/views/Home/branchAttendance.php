@@ -209,7 +209,7 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-nowrap mb-0">
+                                        <table class="table table-striped table-nowrap mb-0" id="dataTableDefualt">
                                             <thead>
                                                 <tr>
                                                     <th>Employee</th>
@@ -285,6 +285,9 @@
 
     <!-- JS here -->
     <?php include 'includes/footer_link.php'; ?>
+   
+   
+
 
 </body>
 
