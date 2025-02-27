@@ -1790,10 +1790,23 @@
 	// dataTableDefualt
 	$(document).ready(function () {
 		$("#dataTableDefualt").DataTable({
-			// dom: 'Bfrtip',
+			dom: 'Bfrtip',
+
 			bFilter: true,
 			ordering: true,
 			lengthChange: true,
+			buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: 'Download Excel',
+                    className: 'btn btn-success'
+                },
+                {
+                    extend: 'pdfHtml5',
+                    text: 'Download PDF',
+                    className: 'btn btn-danger'
+                }
+            ]
 		});
 	});
 	// projectDocuments
