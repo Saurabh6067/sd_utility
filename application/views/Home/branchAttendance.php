@@ -152,7 +152,6 @@
                                                 <h6 class="text-dark small">Day Off</h6>
                                             </div>
                                             <div class="attendant__info-icon">
-                                                <i class="fa fa-check text-success"></i>
                                                 <span class="attachment__info-arrow">
                                                     <p class="text-success fw-400">1</p>
                                                 </span>
