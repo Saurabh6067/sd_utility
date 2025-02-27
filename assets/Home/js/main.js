@@ -1791,7 +1791,7 @@
 	$(document).ready(function () {
 		$("#dataTableDefualt").DataTable({
 			dom: 'Bfrtip',
-			bFilter: true,
+			bFilter: false,
 			ordering: true,
 			lengthChange: true,
 			responsive: true, // ✅ Table responsive bana diya
