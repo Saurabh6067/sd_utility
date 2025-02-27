@@ -240,17 +240,24 @@
                                                             } else {
                                                                 $status = isset($attendance_map[$emp['id']][$day]) ? $attendance_map[$emp['id']][$day] : 'Absent';
                                                             }
+
+                                                            // ✅ Status numeric conversion & color-coding
+                                                            $status_text = '';
+                                                            $status_class = '';
+
+                                                            if ($status == 'Full Day') {
+                                                                $status_text = '1'; // ✅ Present
+                                                                $status_class = 'text-success'; // ✅ Green
+                                                            } elseif ($status == 'Half Day') {
+                                                                $status_text = '0.5'; // ✅ Half Day
+                                                                $status_class = 'text-warning'; // ✅ Orange
+                                                            } elseif ($status == 'Absent') {
+                                                                $status_text = '0'; // ✅ Absent
+                                                                $status_class = 'text-danger'; // ✅ Red
+                                                            }
                                                             ?>
                                                             <td class="<?= $is_sunday ? 'bg-warning text-dark' : '' ?>">
-                                                                <?php if ($status == 'Full Day') { ?>
-                                                                    <i class="fa-solid fa-check text-success"></i>
-                                                                <?php } elseif ($status == 'Half Day') { ?>
-                                                                    <i class="fa fa-star-half-alt text-info"></i>
-                                                                <?php } elseif ($status == 'Absent') { ?>
-                                                                    <i class="fa fa-close text-danger"></i>
-                                                                <?php } else { ?>
-                                                                    <!-- Future dates will be blank -->
-                                                                <?php } ?>
+                                                                <span class="<?= $status_class ?>"><?= $status_text ?></span>
                                                             </td>
                                                         <?php } ?>
                                                     </tr>
@@ -260,7 +267,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -285,8 +291,8 @@
 
     <!-- JS here -->
     <?php include 'includes/footer_link.php'; ?>
-   
-   
+
+
 
 
 </body>
