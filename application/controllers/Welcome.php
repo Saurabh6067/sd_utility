@@ -63,7 +63,8 @@ class Welcome extends CI_Controller
 					}
 					$result = $this->import->importData($inserdata);
 					if ($result) {
-						echo "Imported successfully";
+						// echo "Imported successfully";
+						redirect('Welcome');
 					} else {
 						echo "ERROR !";
 					}
