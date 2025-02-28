@@ -9,34 +9,12 @@
 
 <body>
 
-    <h2>Upload Excel File</h2>
-    <?php if ($this->session->flashdata('success')): ?>
-        <p style="color: green;"><?php echo $this->session->flashdata('success'); ?></p>
-    <?php endif; ?>
-    <?php if ($this->session->flashdata('error')): ?>
-        <p style="color: red;"><?php echo $this->session->flashdata('error'); ?></p>
-    <?php endif; ?>
-
-    <form action="<?= base_url('ExcelController/upload') ?>" method="post" enctype="multipart/form-data">
-        <input type="file" name="excel_file" required>
-        <button type="submit">Upload</button>
-    </form>
-
-    <h2>Data from Database</h2>
-    <table border="1">
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-        </tr>
-        <?php foreach ($records as $row): ?>
-            <tr>
-                <td><?= $row['name']; ?></td>
-                <td><?= $row['email']; ?></td>
-                <td><?= $row['phone']; ?></td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
+<form method="post" id="import_form" enctype="multipart/form-data">
+			<p><label>Select Excel File</label>
+			<input type="file" name="file" id="file" required accept=".xls, .xlsx" /></p>
+			<br />
+			<input type="submit" name="import" value="Import" class="btn btn-info" />
+		</form>
 
 </body>
 
