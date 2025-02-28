@@ -9,7 +9,7 @@ class Import extends CI_Controller
 		parent::__construct();
 		// load model
 		// $this->load->model('Import_model', 'import');
-		$this->load->helper(array('url', 'html', 'form'));
+		// $this->load->helper(array('url', 'html', 'form'));
 	}
 
 	public function index()
