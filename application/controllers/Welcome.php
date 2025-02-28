@@ -2,24 +2,24 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Import extends CI_Controller
+class Welcome extends CI_Controller
 {
 	public function __construct()
 	{
 		parent::__construct();
 		// load model
-		// $this->load->model('Import_model', 'import');
-		// $this->load->helper(array('url', 'html', 'form'));
+		$this->load->model('Import_model', 'import');
+		$this->load->helper(array('url', 'html', 'form'));
 	}
 
 	public function index()
 	{
-		// echo "pk";
 		$this->load->view('import');
 	}
 
 	public function importFile()
 	{
+
 
 		if ($this->input->post('submit')) {
 
@@ -61,7 +61,7 @@ class Import extends CI_Controller
 						$inserdata[$i]['contact_no'] = $value['D'];
 						$i++;
 					}
-					$result = $this->db->insert('import', $inserdata);
+					$result = $this->import->importData($inserdata);
 					if ($result) {
 						echo "Imported successfully";
 					} else {
