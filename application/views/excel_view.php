@@ -9,12 +9,11 @@
 
 <body>
 
-<form method="post" action="<?= base_url('Welcome/import') ?>" enctype="multipart/form-data">
-			<p><label>Select Excel File</label>
-			<input type="file" name="file" id="file" required accept=".xls, .xlsx" /></p>
-			<br />
-			<input type="submit" name="import" value="Import" class="btn btn-info" />
-		</form>
+<form action="<?php echo base_url();?>Welcome/importFile" method="post" enctype="multipart/form-data">
+    Upload excel file : 
+    <input type="file" name="uploadFile" value="" /><br><br>
+    <input type="submit" name="submit" value="Upload" />
+</form>
 
 </body>
 
