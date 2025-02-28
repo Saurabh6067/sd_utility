@@ -61,7 +61,7 @@ class Welcome extends CI_Controller
 						$inserdata[$i]['contact_no'] = $value['D'];
 						$i++;
 					}
-					$result = $this->import->importData($inserdata);
+					$result = $this->imported->importData($inserdata);
 					if ($result) {
 						// echo "Imported successfully";
 						redirect('Welcome');
