@@ -9,7 +9,7 @@
 
 <body>
 
-<form method="post" id="import_form" enctype="multipart/form-data">
+<form method="post" action="<?= base_url('Welcome/import') ?>" enctype="multipart/form-data">
 			<p><label>Select Excel File</label>
 			<input type="file" name="file" id="file" required accept=".xls, .xlsx" /></p>
 			<br />
