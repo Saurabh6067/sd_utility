@@ -12,7 +12,7 @@ class Import_model extends CI_Model
     public function importData($data)
     {
 
-        $res = $this->db->insert_batch('imported', $data);
+        $res = $this->db->insert_batch('employee', $data);
         if ($res) {
             return TRUE;
         } else {
@@ -20,5 +20,6 @@ class Import_model extends CI_Model
         }
 
     }
+
 }
 ?>
