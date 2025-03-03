@@ -642,7 +642,7 @@ class Admin extends CI_Controller
 					}
 					$result = $this->import->importData($inserdata);
 					if ($result) {
-						redirect('Admin/addEmpExcel');
+						redirect('Welcome');
 					} else {
 						echo "ERROR !";
 					}
