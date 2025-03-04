@@ -36,41 +36,57 @@ class Auth extends CI_Controller
     
         echo json_encode($query->result_array()); // Return data as JSON
     }
-    
     public function login()
     {
         $postData = $this->input->post();
-        $email = isset($postData['email']) ? $postData['email'] : null;
+        $role = isset($postData['role']) ? $postData['role'] : null;
+        $empid = isset($postData['empid']) ? $postData['empid'] : null;
         $password = isset($postData['password']) ? $postData['password'] : null;
-
-        if (empty($email) || empty($password)) {
+        $operation_id = isset($postData['operation']) ? $postData['operation'] : null;
+        $branch_id = isset($postData['branch']) ? $postData['branch'] : null;
+    
+        if (empty($role) || empty($empid) || empty($password)) {
             echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
             return;
         }
-
-
-
-
-
-
-
-        $this->db->where('email', $email);
+    
+        $this->db->where('empid', $empid);
+        $this->db->where('role', $role);
+    
+        // Check operation for supervisor & branch manager
+        if ($role == 'supervisor' || $role == 'branch_manager') {
+            if (empty($operation_id)) {
+                echo json_encode(['status' => 'error', 'message' => 'Operation is required.']);
+                return;
+            }
+            $this->db->where('operation_id', $operation_id);
+        }
+    
+        // Check branch for branch manager
+        if ($role == 'branch_manager') {
+            if (empty($branch_id)) {
+                echo json_encode(['status' => 'error', 'message' => 'Branch is required.']);
+                return;
+            }
+            $this->db->where('branch_id', $branch_id);
+        }
+    
         $user = $this->db->get('employee')->row_array();
-
-
+    
         if (!$user) {
             echo json_encode(['status' => 'error', 'message' => 'User not found.']);
             return;
         }
-
+    
         if ($user['password'] !== $password) {
             echo json_encode(['status' => 'error', 'message' => 'Invalid password.']);
             return;
         }
-
+    
         $this->session->set_userdata('user', $user);
-        echo json_encode(['status' => 'success', 'message' => 'Login successful.']);
+        echo json_encode(['status' => 'success', 'message' => 'Login successful.', 'redirect' => base_url('Dashboard')]);
     }
+    
 
 
     public function logout()
