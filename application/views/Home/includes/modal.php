@@ -330,7 +330,8 @@
                         class="fa-solid fa-xmark-large"></i></button>
             </div>
             <div class="modal-body">
-                <form method="post" enctype="multipart/form-data" action="<?php base_url('Admin/Addemployee') ?>">
+                <form method="post" action="<?php echo base_url(); ?>Admin/addEmpExcel" enctype="multipart/form-data"
+                    action="<?php base_url('Admin/Addemployee') ?>">
                     <div class="card__wrapper mb-20">
                         <div class="row g-20 gy-20 align-items-center justify-content-center">
                             <div class="col-lg-12">
@@ -339,14 +340,14 @@
                                         <label for="sellerphoto">Upload Employee Excel</label>
                                     </div>
                                     <div class="form__input">
-                                        <input class="form-control" name="emp" id="empexcel" type="file">
+                                        <input class="form-control" name="uploadFile" id="uploadFile" type="file">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="submit__btn text-center">
-                        <button class="btn btn-primary">Submit</button>
+                        <input class="btn btn-primary" type="submit" name="submit" value="Upload" />
                     </div>
                 </form>
             </div>
