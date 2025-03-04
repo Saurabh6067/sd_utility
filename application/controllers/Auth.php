@@ -24,7 +24,7 @@ class Auth extends CI_Controller
     public function getBranchesByOperation()
     {
         $operation = $this->input->post('operation'); // Get selected operation
-
+    
         $this->db->distinct();
         $this->db->select('bank_branch_name');
         $this->db->from('employee');
@@ -33,9 +33,10 @@ class Auth extends CI_Controller
         $this->db->where("bank_branch_name != ''");
         $this->db->group_by('bank_branch_name');
         $query = $this->db->get();
-
+    
         echo json_encode($query->result_array()); // Return data as JSON
     }
+    
     public function login()
     {
         $postData = $this->input->post();

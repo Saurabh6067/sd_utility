@@ -43,7 +43,8 @@
                                 <select class="form-control" name="operation" id="operationSelect">
                                     <option value="">Select Operation</option>
                                     <?php foreach ($operations as $operation): ?>
-                                        <option value="<?= $operation['operation'] ?>"> <?= $operation['operation'] ?> </option>
+                                        <option value="<?= $operation['operation'] ?>"> <?= $operation['operation'] ?>
+                                        </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -94,6 +95,7 @@
 
     <?php include('includes/footer_link.php') ?>
 </body>
+
 </html>
 
 <script>
@@ -122,7 +124,8 @@
         });
 
         $('#operationSelect').change(function () {
-            const operationId = $(this).val();
+            const operation = $(this).val();
+            const branchSection = $('#branchSection');
             const branchSelect = $('#branchSelect');
 
             if ($('#roleSelect').val() === 'branch_manager') {
@@ -133,25 +136,22 @@
             $.ajax({
                 url: '<?= base_url("Auth/getBranchesByOperation") ?>',
                 type: 'POST',
-                data: { operation_id: operationId },
+                data: { operation: operation }, // Fix the parameter name
                 dataType: 'json',
                 success: function (response) {
                     let branchOptions = '<option value="">Select Branch</option>';
-                    response.branches.forEach(branch => {
-                        branchOptions += `<option value="${branch.id}">${branch.branch_name}</option>`;
+                    response.forEach(branch => {  // Fix: Access response directly
+                        branchOptions += `<option value="${branch.bank_branch_name}">${branch.bank_branch_name}</option>`;
                     });
                     branchSelect.html(branchOptions);
+                    branchSection.show(); // Ensure the section is visible after getting branches
                 },
                 error: function () {
                     alert('Error fetching branches.');
                 }
             });
         });
-    });
-</script>
 
-<script>
-    $(document).ready(function () {
         $('#loginForm').submit(function (e) {
             e.preventDefault();
 
@@ -189,7 +189,6 @@
                     alert('An unexpected error occurred. Please try again later.');
                 },
                 complete: function () {
-                    // Re-enable the button
                     $('button[type="submit"]').prop('disabled', false).text('Sign in');
                 }
             });
