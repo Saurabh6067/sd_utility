@@ -21,7 +21,7 @@ class Auth extends CI_Controller
         $this->load->view('Auth/Login', $data);
     }
 
-    public function get_branches()
+    public function getBranchesByOperation()
     {
         $operation = $this->input->post('operation'); // Get selected operation
 
