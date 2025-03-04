@@ -100,27 +100,67 @@
 
 <script>
     $(document).ready(function () {
-        $('#roleSelect').change(function () {
-            const role = $(this).val();
-            const operationSection = $('#operationSection');
-            const branchSection = $('#branchSection');
-            const operationSelect = $('#operationSelect');
-            const branchSelect = $('#branchSelect');
+        $(document).ready(function () {
+            $('#roleSelect').change(function () {
+                const role = $(this).val();
+                const operationSection = $('#operationSection');
+                const branchSection = $('#branchSection');
+                const operationSelect = $('#operationSelect');
+                const branchSelect = $('#branchSelect');
 
-            operationSection.hide();
-            branchSection.hide();
-            operationSelect.prop('required', false);
-            branchSelect.prop('required', false);
+                // Reset visibility and required attributes
+                operationSection.hide();
+                branchSection.hide();
+                operationSelect.prop('required', false);
+                branchSelect.prop('required', false);
 
-            if (role === 'supervisor') {
-                operationSection.show();
-                operationSelect.prop('required', true);
-            } else if (role === 'branch_manager') {
-                operationSection.show();
-                operationSelect.prop('required', true);
-                branchSection.show();
-                branchSelect.prop('required', true);
-            }
+                if (role === 'supervisor') {
+                    operationSection.show();
+                    operationSelect.prop('required', true);
+                } else if (role === 'branch_manager') {
+                    operationSection.show();
+                    operationSelect.prop('required', true);
+                    branchSection.show();
+                    branchSelect.prop('required', true);
+                }
+            });
+
+            $('#operationSelect').change(function () {
+                const operation = $(this).val();
+                const branchSection = $('#branchSection');
+                const branchSelect = $('#branchSelect');
+                const role = $('#roleSelect').val();
+
+                // If role is 'supervisor', do not show branch selection
+                if (role === 'supervisor') {
+                    branchSection.hide();
+                    branchSelect.prop('required', false);
+                    return;
+                }
+
+                if (role === 'branch_manager') {
+                    branchSection.show();
+                    branchSelect.prop('required', true);
+
+                    $.ajax({
+                        url: '<?= base_url("Auth/getBranchesByOperation") ?>',
+                        type: 'POST',
+                        data: { operation: operation },
+                        dataType: 'json',
+                        success: function (response) {
+                            let branchOptions = '<option value="">Select Branch</option>';
+                            response.forEach(branch => {
+                                branchOptions += `<option value="${branch.bank_branch_name}">${branch.bank_branch_name}</option>`;
+                            });
+                            branchSelect.html(branchOptions);
+                            branchSection.show();
+                        },
+                        error: function () {
+                            alert('Error fetching branches.');
+                        }
+                    });
+                }
+            });
         });
 
         $('#operationSelect').change(function () {
