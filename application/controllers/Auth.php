@@ -11,7 +11,9 @@ class Auth extends CI_Controller
     }
     public function index()
     {
-        $data['operation'] = $this->db->from('operation')->get()->result_array();
+        $this->db->select('operation');
+        $this->db->from('employee');
+        $data['operations'] = $this->db->get()->result_array();
         $this->load->view('Auth/Login', $data);
     }
 
@@ -49,6 +51,8 @@ class Auth extends CI_Controller
         $this->session->set_userdata('user', $user);
         echo json_encode(['status' => 'success', 'message' => 'Login successful.']);
     }
+
+
     public function logout()
     {
         $this->session->unset_userdata('user');

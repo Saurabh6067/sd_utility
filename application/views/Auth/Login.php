@@ -51,9 +51,10 @@
                             <div class="form__input">
                                 <select class="form-control" name="operation" id="operationSelect">
                                     <option value="">Select Operation</option>
-                                    <option value="circle1">Circle 1</option>
-                                    <option value="circle2">Circle 2</option>
-                                    <option value="circle3">Circle 3</option>
+                                    <?php foreach ($operations as $operation): ?>
+                                        <option value="<?= $operation['operation'] ?>"><?= $operation['operation'] ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
