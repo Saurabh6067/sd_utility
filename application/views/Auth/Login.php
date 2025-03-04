@@ -12,20 +12,11 @@
 </head>
 
 <body class="body-area">
-
     <div class="container-xxl">
-        <!-- register area start-->
         <div class="authentication-wrapper basic-authentication">
             <div class="authentication-inner">
                 <div class="card__wrapper">
                     <div class="authentication-top text-center mb-20">
-                        <!-- <a href="javascript:;" class="authentication-logo logo-black">
-                            <img src="<?= base_url('assets/Home/images/logo/sd-logo.png') ?>" alt="logo">
-                        </a>
-                        <a href="javascript:;" class="authentication-logo logo-white">
-                            <img src="<?= base_url('assets/Home/images/logo/sd-logo.png') ?>" alt="logo">
-                        </a> -->
-
                         <h4 class="mb-15">Welcome</h4>
                         <p class="mb-15">Please sign-in to your account and start the adventure</p>
                     </div>
@@ -52,8 +43,7 @@
                                 <select class="form-control" name="operation" id="operationSelect">
                                     <option value="">Select Operation</option>
                                     <?php foreach ($operations as $operation): ?>
-                                        <option value="<?= $operation['operation'] ?>"><?= $operation['operation'] ?>
-                                        </option>
+                                        <option value="<?= $operation['operation'] ?>"> <?= $operation['operation'] ?> </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -94,23 +84,71 @@
                 </div>
             </div>
         </div>
-        <!-- register area end-->
     </div>
 
-    <!-- Back to top start -->
     <div class="progress-wrap">
         <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
             <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
         </svg>
     </div>
-    <!-- Back to top end -->
 
-    <!-- JS here -->
     <?php include('includes/footer_link.php') ?>
-
 </body>
-
 </html>
+
+<script>
+    $(document).ready(function () {
+        $('#roleSelect').change(function () {
+            const role = $(this).val();
+            const operationSection = $('#operationSection');
+            const branchSection = $('#branchSection');
+            const operationSelect = $('#operationSelect');
+            const branchSelect = $('#branchSelect');
+
+            operationSection.hide();
+            branchSection.hide();
+            operationSelect.prop('required', false);
+            branchSelect.prop('required', false);
+
+            if (role === 'supervisor') {
+                operationSection.show();
+                operationSelect.prop('required', true);
+            } else if (role === 'branch_manager') {
+                operationSection.show();
+                operationSelect.prop('required', true);
+                branchSection.show();
+                branchSelect.prop('required', true);
+            }
+        });
+
+        $('#operationSelect').change(function () {
+            const operationId = $(this).val();
+            const branchSelect = $('#branchSelect');
+
+            if ($('#roleSelect').val() === 'branch_manager') {
+                branchSection.show();
+                branchSelect.prop('required', true);
+            }
+
+            $.ajax({
+                url: '<?= base_url("Auth/getBranchesByOperation") ?>',
+                type: 'POST',
+                data: { operation_id: operationId },
+                dataType: 'json',
+                success: function (response) {
+                    let branchOptions = '<option value="">Select Branch</option>';
+                    response.branches.forEach(branch => {
+                        branchOptions += `<option value="${branch.id}">${branch.branch_name}</option>`;
+                    });
+                    branchSelect.html(branchOptions);
+                },
+                error: function () {
+                    alert('Error fetching branches.');
+                }
+            });
+        });
+    });
+</script>
 
 <script>
     $(document).ready(function () {
@@ -153,60 +191,6 @@
                 complete: function () {
                     // Re-enable the button
                     $('button[type="submit"]').prop('disabled', false).text('Sign in');
-                }
-            });
-        });
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $('#roleSelect').change(function () {
-            const role = $(this).val();
-            const operationSection = $('#operationSection');
-            const branchSection = $('#branchSection');
-            const operationSelect = $('#operationSelect');
-            const branchSelect = $('#branchSelect');
-
-            operationSection.hide();
-            branchSection.hide();
-            operationSelect.prop('required', false);
-            branchSelect.prop('required', false);
-
-            if (role === 'supervisor') {
-                operationSection.show();
-                operationSelect.prop('required', true);
-            } else if (role === 'branch_manager') {
-                operationSection.show();
-                operationSelect.prop('required', true);
-                branchSection.show();
-                branchSelect.prop('required', true);
-            }
-        });
-
-        $('#operationSelect').change(function () {
-            const operationId = $(this).val();
-            const branchSelect = $('#branchSelect');
-
-            if ($('#roleSelect').val() === 'branch_manager') {
-                branchSection.show();
-                branchSelect.prop('required', true);
-            }
-
-            // Dummy AJAX request for branch data (Replace with actual API)
-            $.ajax({
-                url: '<?= base_url("Admin/getBranchesByOperation") ?>',
-                type: 'POST',
-                data: { operation_id: operationId },
-                dataType: 'json',
-                success: function (response) {
-                    let branchOptions = '<option value="">Select Branch</option>';
-                    response.branches.forEach(branch => {
-                        branchOptions += `<option value="${branch.id}">${branch.branch_name}</option>`;
-                    });
-                    branchSelect.html(branchOptions);
-                },
-                error: function () {
-                    alert('Error fetching branches.');
                 }
             });
         });
