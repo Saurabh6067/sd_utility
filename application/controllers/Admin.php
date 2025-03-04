@@ -599,6 +599,7 @@ class Admin extends CI_Controller
                         'name' => $value['K'],
                         'empid' => "sd" . rand(10000, 99999) . "utility" . rand(10000, 99999),
                         'mobile' => $value['M'],
+                        'password' => "sd" . "12345",
                         'esi_number' => $value['N'],
                         'pf_number' => $value['O'],
                         'pf_uan' => $value['P'],
