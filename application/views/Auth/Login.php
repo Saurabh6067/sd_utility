@@ -30,18 +30,57 @@
                         <p class="mb-15">Please sign-in to your account and start the adventure</p>
                     </div>
                     <form method="post" id="loginForm">
-                        <div class="form__input-title">
-                            <label for="nameEmail">Email or Username</label>
-                        </div>
-                        <div class="form__input">
-                            <input class="form-control" name="email" id="nameEmail" type="text" required>
-                        </div>
                         <div class="from__input-box">
-                            <div class="form__input-title d-flex justify-content-between">
+                            <div class="form__input-title">
+                                <label for="roleSelect">Select Role</label>
+                            </div>
+                            <div class="form__input">
+                                <select class="form-control" name="role" id="roleSelect" required>
+                                    <option value="" disabled selected>Select Role</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="supervisor">Supervisor</option>
+                                    <option value="branch_manager">Branch Manager</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="from__input-box" id="operationSection" style="display: none;">
+                            <div class="form__input-title">
+                                <label for="operationSelect">Select Operation/Circle</label>
+                            </div>
+                            <div class="form__input">
+                                <select class="form-control" name="operation" id="operationSelect">
+                                    <option value="">Select Operation</option>
+                                    <option value="circle1">Circle 1</option>
+                                    <option value="circle2">Circle 2</option>
+                                    <option value="circle3">Circle 3</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="from__input-box" id="branchSection" style="display: none;">
+                            <div class="form__input-title">
+                                <label for="branchSelect">Select Branch</label>
+                            </div>
+                            <div class="form__input">
+                                <select class="form-control" name="branch" id="branchSelect">
+                                    <option value="">Select Branch</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="from__input-box">
+                            <div class="form__input-title">
+                                <label for="empId">Employee ID</label>
+                            </div>
+                            <div class="form__input">
+                                <input class="form-control" name="empid" id="empId" type="text" required>
+                            </div>
+                        </div>
+
+                        <div class="from__input-box">
+                            <div class="form__input-title">
                                 <label for="passwordInput">Password</label>
-                                <a href="auth-forgot-password-basic.html">
-                                    <!-- <small>Forgot Password?</small> -->
-                                </a>
                             </div>
                             <div class="form__input">
                                 <input class="form-control" type="password" name="password" id="passwordInput" required>
@@ -118,136 +157,57 @@
         });
     });
 </script>
-
-
-
-<!-- <div class="from__input-box">
-
-                            <div class="form__input-title">
-                                <label for="operationSelect">Select Operation</label>
-                            </div>
-                            <div class="form__input">
-                                <select class="form-control" name="operation" id="operationSelect">
-                                    <option value="">Select Operation</option>
-                                    <?php foreach ($operation as $key => $value) { ?>
-                                        <option value="<?= $value['id'] ?>">
-                                            <?= $value['operation_city'] ?>
-                                        </option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="from__input-box" id="designationSection" style="display: none;">
-                            <div class="form__input-title">
-                                <label for="designationSelect">Select Designation</label>
-                            </div>
-                            <div class="form__input">
-                                <select class="form-control" name="designation" id="designationSelect">
-                                    <option value="">Select Designation</option>
-                                    <option value="area_manager">Area Manager</option>
-                                    <option value="repair_manager">Repair Manager</option>
-                                    <option value="supervisor">Supervisor</option>
-                                    <option value="mst_team">MST Team</option>
-                                    <option value="employee">Employee</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="from__input-box" id="branchSection" style="display: none;">
-                            <div class="form__input-title">
-                                <label for="branchSelect">Select Branch</label>
-                            </div>
-                            <div class="form__input">
-                                <select class="branch form-control" name="branchName" id="branchName">
-                                    <option value="">Select Branch</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="from__input-box" id="domainSection" style="display: none;">
-                            <div class="form__input-title">
-                                <label for="domainSelect">Select Domain</label>
-                            </div>
-                            <div class="form__input">
-                                <select class="form-control" name="domain" id="domainSelect">
-                                    <option value="">Select Domain</option>
-                                    <option value="data_entry">Data Entry</option>
-                                    <option value="repair">Repair & Maintenance</option>
-                                    <option value="employee_b">Employee B Category</option>
-                                </select>
-                            </div>
-                        </div> -->
-
-
-<!-- <script>
+<script>
     $(document).ready(function () {
+        $('#roleSelect').change(function () {
+            const role = $(this).val();
+            const operationSection = $('#operationSection');
+            const branchSection = $('#branchSection');
+            const operationSelect = $('#operationSelect');
+            const branchSelect = $('#branchSelect');
+
+            operationSection.hide();
+            branchSection.hide();
+            operationSelect.prop('required', false);
+            branchSelect.prop('required', false);
+
+            if (role === 'supervisor') {
+                operationSection.show();
+                operationSelect.prop('required', true);
+            } else if (role === 'branch_manager') {
+                operationSection.show();
+                operationSelect.prop('required', true);
+                branchSection.show();
+                branchSelect.prop('required', true);
+            }
+        });
+
         $('#operationSelect').change(function () {
             const operationId = $(this).val();
-            const designationSection = $('#designationSection');
-            const branchSection = $('#branchSection');
-            const domainSection = $('#domainSection');
-            const designationSelect = $('#designationSelect');
-            const branchSelect = $('#branchName');
-            const domainSelect = $('#domainSelect');
+            const branchSelect = $('#branchSelect');
 
-            designationSection.hide();
-            branchSection.hide();
-            domainSection.hide();
-
-            designationSelect.prop('required', false);
-            branchSelect.prop('required', false);
-            domainSelect.prop('required', false);
-
-            if (operationId) {
-                designationSection.show();
-                designationSelect.prop('required', true);
-
-                // AJAX Request to Fetch Branches
-                $.ajax({
-                    url: '<?= base_url("Admin/getBranchesByOperation") ?>',
-                    type: 'POST',
-                    data: { operation_id: operationId },
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.status === 'success') {
-                            let branchOptions = '<option value="">Select Branch</option>';
-                            response.branches.forEach(function (branch) {
-                                branchOptions += `<option value="${branch.id}">${branch.branch_name}</option>`;
-                            });
-                            branchSelect.html(branchOptions);
-                        } else {
-                            branchSelect.html('<option value="">Select Branch</option>');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('AJAX Error:', error);
-                        alert('An error occurred while fetching branches.');
-                    }
-                });
-            } else {
-                branchSelect.html('<option value="">Select Branch</option>');
-            }
-        });
-
-        $('#designationSelect').change(function () {
-            const designation = $(this).val();
-            const branchSection = $('#branchSection');
-            const domainSection = $('#domainSection');
-            const branchSelect = $('#branchName');
-            const domainSelect = $('#domainSelect');
-
-            branchSection.hide();
-            domainSection.hide();
-            branchSelect.prop('required', false);
-            domainSelect.prop('required', false);
-
-            if (designation === 'supervisor' || designation === 'mst_team') {
+            if ($('#roleSelect').val() === 'branch_manager') {
                 branchSection.show();
                 branchSelect.prop('required', true);
-            } else if (designation === 'employee') {
-                branchSection.show();
-                domainSection.show();
-                branchSelect.prop('required', true);
-                domainSelect.prop('required', true);
             }
+
+            // Dummy AJAX request for branch data (Replace with actual API)
+            $.ajax({
+                url: '<?= base_url("Admin/getBranchesByOperation") ?>',
+                type: 'POST',
+                data: { operation_id: operationId },
+                dataType: 'json',
+                success: function (response) {
+                    let branchOptions = '<option value="">Select Branch</option>';
+                    response.branches.forEach(branch => {
+                        branchOptions += `<option value="${branch.id}">${branch.branch_name}</option>`;
+                    });
+                    branchSelect.html(branchOptions);
+                },
+                error: function () {
+                    alert('Error fetching branches.');
+                }
+            });
         });
     });
-</script> -->
+</script>
