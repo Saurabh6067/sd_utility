@@ -7,9 +7,9 @@ class Admin extends CI_Controller
     {
         parent::__construct();
         date_default_timezone_set('Asia/Kolkata');
-        if (!$this->session->userdata('user')) {
-            redirect(base_url('Auth'));
-        }
+        // if (!$this->session->userdata('user')) {
+        //     redirect(base_url('Auth'));
+        // }
 
         $this->load->model('Import_model', 'import');
 		$this->load->helper(array('url', 'html', 'form'));
