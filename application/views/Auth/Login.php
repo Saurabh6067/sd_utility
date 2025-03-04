@@ -100,91 +100,56 @@
 
 <script>
     $(document).ready(function () {
-        $(document).ready(function () {
-            $('#roleSelect').change(function () {
-                const role = $(this).val();
-                const operationSection = $('#operationSection');
-                const branchSection = $('#branchSection');
-                const operationSelect = $('#operationSelect');
-                const branchSelect = $('#branchSelect');
+        $('#roleSelect').change(function () {
+            const role = $(this).val();
+            const operationSection = $('#operationSection');
+            const branchSection = $('#branchSection');
+            const operationSelect = $('#operationSelect');
+            const branchSelect = $('#branchSelect');
 
-                // Reset visibility and required attributes
-                operationSection.hide();
-                branchSection.hide();
-                operationSelect.prop('required', false);
-                branchSelect.prop('required', false);
+            // Reset all fields visibility and required attributes
+            operationSection.hide();
+            branchSection.hide();
+            operationSelect.prop('required', false);
+            branchSelect.prop('required', false);
 
-                if (role === 'supervisor') {
-                    operationSection.show();
-                    operationSelect.prop('required', true);
-                } else if (role === 'branch_manager') {
-                    operationSection.show();
-                    operationSelect.prop('required', true);
-                    branchSection.show();
-                    branchSelect.prop('required', true);
-                }
-            });
-
-            $('#operationSelect').change(function () {
-                const operation = $(this).val();
-                const branchSection = $('#branchSection');
-                const branchSelect = $('#branchSelect');
-                const role = $('#roleSelect').val();
-
-                // If role is 'supervisor', do not show branch selection
-                if (role === 'supervisor') {
-                    branchSection.hide();
-                    branchSelect.prop('required', false);
-                    return;
-                }
-
-                if (role === 'branch_manager') {
-                    branchSection.show();
-                    branchSelect.prop('required', true);
-
-                    $.ajax({
-                        url: '<?= base_url("Auth/getBranchesByOperation") ?>',
-                        type: 'POST',
-                        data: { operation: operation },
-                        dataType: 'json',
-                        success: function (response) {
-                            let branchOptions = '<option value="">Select Branch</option>';
-                            response.forEach(branch => {
-                                branchOptions += `<option value="${branch.bank_branch_name}">${branch.bank_branch_name}</option>`;
-                            });
-                            branchSelect.html(branchOptions);
-                            branchSection.show();
-                        },
-                        error: function () {
-                            alert('Error fetching branches.');
-                        }
-                    });
-                }
-            });
+            if (role === 'supervisor') {
+                operationSection.show();
+                operationSelect.prop('required', true);
+            } else if (role === 'branch_manager') {
+                operationSection.show();
+                operationSelect.prop('required', true);
+                branchSection.show();
+                branchSelect.prop('required', true);
+            }
         });
 
         $('#operationSelect').change(function () {
             const operation = $(this).val();
+            const role = $('#roleSelect').val();
             const branchSection = $('#branchSection');
             const branchSelect = $('#branchSelect');
 
-            if ($('#roleSelect').val() === 'branch_manager') {
-                branchSection.show();
-                branchSelect.prop('required', true);
+            // ✅ Only show branch section if role is 'branch_manager'
+            if (role !== 'branch_manager') {
+                branchSection.hide();
+                branchSelect.prop('required', false);
+                return;
             }
 
+            // ✅ Fetch branches only for 'branch_manager'
             $.ajax({
                 url: '<?= base_url("Auth/getBranchesByOperation") ?>',
                 type: 'POST',
-                data: { operation: operation }, // Fix the parameter name
+                data: { operation: operation },
                 dataType: 'json',
                 success: function (response) {
                     let branchOptions = '<option value="">Select Branch</option>';
-                    response.forEach(branch => {  // Fix: Access response directly
+                    response.forEach(branch => {
                         branchOptions += `<option value="${branch.bank_branch_name}">${branch.bank_branch_name}</option>`;
                     });
                     branchSelect.html(branchOptions);
-                    branchSection.show(); // Ensure the section is visible after getting branches
+                    branchSection.show();
                 },
                 error: function () {
                     alert('Error fetching branches.');
