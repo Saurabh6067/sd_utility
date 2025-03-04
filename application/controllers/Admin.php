@@ -7,12 +7,12 @@ class Admin extends CI_Controller
     {
         parent::__construct();
         date_default_timezone_set('Asia/Kolkata');
-        // if (!$this->session->userdata('user')) {
-        //     redirect(base_url('Auth'));
-        // }
+        if (!$this->session->userdata('user')) {
+            redirect(base_url('Auth'));
+        }
 
         $this->load->model('Import_model', 'import');
-		$this->load->helper(array('url', 'html', 'form'));
+        $this->load->helper(array('url', 'html', 'form'));
 
 
     }
@@ -461,19 +461,19 @@ class Admin extends CI_Controller
     {
         $sessiondata = $this->session->userdata('user');
         $branch_id = $sessiondata['branch'];
-    
+
         $today_date = date('Y-m-d');
         $current_month = date('m');
         $current_year = date('Y');
         $month_name = date('F'); // Get full month name (e.g., "February")
-    
+
         // ✅ Get total days in the current month
         $total_days = cal_days_in_month(CAL_GREGORIAN, $current_month, $current_year);
-    
+
         // ✅ Get total employees in the branch
         $this->db->where('branch', $branch_id);
         $totalbranch_emp = $this->db->count_all_results('employee');
-    
+
         // ✅ Get employees who have attendance for today
         $this->db->distinct();
         $this->db->select('user_id');
@@ -481,20 +481,20 @@ class Admin extends CI_Controller
         $this->db->where('branch_id', $branch_id);
         $this->db->where('today_date', $today_date);
         $employees = $this->db->get()->result_array();
-    
+
         // ✅ Extract user IDs from attendance records
         $employee_ids = array_column($employees, 'user_id');
-    
+
         // ✅ Fetch details of all employees in the branch
         $this->db->select('id, name');
         $this->db->from('employee');
         $this->db->where('branch', $branch_id);
         $all_employees = $this->db->get()->result_array();
-    
+
         // ✅ Classify employees based on attendance
         $present_emp_ids = $employee_ids;  // Employees who have marked attendance
         $absent_emp_list = [];
-    
+
         foreach ($all_employees as $emp) {
             if (!in_array($emp['id'], $present_emp_ids)) {
                 $absent_emp_list[] = [
@@ -504,7 +504,7 @@ class Admin extends CI_Controller
                 ];
             }
         }
-    
+
         // ✅ Get present employees (Full Day)
         $this->db->select('COUNT(DISTINCT user_id) as totalbranch_present');
         $this->db->from('attendance');
@@ -512,7 +512,7 @@ class Admin extends CI_Controller
         $this->db->where('remark', 'Full Day');
         $this->db->where('today_date', $today_date);
         $totalbranch_present = $this->db->get()->row()->totalbranch_present;
-    
+
         // ✅ Get half-day employees
         $this->db->select('COUNT(DISTINCT user_id) as totalbranch_halfday');
         $this->db->from('attendance');
@@ -520,10 +520,10 @@ class Admin extends CI_Controller
         $this->db->where('remark', 'Half Day');
         $this->db->where('today_date', $today_date);
         $totalbranch_halfday = $this->db->get()->row()->totalbranch_halfday;
-    
+
         // ✅ Calculate total absent employees
         $totalbranch_absent = $totalbranch_emp - ($totalbranch_present + $totalbranch_halfday);
-    
+
         // ✅ Prepare response data
         $data = [
             'totalbranch_emp' => $totalbranch_emp, // Total employees
@@ -534,15 +534,15 @@ class Admin extends CI_Controller
             'branch_id' => $branch_id,
             'month_name' => $month_name,
             'current_year' => $current_year,
-            'employee_list' => $all_employees, 
+            'employee_list' => $all_employees,
             'absent_emp_list' => $absent_emp_list,
             'today_date' => $today_date
         ];
-    
+
         // ✅ Load view with attendance data
         $this->load->view('Home/branchAttendance', $data);
     }
-    
+
 
     // excel Upload 
     public function addEmpExcel()
@@ -550,42 +550,42 @@ class Admin extends CI_Controller
         if ($this->input->post('submit')) {
             $path = 'uploads/';
             require_once APPPATH . "/third_party/PHPExcel.php";
-    
+
             // File Upload Configuration
             $config['upload_path'] = $path;
             $config['allowed_types'] = 'xlsx|xls|csv';
             $config['remove_spaces'] = TRUE;
             $this->load->library('upload', $config);
             $this->upload->initialize($config);
-    
+
             if (!$this->upload->do_upload('uploadFile')) {
                 echo "File Upload Error: " . $this->upload->display_errors();
                 return;
             }
-    
+
             $data = $this->upload->data();
             $import_xls_file = $data['file_name'];
             $inputFileName = $path . $import_xls_file;
-    
+
             try {
                 // Load Excel File
                 $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
                 $objReader = PHPExcel_IOFactory::createReader($inputFileType);
                 $objPHPExcel = $objReader->load($inputFileName);
                 $allDataInSheet = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-    
+
                 $flag = true;
                 $inserdata = [];
                 $i = 0;
-    
+
                 foreach ($allDataInSheet as $value) {
                     if ($flag) {
                         $flag = false;
                         continue;
                     }
-    
-                   
-    
+
+
+
                     $inserdata[$i] = [
                         'supervisor_name' => $value['B'],
                         'supervisor_name_contact' => $value['C'],
@@ -653,34 +653,36 @@ class Admin extends CI_Controller
                         'branch_name' => $value['BL'],
                         'ifsc_code' => $value['BM']
                     ];
-    
+
                     $i++;
                 }
-    
+
                 // Insert Data into Database
                 $result = $this->import->importData($inserdata);
-    
+
                 // Delete Uploaded File to Free Storage
                 unlink($inputFileName);
-    
+
                 if ($result) {
-                    redirect('Welcome');
+                    redirect('Admin/Employeadd');
+                    exit;
                 } else {
                     echo "Database Insertion Error!";
+                    exit;
                 }
-    
+
             } catch (Exception $e) {
                 echo 'Error loading file "' . pathinfo($inputFileName, PATHINFO_BASENAME) . '": ' . $e->getMessage();
             }
         }
-    
+
         $this->load->view('import');
     }
-    
-    
-    
-    
-    
+
+
+
+
+
 
 
 
