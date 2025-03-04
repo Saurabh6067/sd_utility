@@ -11,12 +11,16 @@ class Auth extends CI_Controller
     }
     public function index()
     {
+        $this->db->distinct();
         $this->db->select('operation');
         $this->db->from('employee');
-        $this->db->group_by('operation'); // Group by operation to remove duplicates
+        $this->db->where("operation IS NOT NULL"); // Exclude NULL values
+        $this->db->where("operation != ''"); // Exclude empty values
+        $this->db->group_by('operation'); // Ensure unique values
         $data['operations'] = $this->db->get()->result_array();
         $this->load->view('Auth/Login', $data);
     }
+    
     
 
     public function login()
