@@ -546,119 +546,136 @@ class Admin extends CI_Controller
 
     // excel Upload 
     public function addEmpExcel()
-	{
-		if ($this->input->post('submit')) {
-
-			$path = 'uploads/';
-			require_once APPPATH . "/third_party/PHPExcel.php";
-			$config['upload_path'] = $path;
-			$config['allowed_types'] = 'xlsx|xls|csv';
-			$config['remove_spaces'] = TRUE;
-			$this->load->library('upload', $config);
-			$this->upload->initialize($config);
-			if (!$this->upload->do_upload('uploadFile')) {
-				$error = array('error' => $this->upload->display_errors());
-			} else {
-				$data = array('upload_data' => $this->upload->data());
-			}
-			if (empty($error)) {
-				if (!empty($data['upload_data']['file_name'])) {
-					$import_xls_file = $data['upload_data']['file_name'];
-				} else {
-					$import_xls_file = 0;
-				}
-				$inputFileName = $path . $import_xls_file;
-
-				try {
-					$inputFileType = PHPExcel_IOFactory::identify($inputFileName);
-					$objReader = PHPExcel_IOFactory::createReader($inputFileType);
-					$objPHPExcel = $objReader->load($inputFileName);
-					$allDataInSheet = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-					$flag = true;
-					$i = 0;
-					foreach ($allDataInSheet as $value) {
-						if ($flag) {
-							$flag = false;
-							continue;
-						}
-						$inserdata[$i]['sol_id'] = $value['F'];
-						$inserdata[$i]['name'] = $value['K'];
-						$inserdata[$i]['empid'] = $value['L'];
-						$inserdata[$i]['mobile'] = $value['M'];
-                        $inserdata[$i]['esi_number'] = $value['N'];
-
-                        $inserdata[$i]['pf_number'] = $value['O'];
-                        $inserdata[$i]['pf_uan'] = $value['P'];
-                        $inserdata[$i]['aadhar_number'] = $value['Q'];
-                        $inserdata[$i]['medi_claim_number'] = $value['R'];
-                        $inserdata[$i]['emp_group_name'] = $value['S'];
-                        $inserdata[$i]['date_of_joining'] = $value['T'];
-                        $inserdata[$i]['dob'] = $value['U'];
-                        $inserdata[$i]['guardian_name'] = $value['V'];
-                        $inserdata[$i]['realation_ship_name'] = $value['W'];
-                        $inserdata[$i]['gender'] = $value['X'];
-                        $inserdata[$i]['marital_status'] = $value['Y'];
-                        $inserdata[$i]['emp_qualification'] = $value['Z'];
-                        $inserdata[$i]['role'] = $value['AA'];
-                        $inserdata[$i]['leave_balance'] = $value['AB'];
-                        $inserdata[$i]['total_days'] = $value['AC'];
-                        $inserdata[$i]['working_days'] = $value['AD'];
-                        $inserdata[$i]['salary_duduct_days'] = $value['AE'];
-                        $inserdata[$i]['basic'] = $value['AF'];
-                        $inserdata[$i]['hra'] = $value['AG'];
-                        $inserdata[$i]['convince'] = $value['AH'];
-                        $inserdata[$i]['city_all_new'] = $value['AI'];
-                        $inserdata[$i]['special_allowance'] = $value['AJ'];
-                        $inserdata[$i]['other_allowance'] = $value['AK'];
-                        $inserdata[$i]['bonus'] = $value['AL'];
-                        $inserdata[$i]['washing'] = $value['AM'];
-                        $inserdata[$i]['leave_allow'] = $value['AN'];
-                        $inserdata[$i]['uniform_allowance'] = $value['AO'];
-                        $inserdata[$i]['night_allowances'] = $value['AP'];
-                        $inserdata[$i]['pd_all_allowance'] = $value['AQ'];
-                        $inserdata[$i]['uniform_washing_allowance'] = $value['AR'];
-                        $inserdata[$i]['arear_salary'] = $value['AS'];
-                        $inserdata[$i]['total_salary'] = $value['AT'];
-                        $inserdata[$i]['esi_on'] = $value['AU'];
-                        $inserdata[$i]['pf_on'] = $value['AV'];
-                        $inserdata[$i]['pf_com_on'] = $value['AW'];
-                        $inserdata[$i]['pt_on'] = $value['AX'];
-                        $inserdata[$i]['em_esi'] = $value['AY'];
-                        $inserdata[$i]['em_pf'] = $value['AZ'];
-                        $inserdata[$i]['em_pt'] = $value['BA'];
-                        $inserdata[$i]['co_esi'] = $value['BB'];
-                        $inserdata[$i]['co_pf'] = $value['BC'];
-                        $inserdata[$i]['tds'] = $value['BD'];
-                        $inserdata[$i]['advance'] = $value['BE'];
-                        $inserdata[$i]['advance_balance'] = $value['BF'];
-                        $inserdata[$i]['deduction'] = $value['BG'];
-                        $inserdata[$i]['net_salary'] = $value['BH'];
-                        $inserdata[$i]['emp_name_in_bank'] = $value['BI'];
-                        $inserdata[$i]['account_number'] = $value['BJ'];
-                        $inserdata[$i]['bank_name'] = $value['BK'];
-                        $inserdata[$i]['branch_name'] = $value['BL'];
-                        $inserdata[$i]['ifsc_code'] = $value['BM'];
-						$i++;
-					}
-					$result = $this->import->importData($inserdata);
-					if ($result) {
-						redirect('Welcome');
-					} else {
-						echo "ERROR !";
-					}
-
-				} catch (Exception $e) {
-					die('Error loading file "' . pathinfo($inputFileName, PATHINFO_BASENAME)
-						. '": ' . $e->getMessage());
-				}
-			} else {
-				echo $error['error'];
-			}
-
-
-		}
-		$this->load->view('import');
-	}
+    {
+        if ($this->input->post('submit')) {
+            $path = 'uploads/';
+            require_once APPPATH . "/third_party/PHPExcel.php";
+    
+            // File Upload Configuration
+            $config['upload_path'] = $path;
+            $config['allowed_types'] = 'xlsx|xls|csv';
+            $config['remove_spaces'] = TRUE;
+            $this->load->library('upload', $config);
+            $this->upload->initialize($config);
+    
+            if (!$this->upload->do_upload('uploadFile')) {
+                echo "File Upload Error: " . $this->upload->display_errors();
+                return;
+            }
+    
+            $data = $this->upload->data();
+            $import_xls_file = $data['file_name'];
+            $inputFileName = $path . $import_xls_file;
+    
+            try {
+                // Load Excel File
+                $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
+                $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+                $objPHPExcel = $objReader->load($inputFileName);
+                $allDataInSheet = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+    
+                $flag = true;
+                $inserdata = [];
+                $i = 0;
+    
+                foreach ($allDataInSheet as $value) {
+                    if ($flag) {
+                        $flag = false;
+                        continue;
+                    }
+    
+                   
+    
+                    $inserdata[$i] = [
+                        'supervisor_name' => $value['B'],
+                        'supervisor_name_contact' => $value['C'],
+                        'operation' => $value['D'],
+                        'bank_branch_name' => $value['E'],
+                        'sol_id' => $value['F'],
+                        'branch_bm_name' => $value['G'],
+                        'bm_contact_number' => $value['H'],
+                        'branch_operation_head_name' => $value['I'],
+                        'branch_operation_head_number' => $value['J'],
+                        'name' => $value['K'],
+                        'empid' => "sd" . rand(10000, 99999) . "utility" . rand(10000, 99999),
+                        'mobile' => $value['M'],
+                        'esi_number' => $value['N'],
+                        'pf_number' => $value['O'],
+                        'pf_uan' => $value['P'],
+                        'aadhar_number' => $value['Q'],
+                        'medi_claim_number' => $value['R'],
+                        'emp_group_name' => $value['S'],
+                        'date_of_joining' => $value['T'],
+                        'dob' => $value['U'],
+                        'guardian_name' => $value['V'],
+                        'realation_ship_name' => $value['W'],
+                        'gender' => $value['X'],
+                        'marital_status' => $value['Y'],
+                        'emp_qualification' => $value['Z'],
+                        'role' => $value['AA'],
+                        'leave_balance' => $value['AB'],
+                        'total_days' => $value['AC'],
+                        'working_days' => $value['AD'],
+                        'salary_duduct_days' => $value['AE'],
+                        'basic' => $value['AF'],
+                        'hra' => $value['AG'],
+                        'convince' => $value['AH'],
+                        'city_all_new' => $value['AI'],
+                        'special_allowance' => $value['AJ'],
+                        'other_allowance' => $value['AK'],
+                        'bonus' => $value['AL'],
+                        'washing' => $value['AM'],
+                        'leave_allow' => $value['AN'],
+                        'uniform_allowance' => $value['AO'],
+                        'night_allowances' => $value['AP'],
+                        'pd_all_allowance' => $value['AQ'],
+                        'uniform_washing_allowance' => $value['AR'],
+                        'arear_salary' => $value['AS'],
+                        'total_salary' => $value['AT'],
+                        'esi_on' => $value['AU'],
+                        'pf_on' => $value['AV'],
+                        'pf_com_on' => $value['AW'],
+                        'pt_on' => $value['AX'],
+                        'em_esi' => $value['AY'],
+                        'em_pf' => $value['AZ'],
+                        'em_pt' => $value['BA'],
+                        'co_esi' => $value['BB'],
+                        'co_pf' => $value['BC'],
+                        'tds' => $value['BD'],
+                        'advance' => $value['BE'],
+                        'advance_balance' => $value['BF'],
+                        'deduction' => $value['BG'],
+                        'net_salary' => $value['BH'],
+                        'emp_name_in_bank' => $value['BI'],
+                        'account_number' => $value['BJ'],
+                        'bank_name' => $value['BK'],
+                        'branch_name' => $value['BL'],
+                        'ifsc_code' => $value['BM']
+                    ];
+    
+                    $i++;
+                }
+    
+                // Insert Data into Database
+                $result = $this->import->importData($inserdata);
+    
+                // Delete Uploaded File to Free Storage
+                unlink($inputFileName);
+    
+                if ($result) {
+                    redirect('Welcome');
+                } else {
+                    echo "Database Insertion Error!";
+                }
+    
+            } catch (Exception $e) {
+                echo 'Error loading file "' . pathinfo($inputFileName, PATHINFO_BASENAME) . '": ' . $e->getMessage();
+            }
+        }
+    
+        $this->load->view('import');
+    }
+    
     
     
     
