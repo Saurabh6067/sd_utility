@@ -101,64 +101,25 @@
 <script>
     $(document).ready(function () {
         $('#roleSelect').change(function () {
-            const role = $(this).val();
-            const operationSection = $('#operationSection');
-            const branchSection = $('#branchSection');
-            const operationSelect = $('#operationSelect');
-            const branchSelect = $('#branchSelect');
-
-            operationSection.hide();
-            branchSection.hide();
-            operationSelect.prop('required', false);
-            branchSelect.prop('required', false);
+            let role = $(this).val();
+            $('#operationSection, #branchSection').hide();
+            $('#operationSelect, #branchSelect').prop('required', false);
 
             if (role === 'supervisor') {
-                operationSection.show();
-                operationSelect.prop('required', true);
+                $('#operationSection').show();
+                $('#operationSelect').prop('required', true);
             } else if (role === 'branch_manager') {
-                operationSection.show();
-                operationSelect.prop('required', true);
-                branchSection.show();
-                branchSelect.prop('required', true);
+                $('#operationSection, #branchSection').show();
+                $('#operationSelect, #branchSelect').prop('required', true);
             }
-        });
-
-        $('#operationSelect').change(function () {
-            const operation = $(this).val();
-            const branchSection = $('#branchSection');
-            const branchSelect = $('#branchSelect');
-
-            if ($('#roleSelect').val() === 'branch_manager') {
-                branchSection.show();
-                branchSelect.prop('required', true);
-            }
-
-            $.ajax({
-                url: '<?= base_url("Auth/getBranchesByOperation") ?>',
-                type: 'POST',
-                data: { operation: operation }, // Fix the parameter name
-                dataType: 'json',
-                success: function (response) {
-                    let branchOptions = '<option value="">Select Branch</option>';
-                    response.forEach(branch => {  // Fix: Access response directly
-                        branchOptions += `<option value="${branch.bank_branch_name}">${branch.bank_branch_name}</option>`;
-                    });
-                    branchSelect.html(branchOptions);
-                    branchSection.show(); // Ensure the section is visible after getting branches
-                },
-                error: function () {
-                    alert('Error fetching branches.');
-                }
-            });
         });
 
         $('#loginForm').submit(function (e) {
             e.preventDefault();
-
             const formData = $(this).serialize();
-            const loginUrl = '<?= base_url("Auth/login") ?>';
+
             $.ajax({
-                url: loginUrl,
+                url: '<?= base_url("Auth/login") ?>',
                 type: 'POST',
                 data: formData,
                 dataType: 'json',
@@ -174,24 +135,61 @@
                             timer: 2000,
                             showConfirmButton: false
                         }).then(() => {
-                            window.location.href = '<?= base_url("Admin") ?>';
+                            window.location.href = response.redirect;
                         });
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Login Failed',
-                            text: response.message || 'Login failed. Please try again.'
-                        });
+                        Swal.fire({ icon: 'error', title: 'Login Failed', text: response.message });
                     }
                 },
-                error: function (xhr, status, error) {
-                    console.error('AJAX Error:', error);
-                    alert('An unexpected error occurred. Please try again later.');
+                error: function () {
+                    alert('An unexpected error occurred. Please try again.');
                 },
                 complete: function () {
                     $('button[type="submit"]').prop('disabled', false).text('Sign in');
                 }
             });
         });
+    });
+    $('#loginForm').submit(function (e) {
+        e.preventDefault();
+
+        const formData = $(this).serialize();
+        const loginUrl = '<?= base_url("Auth/login") ?>';
+        $.ajax({
+            url: loginUrl,
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            beforeSend: function () {
+                $('button[type="submit"]').prop('disabled', true).text('Signing in...');
+            },
+            success: function (response) {
+                if (response.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Login Successful',
+                        text: 'Redirecting to dashboard...',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = '<?= base_url("Admin") ?>';
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Login Failed',
+                        text: response.message || 'Login failed. Please try again.'
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', error);
+                alert('An unexpected error occurred. Please try again later.');
+            },
+            complete: function () {
+                $('button[type="submit"]').prop('disabled', false).text('Sign in');
+            }
+        });
+    });
     });
 </script>
