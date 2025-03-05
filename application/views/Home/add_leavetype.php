@@ -171,6 +171,44 @@
                 $('#leaveAddform')[0].reset();
             });
         });
+
+
+        // Delete here 
+        function DeleteWithoutImage(id, table) {
+        var status = true;
+        swal({
+            title: "Are You Sure?",
+            text: "You Want To Delete?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: "<?= base_url('Admin/DeleteWithoutImage') ?>",
+                    type: "post",
+                    data: {
+                        'id': id,
+                        'table': table
+                    },
+                    success: function(response) {
+                        if (response == 1) {
+                            swal("Delete Successfully!", {
+                                icon: 'success',
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            swal("Deletion failed!", {
+                                icon: 'error',
+                            });
+                        }
+                    }
+                });
+            }
+        });
+        return status;
+    }
     </script>
 
 </body>
