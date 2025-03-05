@@ -281,6 +281,7 @@ class Admin extends CI_Controller
                 'day' => $day,
                 'created_at_time' => date('H:i:s'),
                 'created_at_date' => date('Y-m-d'),
+                'status' => 'true',
             ];
 
             $insert = $this->db->insert('tbl_leavetype', $data);
