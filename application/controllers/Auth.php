@@ -130,7 +130,7 @@ class Auth extends CI_Controller
             }
             $this->db->where('operation', $operation);
             $this->db->where('supervisor_name', $supervisor_name);
-            $this->db->where('supervisor_contact', $supervisor_contact);
+            $this->db->where('supervisor_name_contact', $supervisor_contact);
         }
         // ✅ Branch Manager Case: Check by empid, operation, branch
         else if ($role == 'branch_manager') {
