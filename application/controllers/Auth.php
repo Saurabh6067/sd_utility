@@ -122,11 +122,20 @@ class Auth extends CI_Controller
                 echo json_encode(['status' => 'error', 'message' => 'All Fields are required.']);
                 return;
             }
-
+        
+            // ✅ WHERE conditions apply karein
             $this->db->where('operation', $operation);
             $this->db->where('supervisor_name', $empid);
             $this->db->where('supervisor_name_contact', $password);
-        }
+        
+            // ✅ Debugging: Query check karne ke liye
+            echo "<pre>";
+            echo "SQL Query: " . $this->db->get_compiled_select('employee') . "\n\n";
+            echo "Operation: " . $operation . "\n";
+            echo "Supervisor Name: " . $empid . "\n";
+            echo "Supervisor Contact: " . $password . "\n";
+            die(); // Execution stop karein taaki debugging ho sake
+        }        
         // ✅ Branch Manager Case: Check by empid, operation, branch
         else if ($role == 'branch_manager') {
             if (empty($operation) || empty($branch) || empty($empid) || empty($password)) {
