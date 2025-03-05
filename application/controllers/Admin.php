@@ -474,6 +474,9 @@ class Admin extends CI_Controller
         $session_role = $this->session_role; 
         if ($session_role == 'branch_manager') {
             $this->db->where('bank_branch_name', $branch_id); 
+        } elseif ($session_role == 'supervisor') {
+            $operation = $this->sessiondata['operation']; // ✅ Supervisor ka operation column
+            $this->db->where('operation', $operation); // ✅ Supervisor ke liye filter
         }
         $totalbranch_emp = $this->db->count_all_results('employee');
 
