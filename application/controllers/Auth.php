@@ -124,14 +124,13 @@ class Auth extends CI_Controller
 
         // ✅ Supervisor Case: Check by empid (supervisor_name), password (supervisor_contact) & operation & branch
         if ($role == 'supervisor') {
-            if (empty($operation) || empty($supervisor_name) || empty($supervisor_contact) || empty($branch)) {
+            if (empty($operation) || empty($supervisor_name) || empty($supervisor_contact)) {
                 echo json_encode(['status' => 'error', 'message' => 'All Fields are required.']);
                 return;
             }
             $this->db->where('operation', $operation);
             $this->db->where('supervisor_name', $supervisor_name);
             $this->db->where('supervisor_contact', $supervisor_contact);
-            $this->db->where('bank_branch_name', $branch); // Ensure branch is same
         }
         // ✅ Branch Manager Case: Check by empid, operation, branch
         else if ($role == 'branch_manager') {
