@@ -166,10 +166,11 @@ class Auth extends CI_Controller
 
         // $user = $users[0]; 
         $user = reset($users);
-
+        echo "<pre>";
+        print_r($user);
+        die();
         $this->session->set_userdata('user', $user);
         $this->session->set_userdata('role', $role);
-
         echo json_encode(['status' => 'success', 'message' => 'Login successful.', 'redirect' => base_url('Dashboard')]);
     }
 
