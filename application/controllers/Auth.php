@@ -33,9 +33,9 @@ class Auth extends CI_Controller
         $this->db->where("bank_branch_name != ''");
         $this->db->group_by('bank_branch_name');
         $query = $this->db->get();
-    
         echo json_encode($query->result_array()); // Return data as JSON
     }
+
     public function login()
     {
         $postData = $this->input->post();
@@ -46,6 +46,8 @@ class Auth extends CI_Controller
         $branch = isset($postData['branch']) ? $postData['branch'] : null;
         $supervisor_name = isset($postData['empid']) ? $postData['empid'] : null;  // 🔄 Supervisor Name in empid field
         $supervisor_contact = isset($postData['password']) ? $postData['password'] : null;  // 🔄 Supervisor Contact in password field
+        $branch_manager_name = isset($postData['empid']) ? $postData['empid'] : null;  // 🔄 Supervisor Contact in password field
+        $branch_manager_contact = isset($postData['password']) ? $postData['password'] : null;  // 🔄 Supervisor Contact in password field
     
         if (empty($role)) {
             echo json_encode(['status' => 'error', 'message' => 'Role is required.']);
@@ -56,31 +58,33 @@ class Auth extends CI_Controller
     
         // ✅ Supervisor Case: Check by supervisor_name, supervisor_contact & operation
         if ($role == 'supervisor') {
-            if (empty($supervisor_name) || empty($supervisor_contact) || empty($operation)) {
-                echo json_encode(['status' => 'error', 'message' => 'Supervisor Name, Contact, and Operation are required.']);
+            if (empty($operation) || empty($supervisor_name) || empty($supervisor_contact)) {
+                echo json_encode(['status' => 'error', 'message' => 'All Fields are required.']);
                 return;
             }
+            $this->db->where('operation', $operation);
             $this->db->where('supervisor_name', $supervisor_name);
             $this->db->where('supervisor_name_contact', $supervisor_contact);
-            $this->db->where('operation', $operation);
         }
-        // ✅ Branch Manager Case: Check by empid, operation & branch
+        // Branch Manager Case: Check by empid, operation & branch
         else if ($role == 'branch_manager') {
-            if (empty($empid) || empty($operation) || empty($branch)) {
-                echo json_encode(['status' => 'error', 'message' => 'Employee ID, Operation, and Branch are required.']);
+            if (empty($operation) || empty($branch) || empty($branch_manager_name) || empty($branch_manager_contact)) {
+                echo json_encode(['status' => 'error', 'message' => 'All Fields are required.']);
                 return;
             }
-            $this->db->where('empid', $empid);
             $this->db->where('operation', $operation);
-            $this->db->where('branch', $branch);
+            $this->db->where('bank_branch_name', $branch);
+            $this->db->where('branch_bm_name', $branch_manager_name);
+            $this->db->where('bm_contact_number', $branch_manager_contact);
         }
         // ✅ Admin Case: Check by empid only
         else if ($role == 'admin') {
-            if (empty($empid)) {
-                echo json_encode(['status' => 'error', 'message' => 'Employee ID is required for Admin.']);
+            if (empty($empid) || empty($password)) {
+                echo json_encode(['status' => 'error', 'message' => 'All Fields are required']);
                 return;
             }
             $this->db->where('empid', $empid);
+            $this->db->where('password', $password);
         }
     
         $user = $this->db->get('employee')->row_array();
@@ -90,32 +94,13 @@ class Auth extends CI_Controller
             return;
         }
     
-        if ($role == 'supervisor') {
-            // ✅ No need to check password for supervisor, as it's using contact info
-            if ($user['supervisor_name_contact'] !== $supervisor_contact) {
-                echo json_encode(['status' => 'error', 'message' => 'Invalid Supervisor Contact.']);
-                return;
-            }
-        } else {
-            // ✅ Regular password check for other roles
-            if ($user['password'] !== $password) {
-                echo json_encode(['status' => 'error', 'message' => 'Invalid password.']);
-                return;
-            }
-        }
-    
-        // ✅ Store user data & role in session
         $this->session->set_userdata('user', $user);
-        $this->session->set_userdata('role', $role);  // 🎯 Store role separately
+        $this->session->set_userdata('role', $role); 
     
         echo json_encode(['status' => 'success', 'message' => 'Login successful.', 'redirect' => base_url('Dashboard')]);
     }
     
     
-    
-    
-
-
     public function logout()
     {
         $this->session->unset_userdata('user');

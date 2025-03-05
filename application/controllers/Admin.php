@@ -10,17 +10,14 @@ class Admin extends CI_Controller
         if (!$this->session->userdata('user')) {
             redirect(base_url('Auth'));
         }
-
         $this->load->model('Import_model', 'import');
         $this->load->helper(array('url', 'html', 'form'));
-
-
     }
     public function index()
     {
-
         $this->load->view('Home/index');
     }
+    
     public function Employeadd()
     {
         $segment = $this->uri->segment(3);

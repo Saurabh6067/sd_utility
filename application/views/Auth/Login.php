@@ -27,7 +27,7 @@
                             </div>
                             <div class="form__input">
                                 <select class="form-control" name="role" id="roleSelect" required>
-                                    <option value="" disabled selected>Select Role</option>
+                                    <option disabled selected>Select Role</option>
                                     <option value="admin">Admin</option>
                                     <option value="supervisor">Supervisor</option>
                                     <option value="branch_manager">Branch Manager</option>
