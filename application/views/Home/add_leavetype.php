@@ -90,9 +90,8 @@
                                                         </button> -->
                                                         <button class="btn btn-danger btn-sm"
                                                             onclick="DeleteWithoutImage('<?= isset($item['id']) ? $item['id'] : ''; ?>', 'tbl_leavetype'); return false;">
-                                                            <i class="bi bi-trash"></i> Delete
+                                                            <i class="fa-regular fa-trash"></i>
                                                         </button>
-
 
                                                     </div>
                                                 </td>
