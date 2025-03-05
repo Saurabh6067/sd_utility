@@ -88,7 +88,7 @@
                                                         <!-- <button class="removeBtn table__icon delete">
                                                             <i class="fa-regular fa-trash"></i>
                                                         </button> -->
-                                                        <button class="btn btn-danger btn-sm"
+                                                        <button class="removeBtn table__icon delete"
                                                             onclick="DeleteWithoutImage('<?= isset($item['id']) ? $item['id'] : ''; ?>', 'tbl_leavetype'); return false;">
                                                             <i class="fa-regular fa-trash"></i>
                                                         </button>
