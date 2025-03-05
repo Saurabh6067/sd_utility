@@ -127,14 +127,6 @@ class Auth extends CI_Controller
             $this->db->where('operation', $operation);
             $this->db->where('supervisor_name', $empid);
             $this->db->where('supervisor_name_contact', $password);
-        
-            // ✅ Debugging: Query check karne ke liye
-            echo "<pre>";
-            echo "SQL Query: " . $this->db->get_compiled_select('employee') . "\n\n";
-            echo "Operation: " . $operation . "\n";
-            echo "Supervisor Name: " . $empid . "\n";
-            echo "Supervisor Contact: " . $password . "\n";
-            die(); // Execution stop karein taaki debugging ho sake
         }        
         // ✅ Branch Manager Case: Check by empid, operation, branch
         else if ($role == 'branch_manager') {
@@ -159,24 +151,11 @@ class Auth extends CI_Controller
             $this->db->where('password', $password);
         }
 
-        // ✅ Execute Query
-        $users = $this->db->get('employee')->result_array();
-
-        // ✅ Debugging: Uncomment to see SQL query
-        // echo json_encode(['query' => $this->db->last_query()]); exit;
-
-        // ✅ Agar user data mil gaya toh continue karein
+        $users = $this->db->get('employee')->row_array();
         if (!empty($users)) {
-            $user = $users[0]; // Pehla user fetch karein
-
-            // ✅ Session Set Karein
+            $user = $users[0]; 
             $this->session->set_userdata('user', $user);
             $this->session->set_userdata('role', $role);
-
-            // ✅ Debugging: Check Output
-            echo "<pre>";
-            print_r($user);
-            die();
         } else {
             echo json_encode(['status' => 'error', 'message' => 'User not found.']);
         }
