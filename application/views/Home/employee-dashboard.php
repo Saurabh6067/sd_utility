@@ -205,14 +205,13 @@
     <?php include 'includes/footer_link.php'; ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-        window.addEventListener('load', function () 
-        {
+        window.addEventListener('load', function () {
             console.log('Page fully loaded');
             console.log('QRCode available:', typeof QRCode !== 'undefined');
 
-            var branchdata = <?php echo json_encode($data['branch'] ?? []); ?>;
-            console.log('Branch Data:', branchdata);
-            alert(branchdata);
+            var branchdata = <?php echo json_encode(isset($branch) ? $branch : []); ?>;
+            console.log('Attandance Data:', branchdata); // Debug log
+            alert(branchdata); // Debug log
 
             if (!branchdata) {
                 console.error('No RC data available');
