@@ -145,7 +145,7 @@
                                 confirmButtonText: 'OK',
                             }).then(() => {
                                 $('#leaveAddform')[0].reset();
-
+                                window.location.reload();
                             });
                         } else {
                             Swal.fire({
