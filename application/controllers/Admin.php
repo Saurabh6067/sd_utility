@@ -332,9 +332,10 @@ class Admin extends CI_Controller
     
     // ✅ Check karein ki query empty na ho, aur ek sath values assign karein
     $data['branch'] = !empty($query) ? [
-        'bank_branch_name' => $query['bank_branch_name'],
-        'sol_id' => $query['sol_id']
-    ] : null;
+        'bank_branch_name' => $query['bank_branch_name'] ?? '',
+        'sol_id' => $query['sol_id'] ?? ''
+    ] : [];
+    
 
     $this->load->view('Home/employee-dashboard', $data);
 }

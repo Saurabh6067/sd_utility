@@ -209,9 +209,10 @@
             console.log('Page fully loaded');
             console.log('QRCode available:', typeof QRCode !== 'undefined');
 
-            var branchdata = <?php echo json_encode(isset($branch) ? $branch : []); ?>;
-            console.log('Attandance Data:', branchdata); // Debug log
-            alert(branchdata);
+            var branchdata = <?php echo json_encode($data['branch'] ?? []); ?>;
+            console.log('Branch Data:', branchdata);
+            alert(JSON.stringify(branchdata));
+
 
             if (!branchdata) {
                 console.error('No RC data available');
