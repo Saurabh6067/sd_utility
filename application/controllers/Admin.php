@@ -324,21 +324,15 @@ class Admin extends CI_Controller
     // }
 
     public function EmpDashbaord()
-{
-    $currentbranch = $this->session->userdata('user'); 
-    
-    // ✅ Query execute karke result fetch karein
-    $query = $this->db->get_where('employee', ['bank_branch_name' => $currentbranch['bank_branch_name']])->row_array();
-    
-    // ✅ Check karein ki query empty na ho, aur ek sath values assign karein
-    $data['branch'] = !empty($query) ? [
-        'bank_branch_name' => $query['bank_branch_name'] ?? '',
-        'sol_id' => $query['sol_id'] ?? ''
-    ] : [];
-    
-
-    $this->load->view('Home/employee-dashboard', $data);
-}
+    {
+        $currentbranch = $this->session->userdata('user'); 
+        $query = $this->db->get_where('employee', ['bank_branch_name' => $currentbranch['bank_branch_name']])->row_array();
+        $data['branch'] = !empty($query) ? [
+            'bank_branch_name' => $query['bank_branch_name'] ?? '',
+            'sol_id' => $query['sol_id'] ?? ''
+        ] : [];
+        $this->load->view('Home/employee-dashboard', $data);
+    }
 
 
 
