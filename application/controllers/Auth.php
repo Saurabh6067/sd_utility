@@ -164,7 +164,8 @@ class Auth extends CI_Controller
             return;
         }
 
-        $user = $users[0]; // Select the first user if multiple exist
+        // $user = $users[0]; 
+        $user = reset($users);
 
         $this->session->set_userdata('user', $user);
         $this->session->set_userdata('role', $role);
