@@ -109,12 +109,6 @@ class Auth extends CI_Controller
         $operation = isset($postData['operation']) ? $postData['operation'] : null;
         $branch = isset($postData['branch']) ? $postData['branch'] : null;
 
-        // Supervisor aur Branch Manager ka data empid aur password se hi lena hai
-        $supervisor_name = $empid;
-        $supervisor_contact = $password;
-        $branch_manager_name = $empid;
-        $branch_manager_contact = $password;
-
         if (empty($role)) {
             echo json_encode(['status' => 'error', 'message' => 'Role is required.']);
             return;
@@ -122,57 +116,64 @@ class Auth extends CI_Controller
 
         $this->db->where('role', $role);
 
-        // ✅ Supervisor Case: Check by empid (supervisor_name), password (supervisor_contact) & operation & branch
+        // ✅ Supervisor Case: Check by empid, password, operation
         if ($role == 'supervisor') {
-            if (empty($operation) || empty($supervisor_name) || empty($supervisor_contact)) {
+            if (empty($operation) || empty($empid) || empty($password)) {
                 echo json_encode(['status' => 'error', 'message' => 'All Fields are required.']);
                 return;
             }
+
             $this->db->where('operation', $operation);
-            $this->db->where('supervisor_name', $supervisor_name);
-            $this->db->where('supervisor_name_contact', $supervisor_contact);
+            $this->db->where('supervisor_name', $empid);
+            $this->db->where('supervisor_name_contact', $password);
         }
         // ✅ Branch Manager Case: Check by empid, operation, branch
         else if ($role == 'branch_manager') {
-            if (empty($operation) || empty($branch) || empty($branch_manager_name) || empty($branch_manager_contact)) {
+            if (empty($operation) || empty($branch) || empty($empid) || empty($password)) {
                 echo json_encode(['status' => 'error', 'message' => 'All Fields are required.']);
                 return;
             }
+
             $this->db->where('operation', $operation);
             $this->db->where('bank_branch_name', $branch);
-            $this->db->where('branch_bm_name', $branch_manager_name);
-            $this->db->where('bm_contact_number', $branch_manager_contact);
+            $this->db->where('branch_bm_name', $empid);
+            $this->db->where('bm_contact_number', $password);
         }
-        // ✅ Admin Case: Check by empid only
+        // ✅ Admin Case: Check by empid & password
         else if ($role == 'admin') {
             if (empty($empid) || empty($password)) {
                 echo json_encode(['status' => 'error', 'message' => 'All Fields are required.']);
                 return;
             }
+
             $this->db->where('empid', $empid);
             $this->db->where('password', $password);
         }
 
-        $users = $this->db->get('employee')->result_array(); // Fetch multiple users
+        // ✅ Execute Query
+        $users = $this->db->get('employee')->result_array();
 
-        // Debugging: Uncomment this line to check the executed query
+        // ✅ Debugging: Uncomment to see SQL query
         // echo json_encode(['query' => $this->db->last_query()]); exit;
 
+        // ✅ Agar user data mil gaya toh continue karein
+        if (!empty($users)) {
+            $user = $users[0]; // Pehla user fetch karein
 
-        if (count($users) > 1) {
-            echo json_encode(['status' => 'error', 'message' => 'Multiple users found. Please contact admin.']);
-            return;
+            // ✅ Session Set Karein
+            $this->session->set_userdata('user', $user);
+            $this->session->set_userdata('role', $role);
+
+            // ✅ Debugging: Check Output
+            echo "<pre>";
+            print_r($user);
+            die();
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'User not found.']);
         }
-
-        // $user = $users[0]; 
-        $user = reset($users);
-        echo "<pre>";
-        print_r($user);
-        die();
-        $this->session->set_userdata('user', $user);
-        $this->session->set_userdata('role', $role);
-        echo json_encode(['status' => 'success', 'message' => 'Login successful.', 'redirect' => base_url('Dashboard')]);
+        return;
     }
+
 
 
 
