@@ -212,7 +212,7 @@
 
             var branchdata = <?php echo json_encode($data['branch'] ?? []); ?>;
             console.log('Branch Data:', branchdata);
-            alert(JSON.stringify(branchdata, null, 2));
+            alert(branchdata);
 
             if (!branchdata) {
                 console.error('No RC data available');
