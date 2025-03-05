@@ -461,7 +461,6 @@ class Admin extends CI_Controller
     public function branchAttendance()
     {
         $sessiondata = $this->session->userdata('user');
-        // $branch_id = $sessiondata['branch'];
 
         $today_date = date('Y-m-d');
         $current_month = date('m');
@@ -471,14 +470,10 @@ class Admin extends CI_Controller
         // ✅ Get total days in the current month
         $total_days = cal_days_in_month(CAL_GREGORIAN, $current_month, $current_year);
 
-        // ✅ Get total employees in the branch
-        // $this->db->where('branch', $branch_id);
-        // $totalbranch_emp = $this->db->count_all_results('employee');
-
-        $branch_id = $this->sessiondata['branch_bm_name'];
+        $branch_id = $this->sessiondata['bank_branch_name'];
         $session_role = $this->session_role; 
         if ($session_role == 'branch_manager') {
-            $this->db->where('branch_bm_name', $branch_id); 
+            $this->db->where('bank_branch_name', $branch_id); 
         }
         $totalbranch_emp = $this->db->count_all_results('employee');
 
