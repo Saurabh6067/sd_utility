@@ -291,12 +291,12 @@ class Admin extends CI_Controller
                 echo json_encode(['status' => 'error', 'message' => 'Failed to save Leave Type.']);
             }
         } else {
-            $data['tbl_leavetype'] = $this->db->query("Select * from `leavetype` where `status` = 'true'")->result_array();
+            // $data['tbl_leavetype'] = $this->db->query("Select * from `leavetype` where `status` = 'true'")->result_array();
+            $data['tbl_leavetype'] = $this->db->query("Select * from `tbl_leavetype` where `status` = 'true'")->result_array();
             $this->load->view('Home/add_leavetype', $data);
         }
-
-
     }
+
     public function Leave()
     {
         $this->load->view('Home/admin_leave');
@@ -315,7 +315,7 @@ class Admin extends CI_Controller
     //     $data['branch'] = $query;
     //     $this->load->view('Home/employee-dashboard', $data);
     // }
-    
+
     // public function EmpDashbaord()
     // {
     //     $currentbranch = $this->session->userdata('user'); 
