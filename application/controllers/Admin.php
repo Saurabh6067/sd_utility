@@ -480,8 +480,6 @@ class Admin extends CI_Controller
         }
         $totalbranch_emp = $this->db->count_all_results('employee');
 
-
-
         // ✅ Get employees who have attendance for today
         $this->db->distinct();
         $this->db->select('user_id');
