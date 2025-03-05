@@ -175,6 +175,7 @@
 
         // Delete here 
         function DeleteWithoutImage(id, table) {
+            alert(table);
         var status = true;
         swal({
             title: "Are You Sure?",
