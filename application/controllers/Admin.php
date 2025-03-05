@@ -305,16 +305,24 @@ class Admin extends CI_Controller
     {
         $this->load->view('Home/warning');
     }
+    // public function EmpDashbaord()
+    // {
+    //     $currentbrach = $this->session->userdata('user');
+    //     $this->db->select('*');
+    //     $this->db->from('branch');
+    //     $this->db->where('id', $currentbrach['branch']);
+    //     $query = $this->db->get()->row_array();
+    //     $data['branch'] = $query;
+    //     $this->load->view('Home/employee-dashboard', $data);
+    // }
     public function EmpDashbaord()
     {
         $currentbrach = $this->session->userdata('user');
-        $this->db->select('*');
-        $this->db->from('branch');
-        $this->db->where('id', $currentbrach['branch']);
-        $query = $this->db->get()->row_array();
+        $this->db->get_where('employee',['bank_branch_name'=>$currentbrach->bank_branch_name])->row_array();
         $data['branch'] = $query;
         $this->load->view('Home/employee-dashboard', $data);
     }
+
     public function EmpAttendance()
     {
         $currentbrach = $this->session->userdata('user');
