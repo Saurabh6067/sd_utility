@@ -148,9 +148,7 @@ class Auth extends CI_Controller
             $this->db->where('empid', $empid);
             $this->db->where('password', $password);
         }
-    
         $user = $this->db->get('employee')->row_array();
-    
         if (!empty($user)) {
             $this->session->set_userdata('user', $user);
             $this->session->set_userdata('role', $role);

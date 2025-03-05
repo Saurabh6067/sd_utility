@@ -10,6 +10,10 @@ class Admin extends CI_Controller
         if (!$this->session->userdata('user')) {
             redirect(base_url('Auth'));
         }
+        // ✅ Session data ko ek baar fetch kar ke property me store karenge
+        $this->sessiondata = $this->session->userdata('user');
+        $this->session_role = $this->session->userdata('role');
+
         $this->load->model('Import_model', 'import');
         $this->load->helper(array('url', 'html', 'form'));
     }
@@ -468,8 +472,17 @@ class Admin extends CI_Controller
         $total_days = cal_days_in_month(CAL_GREGORIAN, $current_month, $current_year);
 
         // ✅ Get total employees in the branch
-        $this->db->where('branch', $branch_id);
+        // $this->db->where('branch', $branch_id);
+        // $totalbranch_emp = $this->db->count_all_results('employee');
+
+        $branch_id = $this->sessiondata['branch'];
+        $session_role = $this->session_role; 
+        if ($session_role == 'branch_manager') {
+            $this->db->where('branch', $branch_id);
+        }
         $totalbranch_emp = $this->db->count_all_results('employee');
+
+
 
         // ✅ Get employees who have attendance for today
         $this->db->distinct();
