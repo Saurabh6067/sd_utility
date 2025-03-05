@@ -158,7 +158,7 @@ class Auth extends CI_Controller
         // Debugging: Uncomment this line to check the executed query
         // echo json_encode(['query' => $this->db->last_query()]); exit;
 
-        if (empty($users)) {
+        if (!is_array($users) || count($users) === 0) {
             echo json_encode(['status' => 'error', 'message' => 'User not found.']);
             return;
         }
