@@ -89,9 +89,9 @@
                                                             <i class="fa-regular fa-trash"></i>
                                                         </button> -->
                                                         <button class="btn btn-danger btn-sm"
-    onclick="DeleteWithoutImage('<?= $item['id']; ?>', 'tbl_leavetype'); return false;">
-    <i class="bi bi-trash"></i> Delete
-</button>
+                                                            onclick="DeleteWithoutImage('<?= $item['id']; ?>', 'tbl_leavetype'); return false;">
+                                                            <i class="bi bi-trash"></i> Delete
+                                                        </button>
 
                                                     </div>
                                                 </td>
