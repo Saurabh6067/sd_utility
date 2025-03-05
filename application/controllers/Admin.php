@@ -478,7 +478,7 @@ class Admin extends CI_Controller
         $branch_id = $this->sessiondata['branch'];
         $session_role = $this->session_role; 
         if ($session_role == 'branch_manager') {
-            $this->db->where('branch', $branch_id); 
+            $this->db->where('branch_bm_name', $branch_id); 
         }
         $totalbranch_emp = $this->db->count_all_results('employee');
 
