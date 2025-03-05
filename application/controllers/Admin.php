@@ -315,24 +315,24 @@ class Admin extends CI_Controller
     //     $data['branch'] = $query;
     //     $this->load->view('Home/employee-dashboard', $data);
     // }
-    // public function EmpDashbaord()
-    // {
-    //     $currentbranch = $this->session->userdata('user'); 
-    //     $query = $this->db->get_where('employee', ['bank_branch_name' => $currentbranch['bank_branch_name']])->row_array();
-    //     $data['branch'] = !empty($query) ? $query['bank_branch_name'] : null;
-    //     $this->load->view('Home/employee-dashboard', $data);
-    // }
-
     public function EmpDashbaord()
     {
         $currentbranch = $this->session->userdata('user'); 
         $query = $this->db->get_where('employee', ['bank_branch_name' => $currentbranch['bank_branch_name']])->row_array();
-        $data['branch'] = !empty($query) ? [
-            'bank_branch_name' => $query['bank_branch_name'] ?? '',
-            'sol_id' => $query['sol_id'] ?? ''
-        ] : [];
+        $data['branch'] = !empty($query) ? $query['bank_branch_name'] : null;
         $this->load->view('Home/employee-dashboard', $data);
     }
+
+    // public function EmpDashbaord()
+    // {
+    //     $currentbranch = $this->session->userdata('user'); 
+    //     $query = $this->db->get_where('employee', ['bank_branch_name' => $currentbranch['bank_branch_name']])->row_array();
+    //     $data['branch'] = !empty($query) ? [
+    //         'bank_branch_name' => $query['bank_branch_name'] ?? '',
+    //         'sol_id' => $query['sol_id'] ?? ''
+    //     ] : [];
+    //     $this->load->view('Home/employee-dashboard', $data);
+    // }
 
 
 
