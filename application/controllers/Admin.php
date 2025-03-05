@@ -281,6 +281,7 @@ class Admin extends CI_Controller
                 'day' => $day,
                 'created_at_time' => date('H:i:s'),
                 'created_at_date' => date('Y-m-d'),
+                'status' => 'true',
             ];
 
             $insert = $this->db->insert('tbl_leavetype', $data);
@@ -291,12 +292,12 @@ class Admin extends CI_Controller
                 echo json_encode(['status' => 'error', 'message' => 'Failed to save Leave Type.']);
             }
         } else {
-            $data['tbl_leavetype'] = $this->db->query("Select * from `leavetype` where `status` = 'true'")->result_array();
+            // $data['tbl_leavetype'] = $this->db->query("Select * from `leavetype` where `status` = 'true'")->result_array();
+            $data['leavetype'] = $this->db->query("Select * from `tbl_leavetype` where `status` = 'true'")->result_array();
             $this->load->view('Home/add_leavetype', $data);
         }
-
-
     }
+
     public function Leave()
     {
         $this->load->view('Home/admin_leave');
@@ -305,16 +306,38 @@ class Admin extends CI_Controller
     {
         $this->load->view('Home/warning');
     }
+    // public function EmpDashbaord()
+    // {
+    //     $currentbrach = $this->session->userdata('user');
+    //     $this->db->select('*');
+    //     $this->db->from('branch');
+    //     $this->db->where('id', $currentbrach['branch']);
+    //     $query = $this->db->get()->row_array();
+    //     $data['branch'] = $query;
+    //     $this->load->view('Home/employee-dashboard', $data);
+    // }
+
+    // public function EmpDashbaord()
+    // {
+    //     $currentbranch = $this->session->userdata('user'); 
+    //     $query = $this->db->get_where('employee', ['bank_branch_name' => $currentbranch['bank_branch_name']])->row_array();
+    //     $data['branch'] = !empty($query) ? $query['bank_branch_name'] : null;
+    //     $this->load->view('Home/employee-dashboard', $data);
+    // }
+
     public function EmpDashbaord()
     {
-        $currentbrach = $this->session->userdata('user');
-        $this->db->select('*');
-        $this->db->from('branch');
-        $this->db->where('id', $currentbrach['branch']);
-        $query = $this->db->get()->row_array();
-        $data['branch'] = $query;
+        $currentbranch = $this->session->userdata('user'); 
+        $query = $this->db->get_where('employee', ['bank_branch_name' => $currentbranch['bank_branch_name']])->row_array();
+        $data['branch'] = !empty($query) ? [
+            'bank_branch_name' => $query['bank_branch_name'] ?? '',
+            'sol_id' => $query['sol_id'] ?? ''
+        ] : [];
         $this->load->view('Home/employee-dashboard', $data);
     }
+
+
+
     public function EmpAttendance()
     {
         $currentbrach = $this->session->userdata('user');
@@ -479,8 +502,6 @@ class Admin extends CI_Controller
             $this->db->where('operation', $operation); // ✅ Supervisor ke liye filter
         }
         $totalbranch_emp = $this->db->count_all_results('employee');
-
-
 
         // ✅ Get employees who have attendance for today
         $this->db->distinct();

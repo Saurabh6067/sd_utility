@@ -70,31 +70,34 @@
                                         </tr>
                                     </thead>
                                     <tbody class="table__body">
-                                        <?php
-                                        $i = 1;
-                                        foreach ($leavetype as $value) {
-                                            ?>
-                                            <tr>
-                                                <td><?= $i++ ?></td>
-                                                <td><?= $value['leavetype'] ?></td>
-                                                <td><?= $value['day'] ?></td>
-                                                <td><?= $value['created_at_date'] ?></td>
-                                                <td>
-                                                    <div class="d-flex align-items-center justify-content-start gap-10">
-                                                        <button type="button" class="table__icon edit"
-                                                            data-bs-toggle="modal" data-bs-target="#meetingEdit"
-                                                            data-id="<?= $value['id'] ?>">
-                                                            <i class="fa-sharp fa-light fa-pen"></i>
-                                                        </button>
-                                                        <button class="removeBtn table__icon delete">
-                                                            <i class="fa-regular fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <?php
-                                        }
-                                        ?>
+                                    <?php if (!empty($leavetype)) : ?>
+    <?php $i = 1; ?>
+    <?php foreach ($leavetype as $value) : ?>
+        <tr>
+            <td><?= $i++ ?></td>
+            <td><?= $value['leavetype'] ?></td>
+            <td><?= $value['day'] ?></td>
+            <td><?= $value['created_at_date'] ?></td>
+            <td>
+                <div class="d-flex align-items-center justify-content-start gap-10">
+                    <button type="button" class="table__icon edit"
+                        data-bs-toggle="modal" data-bs-target="#meetingEdit"
+                        data-id="<?= $value['id'] ?>">
+                        <i class="fa-sharp fa-light fa-pen"></i>
+                    </button>
+                    <button class="removeBtn table__icon delete">
+                        <i class="fa-regular fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+<?php else : ?>
+    <tr>
+        <td colspan="5" class="text-center">No records found</td>
+    </tr>
+<?php endif; ?>
+
                                     </tbody>
                                 </table>
                             </div>

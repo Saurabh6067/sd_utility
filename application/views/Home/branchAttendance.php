@@ -181,8 +181,9 @@
                             $month_name = date('F'); // Get full month name
                             
                             // Fetch employees
-                            $employees = $this->db->where('branch', $branch_id)->get('employee')->result_array();
-
+                            // $employees = $this->db->where('branch', $branch_id)->get('employee')->result_array();
+                            $employees = $this->db->where('bank_branch_name', $branch_id)->get('employee')->result_array();
+                            
                             // Fetch attendance records for the current month
                             $attendance_data = $this->db->query("
                             SELECT user_id, DAY(today_date) as day, remark
@@ -190,7 +191,7 @@
                             WHERE branch_id = '$branch_id' 
                             AND MONTH(today_date) = '$current_month' 
                             AND YEAR(today_date) = '$current_year'
-                        ")->result_array();
+                            ")->result_array();
 
                             // Organize attendance records in an associative array
                             $attendance_map = [];

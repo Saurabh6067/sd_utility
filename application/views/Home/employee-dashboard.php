@@ -211,6 +211,7 @@
 
             var branchdata = <?php echo json_encode(isset($branch) ? $branch : []); ?>;
             console.log('Attandance Data:', branchdata); // Debug log
+            // alert(branchdata); // Debug log
 
             if (!branchdata) {
                 console.error('No RC data available');
