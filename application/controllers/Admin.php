@@ -292,7 +292,7 @@ class Admin extends CI_Controller
             }
         } else {
             // $data['tbl_leavetype'] = $this->db->query("Select * from `leavetype` where `status` = 'true'")->result_array();
-            $data['tbl_leavetype'] = $this->db->query("Select * from `tbl_leavetype` where `status` = 'true'")->result_array();
+            $data['leavetype'] = $this->db->query("Select * from `tbl_leavetype` where `status` = 'true'")->result_array();
             $this->load->view('Home/add_leavetype', $data);
         }
     }
