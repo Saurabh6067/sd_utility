@@ -1987,28 +1987,19 @@
                                                     Type<span>*</span></label>
                                             </div>
                                             <div class="form__input">
-                                                <select id="largeSelect" class="form-select">
-                                                    <option value="0">Select Leave Type</option>
-                                                    <option value="1">Medical Leave</option>
-                                                    <option value="2">Personal Leave</option>
-                                                    <option value="3">Vacation Leave</option>
-                                                    <option value="4">Monthly Leave</option>
-                                                    <option value="5">Yearly Leave</option>
-                                                </select>
+                                            <select name="leavetype_id" id="largeSelect" class="form-select">
+                                                <option selected="true" disabled="true">Select Leave Type</option>
+                                                <?php 
+                                                $leaveTypes = $this->db->get('tbl_leavetype')->result(); 
+                                                foreach ($leaveTypes as $leave) {
+                                                    echo '<option value="' . $leave->id . '">' . $leave->leavetype . '</option>';
+                                                }
+                                                ?>
+                                            </select>
+
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- <div class="col-md-12">
-                                        <div class="from__input-box">
-                                            <div class="form__input-title">
-                                                <label class="form-check-label" for="dateDuration">Leave
-                                                    Duration</label>
-                                            </div>
-                                            <div class="form__input">
-                                                <input class="form-control" id="dateDuration" type="text" required="">
-                                            </div>
-                                        </div>
-                                    </div> -->
                                     <div class="col-sm-6">
                                         <label for="">Date From</label>
                                         <input type="date" name="from_date" id="" class="form-control ">
@@ -2020,21 +2011,10 @@
                                     <div class="col-md-12">
                                         <div class="from__input-box">
                                             <div class="form__input-title">
-                                                <label for="numberDays">Number of days <span>*</span></label>
-                                            </div>
-                                            <div class="form__input">
-                                                <input class="form-control" name="numberDays" id="numberDays"
-                                                    type="text" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="from__input-box">
-                                            <div class="form__input-title">
                                                 <label>Reason <span>*</span></label>
                                             </div>
                                             <div class="form__input">
-                                                <textarea class="form-control" name="name" required=""></textarea>
+                                                <textarea class="form-control" name="reason" required=""></textarea>
                                             </div>
                                         </div>
                                     </div>
