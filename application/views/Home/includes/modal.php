@@ -290,10 +290,10 @@
                             <div class="col-lg-6">
                                 <div class="from__input-box">
                                     <div class="form__input-title">
-                                        <label for="circleName">Assets Name<span>*</span></label>
+                                        <label for="asset_name">Assets Name<span>*</span></label>
                                     </div>
                                     <div class="form__input">
-                                        <input class="form-control" name="assets" id="assets" type="text"
+                                        <input class="form-control" name="asset_name" id="asset_name" type="text"
                                             required>
                                     </div>
                                 </div>
@@ -304,7 +304,52 @@
                                         <label for="day">Assets Image<span>*</span></label>
                                     </div>
                                     <div class="form__input">
-                                        <input class="form-control" name="assetsimg" id="assetsimg" type="file" required>
+                                        <input class="form-control" name="assetsimg" id="assetsimg" type="file"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="from__input-box">
+                                    <div class="form__input-title">
+                                        <label for="asset_type">Assets Type<span>*</span></label>
+                                    </div>
+                                    <div class="form__input">
+                                        <input class="form-control" name="asset_type" id="asset_type" type="text"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="from__input-box">
+                                    <div class="form__input-title">
+                                        <label for="asset_quantity">Assets Quantity<span>*</span></label>
+                                    </div>
+                                    <div class="form__input">
+                                        <input class="form-control" name="asset_quantity" id="asset_quantity"
+                                            type="text" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="from__input-box">
+                                    <div class="form__input-title">
+                                        <label for="asset_price">Assets Price<span>*</span></label>
+                                    </div>
+                                    <div class="form__input">
+                                        <input class="form-control" name="asset_price" id="asset_price" type="text"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="from__input-box">
+                                    <div class="form__input-title">
+                                        <label for="asset_description">Assets Description<span>*</span></label>
+                                    </div>
+                                    <div class="form__input">
+                                        <input class="form-control" name="asset_description" id="asset_description"
+                                            type="text" required>
                                     </div>
                                 </div>
                             </div>

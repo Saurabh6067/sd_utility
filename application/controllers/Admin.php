@@ -814,7 +814,42 @@ class Admin extends CI_Controller
     }
 
     public function addAssets(){
-        $this->load->view('Home/addassets');
+        $action = $this->uri->segment(3);
+
+        if ($action === 'add' && $this->input->server('REQUEST_METHOD') === 'POST'){
+            $asset_name = $this->input->post('asset_name');
+            $asset_type = $this->input->post('asset_type');
+            $asset_quantity = $this->input->post('asset_quantity');
+            $asset_price = $this->input->post('asset_price');
+            $asset_description = $this->input->post('asset_description');
+
+            if (empty($asset_name) || empty($asset_type) || empty($asset_quantity) || empty($asset_price) || empty($asset_description)){
+                echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
+                return;
+            }
+
+            $data = [
+                'asset_name' => $asset_name,
+                'asset_type' => $asset_type,
+                'asset_quantity' => $asset_quantity,
+                'asset_price' => $asset_price,
+                'asset_description' => $asset_description,
+                'created_at_time' => date('H:i:s'),
+                'created_at_date' => date('Y-m-d'),
+            ];
+
+            $insert = $this->db->insert('assets', $data);
+
+            if ($insert){
+                echo json_encode(['status' => 'success', 'message' => 'Asset added successfully.']);
+            }else{
+                echo json_encode(['status' => 'error', 'message' => 'Failed to add asset.']);
+            }
+
+        }else{
+            $this->load->view('Home/addassets');
+        }
+
     }
 
 
