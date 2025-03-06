@@ -21,7 +21,7 @@ class Admin extends CI_Controller
     {
         $this->load->view('Home/index');
     }
-    
+
     public function Employeadd()
     {
         $segment = $this->uri->segment(3);
@@ -302,7 +302,7 @@ class Admin extends CI_Controller
     public function AddLeaveType()
     {
         $action = $this->uri->segment(3);
-        
+
         // Handle Edit action
         if ($this->uri->segment(4) == true) {
             $id = $this->uri->segment(4);
@@ -437,7 +437,7 @@ class Admin extends CI_Controller
 
     public function EmpDashbaord()
     {
-        $currentbranch = $this->session->userdata('user'); 
+        $currentbranch = $this->session->userdata('user');
         $query = $this->db->get_where('employee', ['bank_branch_name' => $currentbranch['bank_branch_name']])->row_array();
         $data['branch'] = !empty($query) ? [
             'bank_branch_name' => $query['bank_branch_name'] ?? '',
@@ -604,9 +604,9 @@ class Admin extends CI_Controller
         $total_days = cal_days_in_month(CAL_GREGORIAN, $current_month, $current_year);
 
         $branch_id = $this->sessiondata['bank_branch_name'];
-        $session_role = $this->session_role; 
+        $session_role = $this->session_role;
         if ($session_role == 'branch_manager') {
-            $this->db->where('bank_branch_name', $branch_id); 
+            $this->db->where('bank_branch_name', $branch_id);
         } elseif ($session_role == 'supervisor') {
             $operation = $this->sessiondata['operation']; // ✅ Supervisor ka operation column
             $this->db->where('operation', $operation); // ✅ Supervisor ke liye filter
@@ -818,44 +818,69 @@ class Admin extends CI_Controller
         $this->load->view('import');
     }
 
-    public function addAssets(){
+    public function addAssets()
+    {
         $action = $this->uri->segment(3);
 
-        if ($action === 'add' && $this->input->server('REQUEST_METHOD') === 'POST'){
+        if ($action === 'add' && $this->input->server('REQUEST_METHOD') === 'POST') {
             $asset_name = $this->input->post('asset_name');
             $asset_type = $this->input->post('asset_type');
             $asset_quantity = $this->input->post('asset_quantity');
             $asset_price = $this->input->post('asset_price');
             $asset_description = $this->input->post('asset_description');
 
-            if (empty($asset_name) || empty($asset_type) || empty($asset_quantity) || empty($asset_price) || empty($asset_description)){
+            // Check if required fields are empty
+            if (empty($asset_name) || empty($asset_type) || empty($asset_quantity) || empty($asset_price) || empty($asset_description)) {
                 echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
                 return;
             }
 
+            // Image upload handling
+            $imagePath = '';
+            if (!empty($_FILES['asset_img']['name'])) {
+                $config['upload_path'] = './uploads/assets/'; // Folder to store images
+                $config['allowed_types'] = 'jpg|jpeg|png|gif';  // Allowed file types
+                $config['max_size'] = 2048; // Max size in KB (2MB)
+                $config['file_name'] = time() . '_' . $_FILES['asset_img']['name']; // Rename the file
+
+                $this->load->library('upload', $config);
+
+                if ($this->upload->do_upload('asset_img')) {
+                    $uploadData = $this->upload->data();
+                    $imagePath = 'uploads/assets/' . $uploadData['file_name']; // Save path in DB
+                } else {
+                    echo json_encode(['status' => 'error', 'message' => $this->upload->display_errors()]);
+                    return;
+                }
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Please upload an image.']);
+                return;
+            }
+
+            // Prepare data for database insertion
             $data = [
                 'asset_name' => $asset_name,
                 'asset_type' => $asset_type,
                 'asset_quantity' => $asset_quantity,
                 'asset_price' => $asset_price,
                 'asset_description' => $asset_description,
+                'asset_img' => $imagePath, // Save image path
                 'created_at_time' => date('H:i:s'),
                 'created_at_date' => date('Y-m-d'),
             ];
 
             $insert = $this->db->insert('assets', $data);
 
-            if ($insert){
+            if ($insert) {
                 echo json_encode(['status' => 'success', 'message' => 'Asset added successfully.']);
-            }else{
+            } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to add asset.']);
             }
-
-        }else{
+        } else {
             $this->load->view('Home/addassets');
         }
-
     }
+
 
 
 
