@@ -115,7 +115,7 @@
 
 
             <!-- Edit Leave Type -->
-            <div class="modal fade" id="EditModal">
+            <!-- <div class="modal fade" id="EditModal">
                 <div class="modal-dialog">
                     <div class="modal-content border-primary">
                         <div class="modal-header p-1" style="background-color:#4da7ff">
@@ -135,7 +135,7 @@
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- Edit Leave Type -->
 
 

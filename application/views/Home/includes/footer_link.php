@@ -53,6 +53,23 @@
 <script src="<?= base_url('assets/Home/js/main.js') ?>"></script>
 <script src="<?= base_url('assets/Home/js/vendor/sidebar.js') ?>"></script>
 
+<div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+
+            <div class="modal-header px-4">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Update Data</h5>
+            </div>
+
+            <!-- Body Start Here -->
+            <div class="modal-body px-4">
+            </div>
+            <!-- Body End Here -->
+
+        </div>
+    </div>
+</div>
+
     <!-- Delete here  -->
     <script>
        function DeleteWithoutImage(id, table){
