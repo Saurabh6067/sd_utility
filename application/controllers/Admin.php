@@ -300,6 +300,20 @@ class Admin extends CI_Controller
 
 
     // Delete here  j
+    // public function DeleteWithoutImage()
+    // {
+    //     $id = $this->input->post('id');
+    //     $table = $this->input->post('table');
+    //     $this->db->where('id', $id);
+    //     $delete = $this->db->delete($table);
+
+    //     if ($delete) {
+    //         echo 1;
+    //     } else {
+    //         echo 0;
+    //     }
+    // }
+
     public function DeleteWithoutImage()
     {
         $id = $this->input->post('id');
@@ -307,10 +321,12 @@ class Admin extends CI_Controller
         $this->db->where('id', $id);
         $delete = $this->db->delete($table);
 
+        header('Content-Type: application/json');
+        
         if ($delete) {
-            echo 1;
+            echo json_encode(['success' => true, 'message' => 'Delete Successfully!']);
         } else {
-            echo 0;
+            echo json_encode(['success' => false, 'message' => 'Deletion failed!']);
         }
     }
 
