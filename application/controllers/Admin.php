@@ -814,67 +814,83 @@ class Admin extends CI_Controller
     public function addAssets()
     {
         $action = $this->uri->segment(3);
-
+    
         if ($action === 'add' && $this->input->server('REQUEST_METHOD') === 'POST') {
             $asset_name = $this->input->post('asset_name');
             $asset_type = $this->input->post('asset_type');
             $asset_quantity = $this->input->post('asset_quantity');
             $asset_price = $this->input->post('asset_price');
             $asset_description = $this->input->post('asset_description');
-
-            // Check if required fields are empty
+    
+            // Validate required fields
             if (empty($asset_name) || empty($asset_type) || empty($asset_quantity) || empty($asset_price) || empty($asset_description)) {
                 echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
                 return;
             }
-
-            // Image upload handling
+    
+            // Image Upload
+            $upload_status = true;
             $imagePath = '';
+    
             if (!empty($_FILES['asset_img']['name'])) {
-                $config['upload_path'] = './uploads/assets/'; // Folder to store images
-                $config['allowed_types'] = 'jpg|jpeg|png|gif';  // Allowed file types
-                $config['max_size'] = 2048; // Max size in KB (2MB)
-                $config['file_name'] = time() . '_' . $_FILES['asset_img']['name']; // Rename the file
-
+                $ext = pathinfo($_FILES["asset_img"]["name"], PATHINFO_EXTENSION);
+                $filename = time() . "_asset." . $ext; // Unique file name
+    
+                $config['upload_path'] = './uploads/assets/';
+                $config['allowed_types'] = 'jpg|jpeg|png|gif';
+                $config['max_size'] = 2048; // 2MB
+                $config['file_name'] = $filename;
+    
                 $this->load->library('upload', $config);
-
+                $this->upload->initialize($config);
+    
                 if ($this->upload->do_upload('asset_img')) {
                     $uploadData = $this->upload->data();
                     $imagePath = 'uploads/assets/' . $uploadData['file_name']; 
                 } else {
-                    echo json_encode(['status' => 'error', 'message' => $this->upload->display_errors()]);
-                    return;
+                    $upload_status = false;
+                    $upload_error = $this->upload->display_errors();
                 }
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Please upload an image.']);
-                return;
+                $upload_status = false;
+                $upload_error = "Please upload an image.";
             }
-
-            // Prepare data for database insertion
-            $data = [
-                'asset_name' => $asset_name,
-                'asset_type' => $asset_type,
-                'asset_quantity' => $asset_quantity,
-                'asset_price' => $asset_price,
-                'asset_description' => $asset_description,
-                'asset_img' => $imagePath, // Save image path
-                'created_at_time' => date('H:i:s'),
-                'created_at_date' => date('Y-m-d'),
-            ];
-
-            $insert = $this->db->insert('assets', $data);
-
-            if ($insert) {
-                echo json_encode(['status' => 'success', 'message' => 'Asset added successfully.']);
+    
+            if ($upload_status) {
+                // Prepare data for database insertion
+                $data = [
+                    'asset_name' => $asset_name,
+                    'asset_type' => $asset_type,
+                    'asset_quantity' => $asset_quantity,
+                    'asset_price' => $asset_price,
+                    'asset_description' => $asset_description,
+                    'asset_img' => $imagePath,
+                    'is_status' => 'true',
+                    'created_at_time' => date('H:i:s'),
+                    'created_at_date' => date('Y-m-d'),
+                ];
+    
+                $insert = $this->db->insert('assets', $data);
+    
+                if ($insert) {
+                    echo json_encode(['status' => 'success', 'message' => 'Asset added successfully.']);
+                } else {
+                    echo json_encode(['status' => 'error', 'message' => 'Failed to add asset.']);
+                }
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Failed to add asset.']);
+                echo json_encode(['status' => 'error', 'message' => $upload_error]);
             }
         } else {
-            $data['assets'] = $this->db->query("Select * from `assets` where is_status = 'true'")->result_array();
-            $this->load->view('Home/addassets',$data);
+            $data['assets'] = $this->db->query("SELECT * FROM `assets` WHERE is_status = 'true'")->result_array();
+            $this->load->view('Home/addassets', $data);
         }
     }
+    
 
+
+
+
+  
 
 
 
