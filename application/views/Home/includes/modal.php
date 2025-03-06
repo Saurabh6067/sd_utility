@@ -274,6 +274,53 @@
 </div>
 <!-- Employee leave modal end -->
 
+<!-- Add Leave type Modal -->
+<div class="modal fade" id="addassets" tabindex="-1" aria-labelledby="addassetsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addassetsLabel">Add Assets</h5>
+                <button type="button" class="bd-btn-close" data-bs-dismiss="modal" aria-label="Close"><i
+                        class="fa-solid fa-xmark-large"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="form_addassets" enctype="multipart/form-data" action="#" method="post">
+                    <div class="card__wrapper">
+                        <div class="row gy-20">
+                            <div class="col-lg-6">
+                                <div class="from__input-box">
+                                    <div class="form__input-title">
+                                        <label for="circleName">Assets Name<span>*</span></label>
+                                    </div>
+                                    <div class="form__input">
+                                        <input class="form-control" name="assets" id="assets" type="text"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="from__input-box">
+                                    <div class="form__input-title">
+                                        <label for="day">Assets Image<span>*</span></label>
+                                    </div>
+                                    <div class="form__input">
+                                        <input class="form-control" name="assetsimg" id="assetsimg" type="file" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="submit__btn d-flex align-items-center justify-content-end gap-10">
+                        <button type="button" class="btn btn-danger" id="cancelButton">Clear</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Add Leave type Modal-->
+
 
 
 

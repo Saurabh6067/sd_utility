@@ -819,7 +819,7 @@ class Admin extends CI_Controller
     }
 
     public function addAssets(){
-        $this->load->view('Home/addAssets');
+        $this->load->view('Home/addassets');
     }
 
 

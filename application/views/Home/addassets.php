@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Add Leave Type</title>
+    <title>Add Assets</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-style-mode" content="1">
@@ -36,7 +36,7 @@
                         <nav>
                             <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Leave Type</li>
+                                <li class="breadcrumb-item active" aria-current="page">All Assets</li>
                             </ol>
                         </nav>
                     </div>
@@ -48,8 +48,8 @@
                             <div class="d-flex align-items-center justify-content-end gap-15">
                                 <div>
                                     <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
-                                        data-bs-target="#addleavetype">
-                                        Add Leave Type</button>
+                                        data-bs-target="#addassets">
+                                        Add Assets Type</button>
                                 </div>
                             </div>
                         </div>
@@ -131,16 +131,16 @@
     <?php include 'includes/footer_link.php'; ?>
     <script>
         $(document).ready(function () {
-            $('#leaveAddform').on('submit', function (e) {
+            $('#form_addassets').on('submit', function (e) {
                 e.preventDefault();
                 const formData = $(this).serialize();
                 $.ajax({
-                    url: "<?= base_url('Admin/AddLeaveType/add') ?>",
+                    url: "<?= base_url('Admin/addAssets/add') ?>",
                     method: 'POST',
                     data: formData,
                     dataType: 'json',
                     success: function (response) {
-                        $('#addleavetype').modal('hide');
+                        $('#addassets').modal('hide');
                         if (response.status === 'success') {
                             Swal.fire({
                                 title: 'Success!',
@@ -148,7 +148,7 @@
                                 icon: 'success',
                                 confirmButtonText: 'OK',
                             }).then(() => {
-                                $('#leaveAddform')[0].reset();
+                                $('#form_addassets')[0].reset();
                                 window.location.reload();
                             });
                         } else {
@@ -167,7 +167,7 @@
             });
 
             $('#cancelButton').on('click', function () {
-                $('#leaveAddform')[0].reset();
+                $('#addassets')[0].reset();
             });
         });
 
