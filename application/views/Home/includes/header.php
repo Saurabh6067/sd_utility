@@ -1,5 +1,5 @@
 <?php
-$user = $this->session->userdata('role');
+// $user = $this->session->userdata('role');
 $user_name = "Saurabh";
 ?>
 
@@ -15,7 +15,7 @@ $user_name = "Saurabh";
                     </div>
                 </a>
             </div>
-            <h2 class="header__title"><?= $user['role'] ?> <span style="font-size:15px;font-weight:400"></span></h2>
+            <h2 class="header__title">Saurabh Singh <span style="font-size:15px;font-weight:400"></span></h2>
         </div>
         <div class="app__header-right">
             <div class="app__header-action">
