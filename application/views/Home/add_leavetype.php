@@ -88,7 +88,7 @@
                                                         <!-- <button class="removeBtn table__icon delete">
                                                             <i class="fa-regular fa-trash"></i>
                                                         </button> -->
-                                                        <button class="removeBtn table__icon delete"
+                                                        <button class="btn btn-danger"
                                                             onclick="DeleteWithoutImage('<?= isset($value['id']) ? $value['id'] : ''; ?>', 'tbl_leavetype');">
                                                             <i class="fa-regular fa-trash"></i>
                                                         </button>
@@ -177,50 +177,50 @@
     </script>
     <script>
        function DeleteWithoutImage(id, table){
-    alert(id);
-    var status = true;
-    
-    Swal.fire({
-        title: "Are You Sure?",
-        text: "You Want To Delete?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: "<?= base_url('Admin/DeleteWithoutImage') ?>",
-                type: "post",
-                data: {
-                    'id': id,
-                    'table': table
-                },
-                success: function(response) {
-                    if (response == 1) {
-                        Swal.fire({
-                            title: 'Success!',
-                            text: 'Delete Successfully!',
-                            icon: 'success',
-                            confirmButtonText: 'OK',
-                        }).then(() => {
-                            window.location.reload();
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'Deletion failed!',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    }
+            alert(id);
+            var status = true;
+            
+            Swal.fire({
+                title: "Are You Sure?",
+                text: "You Want To Delete?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "<?= base_url('Admin/DeleteWithoutImage') ?>",
+                        type: "post",
+                        data: {
+                            'id': id,
+                            'table': table
+                        },
+                        success: function(response) {
+                            if (response == 1) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: 'Delete Successfully!',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK',
+                                }).then(() => {
+                                    window.location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Deletion failed!',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        }
+                    });
                 }
             });
+            return status;
         }
-    });
-    return status;
-}
     </script>
 
 </body>

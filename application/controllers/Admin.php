@@ -314,6 +314,23 @@ class Admin extends CI_Controller
         }
     }
 
+    // public function DeleteWithoutImage()
+    // {
+    //     $id = $this->input->post('id');
+    //     $table = $this->input->post('table');
+    //     // echo $table;die();
+    //     $this->db->where('id', $id);
+    //     $delete = $this->db->delete($table);
+
+    //     header('Content-Type: application/json');
+        
+    //     if ($delete) {
+    //         echo json_encode(['success' => true, 'message' => 'Delete Successfully!']);
+    //     } else {
+    //         echo json_encode(['success' => false, 'message' => 'Deletion failed!']);
+    //     }
+    // }
+
 
 
 
