@@ -1975,7 +1975,7 @@
                         class="fa-solid fa-xmark-large"></i></button>
             </div>
             <div class="modal-body">
-                <form action="#">
+                <form action="<?= base_url('Admin/Leave/Add')?>" method="post">
                     <div class="row gy-20">
                         <div class="col-xl-12">
                             <div class="card__wrapper mb-20">
@@ -2023,7 +2023,7 @@
                         </div>
                     </div>
                     <div class="submit__btn text-center">
-                        <button class="btn btn-primary">Submit</button>
+                        <button class="btn btn-primary" type="submit">Submit</button>
                     </div>
                 </form>
             </div>
