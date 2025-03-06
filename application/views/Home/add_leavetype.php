@@ -114,32 +114,6 @@
             <!-- App side area end -->
 
 
-            <!-- Edit Leave Type -->
-            <!-- <div class="modal fade" id="EditModal">
-                <div class="modal-dialog">
-                    <div class="modal-content border-primary">
-                        <div class="modal-header p-1" style="background-color:#4da7ff">
-                            <h5 class="modal-title text-white">Edit Leave Type</h5>
-                            <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form action="<?php echo base_url('Admin/AddLeaveType/Update'); ?>" method="post">
-                            <div class="modal-body">
-                            </div>
-                            <div class="modal-footer d-block p-1">
-                            <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
-                            <input type="text" name="" value="ok" id="">
-                            <button type="submit" class="btn" style="background-color:#4da7ff;color:white"> <i class="fa fa-check-circle"></i> Update <i class="fa fa-spin fa-spinner" id="updateSpin" style="display:none;"></i></button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div> -->
-            <!-- Edit Leave Type -->
-
-
-
             <!-- footer area start -->
             <?php include 'includes/footer.php'; ?>
             <!-- footer area end -->
