@@ -9,6 +9,7 @@ if ($this->session->flashdata('res') == 'success') {
     echo '<script>$.notify("' . $this->session->flashdata('msg') . '","error")</script>';
 }
 ?>
+
 <!-- JS here -->
 <script src="<?= base_url('assets/Home/js/vendor/calendar-activision.js') ?>"></script>
 <script src="<?= base_url('assets/Home/js/vendor/jquery-3.7.0.js') ?>"></script>

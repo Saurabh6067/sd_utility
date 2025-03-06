@@ -1998,7 +1998,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <!-- <div class="col-md-12">
                                         <div class="from__input-box">
                                             <div class="form__input-title">
                                                 <label class="form-check-label" for="dateDuration">Leave
@@ -2008,6 +2008,14 @@
                                                 <input class="form-control" id="dateDuration" type="text" required="">
                                             </div>
                                         </div>
+                                    </div> -->
+                                    <div class="col-sm-6">
+                                        <label for="">Date From</label>
+                                        <input type="date" name="from_date" id="" class="form-control ">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="">Date to</label>
+                                        <input type="date" name="to_date" id="" class="form-control ">
                                     </div>
                                     <div class="col-md-12">
                                         <div class="from__input-box">
