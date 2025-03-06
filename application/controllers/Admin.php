@@ -441,10 +441,7 @@ class Admin extends CI_Controller
                         'created_at_time' => date('h:i A'),
                         'leave_status' => 'pending'
                     ];
-                    // echo "<pre>";
-                    // print_r($insertdata);
-                    // die();
-
+                    
                     $ins = $this->db->insert("emp_leave_request", $insertdata);
                     if ($ins) {
                         $this->session->set_flashdata(['res' => 'success', 'msg' => 'Leave Request Sent Successfully!']);
