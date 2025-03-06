@@ -353,9 +353,7 @@ class Admin extends CI_Controller
 
             $data = [
                 'leavetype' => $leavetype,
-                'day' => $day,
-                'created_at_time' => date('H:i:s'),
-                'created_at_date' => date('Y-m-d')
+                'day' => $day
             ];
 
             $this->db->where('id', $id);
