@@ -153,9 +153,6 @@
                                                     $emp_id = $item->employee_id;
                                                     $empdata = $this->db->get_where("employee", array("id" => $emp_id))->row();
                                                     $name = isset($empdata->name) ? $empdata->name : 'N/A';
-
-                                                    $leavetypedata = $this->db->get_where("tbl_leavetype", array("id" => $item->leavetype_id))->row();
-                                                    $leavetype = isset($leavetypedata->leavetype) ? $leavetypedata->leavetype : 'N/A';
                                                     ?>
                                                     <a href="profile.html"><?= $name; ?></a>
                                                 </div>
@@ -166,7 +163,6 @@
                                                     hi
                                             </td>
                                             <td> Days</td>
-                                            <td class="table__leave-">30</td>
                                             <td class="table__leave-rason"><?= isset($item->reason) ? $item->reason : ''; ?></td>
                                             <td class="table__delivery"><span
                                                     class="bd-badge bg-success">Approved</span></td>
