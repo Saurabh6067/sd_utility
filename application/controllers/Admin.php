@@ -300,36 +300,36 @@ class Admin extends CI_Controller
 
 
     // Delete here  j
-    // public function DeleteWithoutImage()
-    // {
-    //     $id = $this->input->post('id');
-    //     $table = $this->input->post('table');
-    //     $this->db->where('id', $id);
-    //     $delete = $this->db->delete($table);
-
-    //     if ($delete) {
-    //         echo 1;
-    //     } else {
-    //         echo 0;
-    //     }
-    // }
-
     public function DeleteWithoutImage()
     {
         $id = $this->input->post('id');
         $table = $this->input->post('table');
-        // echo $table;die();
         $this->db->where('id', $id);
         $delete = $this->db->delete($table);
 
-        header('Content-Type: application/json');
-        
         if ($delete) {
-            echo json_encode(['success' => true, 'message' => 'Delete Successfully!']);
+            echo 1;
         } else {
-            echo json_encode(['success' => false, 'message' => 'Deletion failed!']);
+            echo 0;
         }
     }
+
+    // public function DeleteWithoutImage()
+    // {
+    //     $id = $this->input->post('id');
+    //     $table = $this->input->post('table');
+    //     // echo $table;die();
+    //     $this->db->where('id', $id);
+    //     $delete = $this->db->delete($table);
+
+    //     header('Content-Type: application/json');
+        
+    //     if ($delete) {
+    //         echo json_encode(['success' => true, 'message' => 'Delete Successfully!']);
+    //     } else {
+    //         echo json_encode(['success' => false, 'message' => 'Deletion failed!']);
+    //     }
+    // }
 
 
 
