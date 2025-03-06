@@ -179,15 +179,38 @@
                                             </td>
                                             <td><?= $daysDifference; ?> Days</td>
                                             <td class="table__leave-rason"><?= isset($item->reason) ? $item->reason : ''; ?></td>
-                                            <td class="table__delivery"><span
-                                                    class="bd-badge bg-success">Approved</span></td>
+                                            <!-- <td class="table__delivery"><span
+                                                    class="bd-badge bg-success">Approved</span></td> -->
+
+                                                    <?php
+                                                    // Assuming $item->status contains the status value ('pending', 'approved', 'rejected')
+                                                    $leave_status = $item->leave_status;
+                                                    $buttonClass = 'btn btn-sm btn-pill';
+                                                    switch ($leave_status) {
+                                                        case 'pending':
+                                                            $buttonClass .= ' btn-primary';
+                                                            break;
+                                                        case 'approved':
+                                                            $buttonClass .= ' btn-success'; 
+                                                            break;
+                                                        case 'rejected':
+                                                            $buttonClass .= ' btn-danger';
+                                                            break;
+                                                        default:
+                                                            $buttonClass .= ' btn-secondary'; 
+                                                            break;
+                                                    }
+                                                    ?>
+                                                    <td class=""><button class="<?= $buttonClass ?>"><?= $leave_status ?></button></td>
+
                                             <td class="table__icon-box">
                                                 <div class="d-flex align-items-center justify-content-start gap-10">
                                                     <a href="#" class="table__icon edit">
                                                         <i class="fa-sharp fa-light fa-pen"></i>
                                                     </a>
-                                                    <button class="removeBtn table__icon delete"><i
-                                                            class="fa-regular fa-trash"></i></button>
+                                                    <button class="removeBtn table__icon delete">
+                                                        <i class="fa-regular fa-trash"></i>
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
