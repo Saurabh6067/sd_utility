@@ -298,6 +298,27 @@ class Admin extends CI_Controller
         }
     }
 
+
+    // Delete here 
+    public function DeleteWithoutImage()
+    {
+        $id = $this->input->post('id');
+        $table = $this->input->post('table');
+
+        $this->db->where('id', $id);
+        $delete = $this->db->delete($table);
+
+        if ($delete) {
+            echo 1;
+        } else {
+            echo 0;
+        }
+    }
+
+
+
+
+
     public function Leave()
     {
         $this->load->view('Home/admin_leave');

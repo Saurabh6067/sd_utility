@@ -71,32 +71,37 @@
                                     </thead>
                                     <tbody class="table__body">
                                     <?php if (!empty($leavetype)) : ?>
-    <?php $i = 1; ?>
-    <?php foreach ($leavetype as $value) : ?>
-        <tr>
-            <td><?= $i++ ?></td>
-            <td><?= $value['leavetype'] ?></td>
-            <td><?= $value['day'] ?></td>
-            <td><?= $value['created_at_date'] ?></td>
-            <td>
-                <div class="d-flex align-items-center justify-content-start gap-10">
-                    <button type="button" class="table__icon edit"
-                        data-bs-toggle="modal" data-bs-target="#meetingEdit"
-                        data-id="<?= $value['id'] ?>">
-                        <i class="fa-sharp fa-light fa-pen"></i>
-                    </button>
-                    <button class="removeBtn table__icon delete">
-                        <i class="fa-regular fa-trash"></i>
-                    </button>
-                </div>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-<?php else : ?>
-    <tr>
-        <td colspan="5" class="text-center">No records found</td>
-    </tr>
-<?php endif; ?>
+                                        <?php $i = 1; ?>
+                                        <?php foreach ($leavetype as $value) : ?>
+                                            <tr>
+                                                <td><?= $i++ ?></td>
+                                                <td><?= $value['leavetype'] ?></td>
+                                                <td><?= $value['day'] ?></td>
+                                                <td><?= $value['created_at_date'] ?></td>
+                                                <td>
+                                                    <div class="d-flex align-items-center justify-content-start gap-10">
+                                                        <button type="button" class="table__icon edit"
+                                                            data-bs-toggle="modal" data-bs-target="#meetingEdit"
+                                                            data-id="<?= $value['id'] ?>">
+                                                            <i class="fa-sharp fa-light fa-pen"></i>
+                                                        </button>
+                                                        <!-- <button class="removeBtn table__icon delete">
+                                                            <i class="fa-regular fa-trash"></i>
+                                                        </button> -->
+                                                        <button class="removeBtn table__icon delete"
+                                                            onclick="DeleteWithoutImage('<?= isset($item['id']) ? $item['id'] : ''; ?>', 'tbl_leavetype');">
+                                                            <i class="fa-regular fa-trash"></i>
+                                                        </button>
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else : ?>
+                                        <tr>
+                                            <td colspan="5" class="text-center">No records found</td>
+                                        </tr>
+                                    <?php endif; ?>
 
                                     </tbody>
                                 </table>
@@ -145,7 +150,7 @@
                                 confirmButtonText: 'OK',
                             }).then(() => {
                                 $('#leaveAddform')[0].reset();
-
+                                window.location.reload();
                             });
                         } else {
                             Swal.fire({
@@ -166,6 +171,44 @@
                 $('#leaveAddform')[0].reset();
             });
         });
+
+
+        // Delete here 
+        function DeleteWithoutImage(id, table) {
+        var status = true;
+        swal({
+            title: "Are You Sure?",
+            text: "You Want To Delete?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: "<?= base_url('Admin/DeleteWithoutImage') ?>",
+                    type: "post",
+                    data: {
+                        'id': id,
+                        'table': table
+                    },
+                    success: function(response) {
+                        if (response == 1) {
+                            swal("Delete Successfully!", {
+                                icon: 'success',
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            swal("Deletion failed!", {
+                                icon: 'error',
+                            });
+                        }
+                    }
+                });
+            }
+        });
+        return status;
+    }
     </script>
 
 </body>
