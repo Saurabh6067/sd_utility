@@ -351,26 +351,19 @@ class Admin extends CI_Controller
             $leavetype = $this->input->post('leavetype');
             $day = $this->input->post('day');
 
-            if (empty($id) || empty($leavetype) || empty($day)) {
-                echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
-                return;
-            }
-
             $data = [
                 'leavetype' => $leavetype,
-                'day' => $day,
-                'updated_at_time' => date('H:i:s'),
-                'updated_at_date' => date('Y-m-d')
+                'day' => $day
             ];
 
             $this->db->where('id', $id);
             $update = $this->db->update('tbl_leavetype', $data);
-
             if ($update) {
-                echo json_encode(['status' => 'success', 'message' => 'Leave Type updated successfully.']);
+                $this->session->set_flashdata(['res' => 'success', 'msg' => 'Leave Type updated successfully.']);
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Failed to update Leave Type.']);
+                $this->session->set_flashdata(['res' => 'error', 'msg' => 'Failed to update Leave Type.']);
             }
+            redirect(base_url('Admin/AddLeaveType'));                     
         }
         // Default view load
         else {

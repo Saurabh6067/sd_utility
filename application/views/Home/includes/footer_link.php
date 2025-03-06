@@ -1,3 +1,14 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
+<?php
+if ($this->session->flashdata('res') == 'success') {
+    echo '<script>$.notify("' . $this->session->flashdata('msg') . '","success")</script>';
+} else if ($this->session->flashdata('res') == 'error') {
+    echo '<script>$.notify("' . $this->session->flashdata('msg') . '","error")</script>';
+}
+?>
 <!-- JS here -->
 <script src="<?= base_url('assets/Home/js/vendor/calendar-activision.js') ?>"></script>
 <script src="<?= base_url('assets/Home/js/vendor/jquery-3.7.0.js') ?>"></script>
