@@ -358,19 +358,12 @@ class Admin extends CI_Controller
 
             $this->db->where('id', $id);
             $update = $this->db->update('tbl_leavetype', $data);
-
             if ($update) {
-                echo json_encode([
-                    'status' => 'success',
-                    'message' => 'Leave Type updated successfully.',
-                    'redirect' => base_url('Admin/AddLeaveType')
-                ]);
+                $this->session->set_flashdata(['res' => 'success', 'msg' => 'Leave Type updated successfully.']);
             } else {
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => 'Failed to update Leave Type.'
-                ]);
-            }            
+                $this->session->set_flashdata(['res' => 'error', 'msg' => 'Failed to update Leave Type.']);
+            }
+            redirect(base_url('Admin/AddLeaveType'));                     
         }
         // Default view load
         else {
