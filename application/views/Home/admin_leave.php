@@ -187,13 +187,13 @@
                                                     $leave_status = $item->leave_status;
                                                     $buttonClass = 'btn btn-sm btn-pill';
                                                     switch ($leave_status) {
-                                                        case 'Pending':
+                                                        case 'pending':
                                                             $buttonClass .= ' btn-primary';
                                                             break;
-                                                        case 'Approved':
+                                                        case 'approved':
                                                             $buttonClass .= ' btn-success'; 
                                                             break;
-                                                        case 'Rejected':
+                                                        case 'rejected':
                                                             $buttonClass .= ' btn-danger';
                                                             break;
                                                         default:
