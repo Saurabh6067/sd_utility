@@ -299,12 +299,11 @@ class Admin extends CI_Controller
     }
 
 
-    // Delete here 
+    // Delete here  j
     public function DeleteWithoutImage()
     {
         $id = $this->input->post('id');
         $table = $this->input->post('table');
-
         $this->db->where('id', $id);
         $delete = $this->db->delete($table);
 

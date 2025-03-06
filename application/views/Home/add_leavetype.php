@@ -89,10 +89,9 @@
                                                             <i class="fa-regular fa-trash"></i>
                                                         </button> -->
                                                         <button class="removeBtn table__icon delete"
-                                                            onclick="DeleteWithoutImage('<?= isset($item['id']) ? $item['id'] : ''; ?>', 'tbl_leavetype');">
+                                                            onclick="DeleteWithoutImage('<?= isset($value['id']) ? $value['id'] : ''; ?>', 'tbl_leavetype');">
                                                             <i class="fa-regular fa-trash"></i>
                                                         </button>
-
                                                     </div>
                                                 </td>
                                             </tr>
@@ -174,41 +173,54 @@
 
 
         // Delete here 
-        function DeleteWithoutImage(id, table) {
-        var status = true;
-        swal({
-            title: "Are You Sure?",
-            text: "You Want To Delete?",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        }).then((willDelete) => {
-            if (willDelete) {
-                $.ajax({
-                    url: "<?= base_url('Admin/DeleteWithoutImage') ?>",
-                    type: "post",
-                    data: {
-                        'id': id,
-                        'table': table
-                    },
-                    success: function(response) {
-                        if (response == 1) {
-                            swal("Delete Successfully!", {
-                                icon: 'success',
-                            }).then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            swal("Deletion failed!", {
-                                icon: 'error',
-                            });
-                        }
+        
+    </script>
+    <script>
+       function DeleteWithoutImage(id, table){
+    alert(id);
+    var status = true;
+    
+    Swal.fire({
+        title: "Are You Sure?",
+        text: "You Want To Delete?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "<?= base_url('Admin/DeleteWithoutImage') ?>",
+                type: "post",
+                data: {
+                    'id': id,
+                    'table': table
+                },
+                success: function(response) {
+                    if (response == 1) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Delete Successfully!',
+                            icon: 'success',
+                            confirmButtonText: 'OK',
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Deletion failed!',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
                     }
-                });
-            }
-        });
-        return status;
-    }
+                }
+            });
+        }
+    });
+    return status;
+}
     </script>
 
 </body>
