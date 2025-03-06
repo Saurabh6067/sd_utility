@@ -1,6 +1,6 @@
 <?php
 $user = $this->session->userdata('role');
-$user_name = $user['role'];
+$user_name = "Saurabh";
 ?>
 
 <div class="app__header__area">
