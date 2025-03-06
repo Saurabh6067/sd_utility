@@ -14,13 +14,11 @@ class Api extends CI_Controller
         header('Content-Type: application/json');
         date_default_timezone_set("Asia/Kolkata");
     }
-
     private function getJsonInput()
     {
         $input = json_decode(file_get_contents('php://input'), true);
         return $input ? $input : $this->input->post();
     }
-
     private function calculateDistance($lat1, $lon1, $lat2, $lon2)
     {
         $earthRadius = 6371;
@@ -41,7 +39,6 @@ class Api extends CI_Controller
 
         return $earthRadius * $c;
     }
-
     public function markAbsent()
     {
         $current_date = date('Y-m-d');
@@ -84,8 +81,6 @@ class Api extends CI_Controller
 
         echo "Attendance records updated successfully!";
     }
-
-
     public function Test()
     {
 
@@ -318,13 +313,11 @@ class Api extends CI_Controller
 
         echo json_encode(['res' => 'success', 'data' => $response, 'msg' => 'Attendance details retrieved successfully.']);
     }
-
     public function getLeavetype()
     {
         $leavetype = $this->db->query('SELECT id , leavetype FROM `tbl_leavetype`')->result();
         echo json_encode(['res' => 'success', 'data' => $leavetype, 'msg' => 'Leave type retrieved successfully.']);
     }
-
     public function requestLeave()
     {
         $input = $this->getJsonInput();
@@ -356,7 +349,6 @@ class Api extends CI_Controller
         echo json_encode(['res' => 'success', 'msg' => 'Leave request submitted successfully.']);
 
     }
-
     public function getleavebyempid()
     {
         $input = $this->getJsonInput();
@@ -371,6 +363,55 @@ class Api extends CI_Controller
         $leavetype = $this->db->query("SELECT * FROM `emp_leave_request` WHERE `employee_id` = ?", [$empid])->result();
 
         echo json_encode(['res' => 'success', 'data' => $leavetype, 'msg' => 'Leave retrieved successfully.']);
+    }
+
+    public function Adduserpayment()
+    {
+        $input = $this->getJsonInput();
+        $opeartion = $input['opeartion'] ?? null;
+        $branch_name = $input['branch_name'] ?? null;
+        $emp_id = $input['emp_id'] ?? null;
+        $asset_id = $input['asset_id'] ?? null;
+        $problem = $input['problem'] ?? null;
+        $created_at_time = date('h:i A');
+        $created_at_date = date('Y-m-d');
+
+        if (!$opeartion || !$branch_name || !$emp_id || !$asset_id || !$problem) {
+            echo json_encode(['res' => 'error', 'msg' => 'All fields are required.']);
+            return;
+        }
+
+        $config['upload_path'] = './uploads/assets/';
+        $config['allowed_types'] = 'jpg|jpeg|png|gif';
+        $config['max_size'] = 2048;
+        $config['encrypt_name'] = true;
+
+        $this->load->library('upload', $config);
+
+        $attachment = null;
+        if (!empty($_FILES['attachment']['name'])) {
+            if (!$this->upload->do_upload('attachment')) {
+                echo json_encode(['res' => 'error', 'msg' => $this->upload->display_errors()]);
+                return;
+            } else {
+                $uploadData = $this->upload->data();
+                $attachment = $uploadData['file_name'];
+            }
+        }
+
+        $data = [
+            'operation' => $opeartion,
+            'branch_name' => $branch_name,
+            'emp_id' => $emp_id,
+            'asset_id' => $asset_id,
+            'problem' => $problem,
+            'device_img' => $attachment,
+            'created_at_time' => $created_at_time,
+            'created_at_date' => $created_at_date
+        ];
+
+        $this->db->insert('assets_complain', $data);
+        echo json_encode(['res' => 'success', 'msg' => 'Assets Complain submitted successfully.']);
     }
 
 
