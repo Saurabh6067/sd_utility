@@ -89,7 +89,7 @@
                                                             <i class="fa-regular fa-trash"></i>
                                                         </button> -->
                                                         <button class="removeBtn table__icon delete"
-                                                            onclick="DeleteWithoutImage('<?= isset($item['id']) ? $item['id'] : ''; ?>', 'tbl_leavetype');">
+                                                            onclick="DeleteWithoutImage('<?= isset($value['id']) ? $value['id'] : ''; ?>', 'tbl_leavetype');">
                                                             <i class="fa-regular fa-trash"></i>
                                                         </button>
                                                     </div>
