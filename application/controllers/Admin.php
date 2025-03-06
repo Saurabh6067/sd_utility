@@ -353,10 +353,14 @@ class Admin extends CI_Controller
 
             $data = [
                 'leavetype' => $leavetype,
-                'day' => $day
+                'day' => $day,
+                'created_at_time' => date('H:i:s'),
+                'created_at_date' => date('Y-m-d')
             ];
+
             $this->db->where('id', $id);
             $update = $this->db->update('tbl_leavetype', $data);
+
             if ($update) {
                 echo json_encode(['status' => 'success', 'message' => 'Leave Type updated successfully.']);
             } else {
