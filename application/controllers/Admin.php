@@ -441,7 +441,7 @@ class Admin extends CI_Controller
                         'created_at_time' => date('h:i A'),
                         'leave_status' => 'pending'
                     ];
-                    
+
                     $ins = $this->db->insert("emp_leave_request", $insertdata);
                     if ($ins) {
                         $this->session->set_flashdata(['res' => 'success', 'msg' => 'Leave Request Sent Successfully!']);
@@ -469,7 +469,10 @@ class Admin extends CI_Controller
             }
         } else {
             $data['leaves'] = $this->db->order_by("id", "DESC")->get_where("emp_leave_request", array("employee_id" => $this->user_id))->result();
-            $this->load->view("Home/admin_leave", $data);
+            echo "<pre>";
+            print_r($data);
+            die();
+            // $this->load->view("Home/admin_leave", $data);
         }
     }
 
