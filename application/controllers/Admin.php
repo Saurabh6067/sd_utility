@@ -304,7 +304,7 @@ class Admin extends CI_Controller
     {
         $id = $this->input->post('id');
         $table = $this->input->post('table');
-
+        echo $table;die();
         $this->db->where('id', $id);
         $delete = $this->db->delete($table);
 
