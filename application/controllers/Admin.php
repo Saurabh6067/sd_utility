@@ -468,11 +468,9 @@ class Admin extends CI_Controller
                 }
             }
         } else {
-            $data['leaves'] = $this->db->order_by("id", "DESC")->get_where("emp_leave_request", array("employee_id" => $this->user_id))->result();
-            echo "<pre>";
-            print_r($data);
-            die();
-            // $this->load->view("Home/admin_leave", $data);
+            // $data['leaves'] = $this->db->order_by("id", "DESC")->get_where("emp_leave_request", array("employee_id" => $this->user_id))->result();
+            $data['leaves'] = $this->db->order_by("id", "DESC")->get_where("emp_leave_request")->result();
+            $this->load->view("Home/admin_leave", $data);
         }
     }
 
