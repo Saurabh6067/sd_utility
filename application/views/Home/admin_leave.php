@@ -153,16 +153,31 @@
                                                     $emp_id = $item->employee_id;
                                                     $empdata = $this->db->get_where("employee", array("id" => $emp_id))->row();
                                                     $name = isset($empdata->name) ? $empdata->name : 'N/A';
+                                                    $leavetypedata = $this->db->get_where("tbl_leavetype", array("id" => $item->leavetype_id))->row();
+                                                    $leavetype = isset($leavetypedata->leavetype) ? $leavetypedata->leavetype : 'N/A';
                                                     ?>
                                                     <a href="profile.html"><?= $name; ?></a>
                                                 </div>
                                             </td>
                                             <td class="table__employee-position">Product Manager</td>
-                                            <td class="table__leave-type">ji</td>
+                                            <td class="table__leave-type"><?= $leavetype; ?></td>
                                             <td class="table__leave-duration">from: <span class="text-dark">
-                                                    hi
+                                                    <?php
+                                                    $fromdate = $item->from_date;
+                                                    $todate = $item->to_date;
+                                                    $date = new DateTime($fromdate);
+                                                    $date2 = new DateTime($todate);
+                                                    $from_date = $date->format('d M, y');
+                                                    $to_date = $date2->format('d M, y');
+                                                    echo $from_date;
+                                                    $startDate = new DateTime($fromdate);
+                                                    $endDate = new DateTime($todate);
+                                                    $daysDifference = $endDate->diff($startDate)->days + 1;
+                                                    ?>
+                                                </span> <br>
+                                                to: <span class="text-dark"><?= $to_date; ?></span>
                                             </td>
-                                            <td> Days</td>
+                                            <td><?= $daysDifference; ?> Days</td>
                                             <td class="table__leave-rason"><?= isset($item->reason) ? $item->reason : ''; ?></td>
                                             <td class="table__delivery"><span
                                                     class="bd-badge bg-success">Approved</span></td>
