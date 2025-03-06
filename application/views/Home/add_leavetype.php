@@ -173,8 +173,11 @@
 
 
         // Delete here 
-        function DeleteWithoutImage(id, table) {
-            alert(table);
+        
+    </script>
+    <script>
+        function DeleteWithoutImage(id, table){
+            alert(id);
         var status = true;
         swal({
             title: "Are You Sure?",
@@ -196,7 +199,7 @@
                             swal("Delete Successfully!", {
                                 icon: 'success',
                             }).then(() => {
-                                location.reload();
+                               window.location.reload();
                             });
                         } else {
                             swal("Deletion failed!", {
