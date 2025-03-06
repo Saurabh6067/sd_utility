@@ -13,6 +13,8 @@ class Admin extends CI_Controller
         // ✅ Session data ko ek baar fetch kar ke property me store karenge
         $this->sessiondata = $this->session->userdata('user');
         $this->session_role = $this->session->userdata('role');
+        // employee ki primary id 
+        $this->user_id = isset($this->sessiondata->id) ? $this->sessiondata->id : null;
 
         $this->load->model('Import_model', 'import');
         $this->load->helper(array('url', 'html', 'form'));
@@ -401,10 +403,89 @@ class Admin extends CI_Controller
 
 
 
+    // public function Leave()
+    // {
+    //     $this->load->view('Home/admin_leave');
+    // }
+
     public function Leave()
     {
-        $this->load->view('Home/admin_leave');
+        if ($this->uri->segment(3)) {
+            $action = $this->uri->segment(3);
+            if ($this->uri->segment(4)) {
+                $id = $this->uri->segment(4);
+                $query = $this->db->get_where("emp_leave_request", array('id' => $id));
+                if ($query->num_rows()) {
+                    $data['list'] = $query->result();
+                    if ($action == 'Edit') {
+                        $data['action'] = 'EditLeave';
+                        $this->load->view("Employee/UpdateData", $data);
+                    } else {
+                        redirect(base_url('Employee/Leave'));
+                    }
+                } else {
+                    redirect(base_url('Employee/Leave'));
+                }
+            } else {
+                if ($action == 'Add') {
+                    $this->form_validation->set_rules('type', 'Leave Type', 'required');
+                    $this->form_validation->set_rules('from_date', 'From Date', 'required');
+                    $this->form_validation->set_rules('to_date', 'To Date', 'required');
+                    $this->form_validation->set_rules('reason', 'Reason', 'required');
+
+                    if ($this->form_validation->run() == FALSE) {
+                        $msg = explode('</pre>', validation_errors());
+                        $msg = str_ireplace('<p>', '', $msg[0]);
+                        $this->session->set_flashdata(['res' => 'error', 'msg' => $msg]);
+                        redirect(base_url('Admin/Leave'));
+                    } else {
+                        $insertdata = [
+                            'status' => 'Pending',
+                            'employee_id' => $this->user_id,
+                            'leavetype_id' => $this->input->post('leavetype_id'),
+                            'from_date' => $this->input->post('from_date'),
+                            'to_date' => $this->input->post('to_date'),
+                            'reason' => $this->input->post('reason'),
+                            'created_at_date' => date('Y-m-d'),
+                            'created_at_time' => date('h:i A'),
+                            'leave_status' => 'pending'
+                        ];
+
+                        $ins = $this->db->insert("emp_leave_request", $insertdata);
+                        if ($ins) {
+                            $this->session->set_flashdata(['res' => 'success', 'msg' => 'Leave Request Sent Successfully!']);
+                        } else {
+                            $this->session->set_flashdata(['res' => 'error', 'msg' => 'Leave Request Not Sent!']);
+                        }
+                        redirect(base_url('Admin/Leave'));
+                    }
+                } elseif ($action == 'Update') {
+                    $query = $this->db->where('id', $this->input->post('id'))->get('emp_leave_request');
+                    if ($query->num_rows()) {
+                        $updatedata = [
+                            'name' => $this->input->post('name'),
+                        ];
+                        $up = $this->db->where('id', $query->row()->id)->update('emp_leave_request', $updatedata);
+                        if ($up) {
+                            $this->session->set_flashdata(['res' => 'success', 'msg' => 'Update Successfully!']);
+                        } else {
+                            $this->session->set_flashdata(['res' => 'error', 'msg' => 'Something Went Wrong!']);
+                        }
+                    } else {
+                        $this->session->set_flashdata(['res' => 'error', 'msg' => 'Something Went Wrong!']);
+                    }
+                    redirect(base_url('Admin/Leave'));
+                }
+            }
+        } else {
+            $data['leaves'] = $this->db->order_by("id", "DESC")->get_where("emp_leave_request", array("employee_id" => $this->user_id))->result();
+            $this->load->view("Home/admin_leave", $data);
+        }
     }
+
+
+
+
     public function Addwarning()
     {
         $this->load->view('Home/warning');
