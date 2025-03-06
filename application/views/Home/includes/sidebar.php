@@ -143,7 +143,7 @@ $user_role = $user['role'];
                     </a>
                     <ul class="sidebar-menu child1">
                         <li class="slide">
-                            <a class="sidebar__menu-item" href="assets_management.html">Manage Assets</a>
+                            <a class="sidebar__menu-item" href="<?= base_url('Admin/addAssets') ?>">Manage Assets</a>
                         </li>
                         <li class="slide">
                             <a class="sidebar__menu-item" href="complian_assets.html">Complian Of Assets</a>
