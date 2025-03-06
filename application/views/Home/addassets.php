@@ -63,44 +63,46 @@
                                     <thead>
                                         <tr class="table__title">
                                             <th>#</th>
-                                            <th>Leave Type</th>
+                                            <th>Assets Name</th>
+                                            <th>Assets Img</th>
+                                            <th>Assets Type</th>
                                             <th>Days</th>
                                             <th>Created at Date</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table__body">
-                                    <?php if (!empty($leavetype)) : ?>
-                                        <?php $i = 1; ?>
-                                        <?php foreach ($leavetype as $value) : ?>
-                                            <tr>
-                                                <td><?= $i++ ?></td>
-                                                <td><?= $value['leavetype'] ?></td>
-                                                <td><?= $value['day'] ?></td>
-                                                <td><?= $value['created_at_date'] ?></td>
-                                                <td>
-                                                    <div class="d-flex align-items-center justify-content-start gap-10">
-                                                        <button type="button" class="table__icon edit"
-                                                            data-bs-toggle="modal" data-bs-target="#meetingEdit"
-                                                            data-id="<?= $value['id'] ?>">
-                                                            <i class="fa-sharp fa-light fa-pen"></i>
-                                                        </button>
-                                                        <!-- <button class="removeBtn table__icon delete">
+                                        <?php if (!empty($assets)): ?>
+                                            <?php $i = 1; ?>
+                                            <?php foreach ($assets as $value): ?>
+                                                <tr>
+                                                    <td><?= $i++ ?></td>
+                                                    <td><?= $value['leavetype'] ?></td>
+                                                    <td><?= $value['day'] ?></td>
+                                                    <td><?= $value['created_at_date'] ?></td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center justify-content-start gap-10">
+                                                            <button type="button" class="table__icon edit"
+                                                                data-bs-toggle="modal" data-bs-target="#meetingEdit"
+                                                                data-id="<?= $value['id'] ?>">
+                                                                <i class="fa-sharp fa-light fa-pen"></i>
+                                                            </button>
+                                                            <!-- <button class="removeBtn table__icon delete">
                                                             <i class="fa-regular fa-trash"></i>
                                                         </button> -->
-                                                        <button class="btn btn-danger"
-                                                            onclick="DeleteWithoutImage('<?= isset($value['id']) ? $value['id'] : ''; ?>', 'tbl_leavetype');">
-                                                            <i class="fa-regular fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
+                                                            <button class="btn btn-danger"
+                                                                onclick="DeleteWithoutImage('<?= isset($value['id']) ? $value['id'] : ''; ?>', 'tbl_leavetype');">
+                                                                <i class="fa-regular fa-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="5" class="text-center">No records found</td>
                                             </tr>
-                                        <?php endforeach; ?>
-                                    <?php else : ?>
-                                        <tr>
-                                            <td colspan="5" class="text-center">No records found</td>
-                                        </tr>
-                                    <?php endif; ?>
+                                        <?php endif; ?>
 
                                     </tbody>
                                 </table>
@@ -133,14 +135,17 @@
         $(document).ready(function () {
             $('#form_addassets').on('submit', function (e) {
                 e.preventDefault();
-                const formData = $(this).serialize();
+
+                let formData = new FormData(this); // Ensure FormData is used to handle file upload
+
                 $.ajax({
                     url: "<?= base_url('Admin/addAssets/add') ?>",
                     method: 'POST',
                     data: formData,
                     dataType: 'json',
+                    processData: false, // Prevent jQuery from converting the data into a query string
+                    contentType: false, // Prevent jQuery from setting a default content type
                     success: function (response) {
-                        $('#addassets').modal('hide');
                         if (response.status === 'success') {
                             Swal.fire({
                                 title: 'Success!',
@@ -167,19 +172,17 @@
             });
 
             $('#cancelButton').on('click', function () {
-                $('#addassets')[0].reset();
+                $('#form_addassets')[0].reset();
             });
         });
 
 
-        // Delete here 
-        
     </script>
     <script>
-       function DeleteWithoutImage(id, table){
+        function DeleteWithoutImage(id, table) {
             alert(id);
             var status = true;
-            
+
             Swal.fire({
                 title: "Are You Sure?",
                 text: "You Want To Delete?",
@@ -197,7 +200,7 @@
                             'id': id,
                             'table': table
                         },
-                        success: function(response) {
+                        success: function (response) {
                             if (response == 1) {
                                 Swal.fire({
                                     title: 'Success!',

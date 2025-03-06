@@ -301,10 +301,10 @@
                             <div class="col-md-6">
                                 <div class="from__input-box">
                                     <div class="form__input-title">
-                                        <label for="day">Assets Image<span>*</span></label>
+                                        <label for="asset_img">Assets Image<span>*</span></label>
                                     </div>
                                     <div class="form__input">
-                                        <input class="form-control" name="assetsimg" id="assetsimg" type="file"
+                                        <input class="form-control" name="asset_img" id="asset_img" type="file"
                                             required>
                                     </div>
                                 </div>
