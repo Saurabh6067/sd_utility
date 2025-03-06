@@ -299,7 +299,7 @@ class Admin extends CI_Controller
     }
 
 
-    // Delete here 
+    // Delete here  j
     public function DeleteWithoutImage()
     {
         $id = $this->input->post('id');
