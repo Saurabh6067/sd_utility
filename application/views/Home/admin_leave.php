@@ -149,7 +149,7 @@
                     <div class="table-avatar">
                         <?php
                         $emp_id = $item->employee_id;
-                        $empdata = $this->db->get_where("tbl_employee", array("id" => $emp_id))->row();
+                        $empdata = $this->db->get_where("employee", array("id" => $emp_id))->row();
                         $name = isset($empdata->name) ? $empdata->name : 'N/A';
 
                         $leavetypedata = $this->db->get_where("tbl_leavetype", array("id" => $item->leavetype_id))->row();
