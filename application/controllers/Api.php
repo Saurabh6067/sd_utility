@@ -340,7 +340,7 @@ class Api extends CI_Controller
 
         $data = [
             'employee_id' => $empid,
-            'leave_type' => $leave_type,
+            'leavetype_id' => $leave_type,
             'from_date' => $from_date,
             'to_date' => $to_date,
             'reason' => $reason,
