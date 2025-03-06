@@ -419,12 +419,12 @@ class Admin extends CI_Controller
                     $data['list'] = $query->result();
                     if ($action == 'Edit') {
                         $data['action'] = 'EditLeave';
-                        $this->load->view("Employee/UpdateData", $data);
+                        $this->load->view("Admin/UpdateData", $data);
                     } else {
-                        redirect(base_url('Employee/Leave'));
+                        redirect(base_url('Admin/Leave'));
                     }
                 } else {
-                    redirect(base_url('Employee/Leave'));
+                    redirect(base_url('Admin/Leave'));
                 }
             } else {
                 if ($action == 'Add') {
@@ -450,6 +450,9 @@ class Admin extends CI_Controller
                             'created_at_time' => date('h:i A'),
                             'leave_status' => 'pending'
                         ];
+                        echo "<pre>";
+                        print_r($insertdata);
+                        die();
 
                         $ins = $this->db->insert("emp_leave_request", $insertdata);
                         if ($ins) {
