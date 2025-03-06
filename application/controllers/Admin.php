@@ -13,8 +13,10 @@ class Admin extends CI_Controller
         // ✅ Session data ko ek baar fetch kar ke property me store karenge
         $this->sessiondata = $this->session->userdata('user');
         $this->session_role = $this->session->userdata('role');
-        // employee ki primary id 
-        $this->user_id = isset($this->sessiondata->id) ? $this->sessiondata->id : null;
+
+        // ✅ `user` key ke andar se `id` extract kiya
+        $this->user_id = isset($this->sessiondata['id']) ? $this->sessiondata['id'] : null;
+
 
         $this->load->model('Import_model', 'import');
         $this->load->helper(array('url', 'html', 'form'));
@@ -439,9 +441,9 @@ class Admin extends CI_Controller
                         'created_at_time' => date('h:i A'),
                         'leave_status' => 'pending'
                     ];
-                    echo "<pre>";
-                    print_r($insertdata);
-                    die();
+                    // echo "<pre>";
+                    // print_r($insertdata);
+                    // die();
 
                     $ins = $this->db->insert("emp_leave_request", $insertdata);
                     if ($ins) {
