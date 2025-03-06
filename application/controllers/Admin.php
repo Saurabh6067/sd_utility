@@ -428,40 +428,28 @@ class Admin extends CI_Controller
                 }
             } else {
                 if ($action == 'Add') {
-                    $this->form_validation->set_rules('type', 'Leave Type', 'required');
-                    $this->form_validation->set_rules('from_date', 'From Date', 'required');
-                    $this->form_validation->set_rules('to_date', 'To Date', 'required');
-                    $this->form_validation->set_rules('reason', 'Reason', 'required');
+                    $insertdata = [
+                        'status' => 'Pending',
+                        'employee_id' => $this->user_id,
+                        'leavetype_id' => $this->input->post('leavetype_id'),
+                        'from_date' => $this->input->post('from_date'),
+                        'to_date' => $this->input->post('to_date'),
+                        'reason' => $this->input->post('reason'),
+                        'created_at_date' => date('Y-m-d'),
+                        'created_at_time' => date('h:i A'),
+                        'leave_status' => 'pending'
+                    ];
+                    echo "<pre>";
+                    print_r($insertdata);
+                    die();
 
-                    if ($this->form_validation->run() == FALSE) {
-                        $msg = explode('</pre>', validation_errors());
-                        $msg = str_ireplace('<p>', '', $msg[0]);
-                        $this->session->set_flashdata(['res' => 'error', 'msg' => $msg]);
-                        redirect(base_url('Admin/Leave'));
+                    $ins = $this->db->insert("emp_leave_request", $insertdata);
+                    if ($ins) {
+                        $this->session->set_flashdata(['res' => 'success', 'msg' => 'Leave Request Sent Successfully!']);
                     } else {
-                        $insertdata = [
-                            'status' => 'Pending',
-                            'employee_id' => $this->user_id,
-                            'leavetype_id' => $this->input->post('leavetype_id'),
-                            'from_date' => $this->input->post('from_date'),
-                            'to_date' => $this->input->post('to_date'),
-                            'reason' => $this->input->post('reason'),
-                            'created_at_date' => date('Y-m-d'),
-                            'created_at_time' => date('h:i A'),
-                            'leave_status' => 'pending'
-                        ];
-                        echo "<pre>";
-                        print_r($insertdata);
-                        die();
-
-                        $ins = $this->db->insert("emp_leave_request", $insertdata);
-                        if ($ins) {
-                            $this->session->set_flashdata(['res' => 'success', 'msg' => 'Leave Request Sent Successfully!']);
-                        } else {
-                            $this->session->set_flashdata(['res' => 'error', 'msg' => 'Leave Request Not Sent!']);
-                        }
-                        redirect(base_url('Admin/Leave'));
+                        $this->session->set_flashdata(['res' => 'error', 'msg' => 'Leave Request Not Sent!']);
                     }
+                    redirect(base_url('Admin/Leave'));
                 } elseif ($action == 'Update') {
                     $query = $this->db->where('id', $this->input->post('id'))->get('emp_leave_request');
                     if ($query->num_rows()) {
