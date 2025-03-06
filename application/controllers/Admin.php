@@ -261,20 +261,73 @@ class Admin extends CI_Controller
     {
         $this->load->view('Home/attendance');
     }
+
+
+    // public function AddLeaveType()
+    // {
+    //     $segment = $this->uri->segment(3);
+    //     if ($segment === 'add' && $this->input->server('REQUEST_METHOD') === 'POST') {
+
+    //         $leavetype = $this->input->post('leavetype');
+    //         $day = $this->input->post('day');
+
+    //         if (empty($leavetype) || empty($day)) {
+    //             echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
+    //             return;
+    //         }
+
+    //         $data = [
+    //             'leavetype' => $leavetype,
+    //             'day' => $day,
+    //             'created_at_time' => date('H:i:s'),
+    //             'created_at_date' => date('Y-m-d'),
+    //             'status' => 'true',
+    //         ];
+
+    //         $insert = $this->db->insert('tbl_leavetype', $data);
+
+    //         if ($insert) {
+    //             echo json_encode(['status' => 'success', 'message' => 'Leave Type save successfully.']);
+    //         } else {
+    //             echo json_encode(['status' => 'error', 'message' => 'Failed to save Leave Type.']);
+    //         }
+    //     } else {
+    //         // $data['tbl_leavetype'] = $this->db->query("Select * from `leavetype` where `status` = 'true'")->result_array();
+    //         $data['leavetype'] = $this->db->query("Select * from `tbl_leavetype` where `status` = 'true'")->result_array();
+    //         $this->load->view('Home/add_leavetype', $data);
+    //     }
+    // }
+
+
     public function AddLeaveType()
     {
-        $segment = $this->uri->segment(3);
-        if ($segment === 'add' && $this->input->server('REQUEST_METHOD') === 'POST') {
-
+        $action = $this->uri->segment(3);
+        
+        // Handle Edit action
+        if ($this->uri->segment(4) == true) {
+            $id = $this->uri->segment(4);
+            $query = $this->db->get_where("tbl_leavetype", array('id' => $id));
+            if ($query->num_rows()) {
+                $data['list'] = $query->result();
+                if ($action == 'Edit') {
+                    $data['action'] = 'EditLeaveType';
+                    $this->load->view("Home/UpdateData", $data);
+                } else {
+                    redirect(base_url('Home/AddLeaveType'));
+                }
+            } else {
+                redirect(base_url('Home/AddLeaveType'));
+            }
+        }
+        // Handle form submission for adding new leave type
+        else if ($action === 'add' && $this->input->server('REQUEST_METHOD') === 'POST') {
             $leavetype = $this->input->post('leavetype');
             $day = $this->input->post('day');
-
 
             if (empty($leavetype) || empty($day)) {
                 echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
                 return;
             }
-
 
             $data = [
                 'leavetype' => $leavetype,
@@ -291,12 +344,51 @@ class Admin extends CI_Controller
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to save Leave Type.']);
             }
-        } else {
-            // $data['tbl_leavetype'] = $this->db->query("Select * from `leavetype` where `status` = 'true'")->result_array();
+        }
+        // Handle update form submission
+        else if ($action === 'Update' && $this->input->server('REQUEST_METHOD') === 'POST') {
+            $id = $this->input->post('id');
+            $leavetype = $this->input->post('leavetype');
+            $day = $this->input->post('day');
+
+            if (empty($id) || empty($leavetype) || empty($day)) {
+                echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
+                return;
+            }
+
+            $data = [
+                'leavetype' => $leavetype,
+                'day' => $day,
+                'updated_at_time' => date('H:i:s'),
+                'updated_at_date' => date('Y-m-d')
+            ];
+
+            $this->db->where('id', $id);
+            $update = $this->db->update('tbl_leavetype', $data);
+
+            if ($update) {
+                echo json_encode(['status' => 'success', 'message' => 'Leave Type updated successfully.']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to update Leave Type.']);
+            }
+        }
+        // Default view load
+        else {
             $data['leavetype'] = $this->db->query("Select * from `tbl_leavetype` where `status` = 'true'")->result_array();
             $this->load->view('Home/add_leavetype', $data);
         }
     }
+
+
+
+
+
+
+
+
+
+
+
 
 
     // Delete here  j
@@ -313,25 +405,6 @@ class Admin extends CI_Controller
             echo 0;
         }
     }
-
-    // public function DeleteWithoutImage()
-    // {
-    //     $id = $this->input->post('id');
-    //     $table = $this->input->post('table');
-    //     // echo $table;die();
-    //     $this->db->where('id', $id);
-    //     $delete = $this->db->delete($table);
-
-    //     header('Content-Type: application/json');
-        
-    //     if ($delete) {
-    //         echo json_encode(['success' => true, 'message' => 'Delete Successfully!']);
-    //     } else {
-    //         echo json_encode(['success' => false, 'message' => 'Deletion failed!']);
-    //     }
-    // }
-
-
 
 
 

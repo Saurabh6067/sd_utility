@@ -98,4 +98,11 @@
             });
             return status;
         }
+
+        // Edit 
+        function Edit(id) {
+            $("#EditModal").modal("show");
+            $("#EditModal .modal-body").html("<center><i class='fa fa-2x fa-spin fa-spinner'></i></center>");
+            $("#EditModal .modal-body").load("<?php echo base_url('Admin/AddLeaveType/Edit/') ?>" + id);
+        }
     </script>

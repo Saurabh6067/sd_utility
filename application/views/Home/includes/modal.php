@@ -79,8 +79,6 @@
             <div class="modal-body">
                 <form action="#">
                     <input type="text" id="modalRecordId" name="record_id">
-
-
                     <div class="card__wrapper">
                         <div class="row gy-20">
                             <div class="col-lg-6">
