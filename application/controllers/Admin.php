@@ -840,7 +840,7 @@ class Admin extends CI_Controller
 
                 if ($this->upload->do_upload('asset_img')) {
                     $uploadData = $this->upload->data();
-                    $imagePath = 'uploads/assets/' . $uploadData['file_name']; // Save path in DB
+                    $imagePath = 'uploads/assets/' . $uploadData['file_name']; 
                 } else {
                     echo json_encode(['status' => 'error', 'message' => $this->upload->display_errors()]);
                     return;
