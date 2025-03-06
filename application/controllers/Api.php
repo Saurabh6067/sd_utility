@@ -46,33 +46,33 @@ class Api extends CI_Controller
     {
         $current_date = date('Y-m-d');
         $day_of_week = date('w', strtotime($current_date)); // Get numeric day (0 = Sunday, 6 = Saturday)
-        
+
         // Determine the remark based on the day
         $remark = ($day_of_week == 0) ? 'Full Day' : 'Absent'; // If Sunday, mark Present; otherwise, Absent
-    
+
         // Fetch all employees who have no attendance record for today
         $this->db->select('id, empid, branch, operation');
         $this->db->from('employee');
         $this->db->where("id NOT IN (SELECT user_id FROM attendance WHERE today_date = '$current_date')", null, false);
         $employees = $this->db->get()->result_array();
-    
+
         if (empty($employees)) {
             echo "No new absentees to mark.";
             return;
         }
-    
+
         foreach ($employees as $emp) {
             $user_id = $emp['id'];
             $emp_id = $emp['empid'];
             $emp_branch = $emp['branch'];
             $emp_operation = $emp['operation'];
-    
+
             // Insert attendance record
             $data = [
                 'emp_id' => $emp_id,
                 'user_id' => $user_id,
-                'punch_in_date' => null, 
-                'punch_out_date' => null, 
+                'punch_in_date' => null,
+                'punch_out_date' => null,
                 'remark' => $remark, // Dynamically set remark
                 'status' => 'true',
                 'today_date' => $current_date,
@@ -81,10 +81,10 @@ class Api extends CI_Controller
             ];
             $this->db->insert('attendance', $data);
         }
-    
+
         echo "Attendance records updated successfully!";
     }
-    
+
 
     public function Test()
     {
@@ -266,43 +266,44 @@ class Api extends CI_Controller
             echo json_encode(['res' => 'error', 'msg' => 'No attendance record found for today.']);
         }
     }
-    public function getUserMonthlyAttendance() {
+    public function getUserMonthlyAttendance()
+    {
         $input = $this->getJsonInput();
         $user_id = $input['user_id'] ?? null;
-        
+
         if (!$user_id) {
             echo json_encode(['res' => 'error', 'msg' => 'Employee ID is required.']);
             return;
         }
-    
+
         // Get current month & year
         $current_month = date('m');
         $current_year = date('Y');
         $total_days = cal_days_in_month(CAL_GREGORIAN, $current_month, $current_year);
-    
+
         // Fetch total present days
         $this->db->where('user_id', $user_id);
         $this->db->where('MONTH(today_date)', $current_month);
         $this->db->where('YEAR(today_date)', $current_year);
         $this->db->where('remark', 'Full Day');
         $total_present = $this->db->count_all_results('attendance');
-    
+
         // Fetch total half-day entries
         $this->db->where('user_id', $user_id);
         $this->db->where('MONTH(today_date)', $current_month);
         $this->db->where('YEAR(today_date)', $current_year);
         $this->db->where('remark', 'Half Day');
         $total_halfday = $this->db->count_all_results('attendance');
-    
+
         // Calculate total absent days
         $total_attendance_days = $total_present + $total_halfday;
         $total_absent = $total_days - $total_attendance_days;
-    
+
         // Calculate percentages
         $present_percentage = ($total_present / $total_days) * 100;
         $halfday_percentage = ($total_halfday / $total_days) * 100;
         $absent_percentage = ($total_absent / $total_days) * 100;
-    
+
         // Prepare response
         $response = [
             'user_id' => $user_id,
@@ -314,16 +315,18 @@ class Api extends CI_Controller
             'total_absent' => $total_absent,
             'total_absent_percentage' => round($absent_percentage, 2) . '%'
         ];
-    
+
         echo json_encode(['res' => 'success', 'data' => $response, 'msg' => 'Attendance details retrieved successfully.']);
     }
 
-    public function getLeavetype(){
+    public function getLeavetype()
+    {
         $leavetype = $this->db->query('SELECT id , leavetype FROM `tbl_leavetype`')->result();
         echo json_encode(['res' => 'success', 'data' => $leavetype, 'msg' => 'Leave type retrieved successfully.']);
     }
 
-    public function requestLeave(){
+    public function requestLeave()
+    {
         $input = $this->getJsonInput();
         $empid = $input['empid'] ?? null;
         $leave_type = $input['leave_type'] ?? null;
@@ -353,7 +356,23 @@ class Api extends CI_Controller
         echo json_encode(['res' => 'success', 'msg' => 'Leave request submitted successfully.']);
 
     }
-    
+
+    public function getleavebyempid()
+    {
+        $input = $this->getJsonInput();
+        $empid = $input['empid'] ?? null;
+
+        if (!$empid) {
+            echo json_encode(['res' => 'error', 'msg' => 'Employee ID is required.']);
+            return;
+        }
+
+        // Use query binding to prevent SQL injection
+        $leavetype = $this->db->query("SELECT * FROM `emp_leave_request` WHERE `employee_id` = ?", [$empid])->result();
+
+        echo json_encode(['res' => 'success', 'data' => $leavetype, 'msg' => 'Leave retrieved successfully.']);
+    }
+
 
 
 }
