@@ -89,7 +89,7 @@
                                                             <i class="fa-regular fa-trash"></i>
                                                         </button> -->
 
-                                                        <button class="btn btn-primary btn-sm" onclick="Edit('<?= $value['id']; ?>')">Edit</button>
+                                                        <button class="btn btn-primary btn-sm" onclick="Edit('<?= $value['id']; ?>')"><i class="fa-sharp fa-light fa-pen"></i></button>
                                                         <button class="btn btn-sm btn-danger"
                                                             onclick="DeleteWithoutImage('<?= isset($value['id']) ? $value['id'] : ''; ?>', 'tbl_leavetype');">
                                                             <i class="fa-regular fa-trash"></i>
