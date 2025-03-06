@@ -135,7 +135,70 @@
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    
+                                    <tbody class="table__body">
+    <?php if (empty($leaves)) : ?>
+        <tr>
+            <td colspan="10" class="text-center"><h4>Data Not Found</h4></td>
+        </tr>
+    <?php else : ?>
+        <?php $srno = 1; ?>
+        <?php foreach ($leaves as $item) : ?>
+            <tr>
+                <td><?= $srno; ?></td>
+                <td>
+                    <div class="table-avatar">
+                        <?php
+                        $emp_id = $item->employee_id;
+                        $empdata = $this->db->get_where("tbl_employee", array("id" => $emp_id))->row();
+                        $name = isset($empdata->name) ? $empdata->name : 'N/A';
+
+                        $leavetypedata = $this->db->get_where("tbl_leavetype", array("id" => $item->leavetype_id))->row();
+                        $leavetype = isset($leavetypedata->leavetype) ? $leavetypedata->leavetype : 'N/A';
+                        ?>
+                        <a href="profile.html"><?= $name; ?></a>
+                    </div>
+                </td>
+                <td class="table__employee-position">Product Manager</td>
+                <td class="table__leave-type"><?= $leavetype; ?></td>
+                <td class="table__leave-duration">
+                    from: <span class="text-dark">
+                        <?php
+                        $from_date = date('d M, y', strtotime($item->from_date));
+                        $to_date = date('d M, y', strtotime($item->to_date));
+                        echo $from_date;
+                        ?>
+                    </span><br>
+                    to: <span class="text-dark"><?= $to_date; ?></span>
+                </td>
+                <td>
+                    <?php
+                    $startDate = new DateTime($item->from_date);
+                    $endDate = new DateTime($item->to_date);
+                    $daysDifference = $endDate->diff($startDate)->days + 1;
+                    echo $daysDifference . ' Days';
+                    ?>
+                </td>
+                <td class="table__leave-">30</td>
+                <td class="table__leave-reason"><?= isset($item->reason) ? $item->reason : 'N/A'; ?></td>
+                <td class="table__delivery">
+                    <span class="bd-badge bg-success">Approved</span>
+                </td>
+                <td class="table__icon-box">
+                    <div class="d-flex align-items-center justify-content-start gap-10">
+                        <a href="#" class="table__icon edit">
+                            <i class="fa-sharp fa-light fa-pen"></i>
+                        </a>
+                        <button class="removeBtn table__icon delete">
+                            <i class="fa-regular fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            <?php $srno++; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</tbody>
+
                                 </table>
                             </div>
                         </div>
