@@ -88,11 +88,10 @@
                                                         <!-- <button class="removeBtn table__icon delete">
                                                             <i class="fa-regular fa-trash"></i>
                                                         </button> -->
-                                                        <button class="removeBtn table__icon delete"
+                                                        <button class="removeBtn table__icon"
                                                             onclick="DeleteWithoutImage('<?= isset($item['id']) ? $item['id'] : ''; ?>', 'tbl_leavetype');">
                                                             <i class="fa-regular fa-trash"></i>
                                                         </button>
-
                                                     </div>
                                                 </td>
                                             </tr>
@@ -175,6 +174,7 @@
 
         // Delete here 
         function DeleteWithoutImage(id, table) {
+            alert(table);
         var status = true;
         swal({
             title: "Are You Sure?",
