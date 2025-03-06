@@ -317,6 +317,42 @@ class Api extends CI_Controller
     
         echo json_encode(['res' => 'success', 'data' => $response, 'msg' => 'Attendance details retrieved successfully.']);
     }
+
+    public function getLeavetype(){
+        $leavetype = $this->db->query('SELECT id , leavetype FROM `tbl_leavetype`')->result();
+        echo json_encode(['res' => 'success', 'data' => $leavetype, 'msg' => 'Leave type retrieved successfully.']);
+    }
+
+    public function requestLeave(){
+        $input = $this->getJsonInput();
+        $empid = $input['empid'] ?? null;
+        $leave_type = $input['leave_type'] ?? null;
+        $from_date = $input['from_date'] ?? null;
+        $to_date = $input['to_date'] ?? null;
+        $reason = $input['reason'] ?? null;
+        $created_at_time = date('h:i A');
+        $created_at_date = date('Y-m-d');
+
+        if (!$empid || !$from_date || !$to_date || !$reason || !$leave_type) {
+            echo json_encode(['res' => 'error', 'msg' => 'All fields are required.']);
+            return;
+        }
+
+        $data = [
+            'employee_id' => $empid,
+            'leave_type' => $leave_type,
+            'from_date' => $from_date,
+            'to_date' => $to_date,
+            'reason' => $reason,
+            'created_at_time' => $created_at_time,
+            'created_at_date' => $created_at_date
+        ];
+
+
+        $this->db->insert('emp_leave_request', $data);
+        echo json_encode(['res' => 'success', 'msg' => 'Leave request submitted successfully.']);
+
+    }
     
 
 
