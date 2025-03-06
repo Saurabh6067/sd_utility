@@ -184,9 +184,9 @@
 
                                                     <?php
                                                     // Assuming $item->status contains the status value ('pending', 'approved', 'rejected')
-                                                    $status = $item->status;
+                                                    $leave_status = $item->leave_status;
                                                     $buttonClass = 'btn btn-sm btn-pill';
-                                                    switch ($status) {
+                                                    switch ($leave_status) {
                                                         case 'Pending':
                                                             $buttonClass .= ' btn-primary';
                                                             break;
@@ -201,7 +201,7 @@
                                                             break;
                                                     }
                                                     ?>
-                                                    <td class="table__delivery"><button class="<?= $buttonClass ?>"><?= $status ?></button></td>
+                                                    <td class="table__delivery"><button class="<?= $buttonClass ?>"><?= $leave_status ?></button></td>
 
                                             <td class="table__icon-box">
                                                 <div class="d-flex align-items-center justify-content-start gap-10">
