@@ -745,6 +745,10 @@ class Admin extends CI_Controller
         $this->load->view('import');
     }
 
+    public function addAssets(){
+        $this->load->view('Home/addAssets');
+    }
+
 
 
 
