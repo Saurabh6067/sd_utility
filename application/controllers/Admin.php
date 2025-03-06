@@ -870,7 +870,8 @@ class Admin extends CI_Controller
                 echo json_encode(['status' => 'error', 'message' => 'Failed to add asset.']);
             }
         } else {
-            $this->load->view('Home/addassets');
+            $data['assets'] = $this->db->query("Select * from `assets` where is_status = 'true'")->result_array();
+            $this->load->view('Home/addassets',$data);
         }
     }
 

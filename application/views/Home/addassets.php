@@ -63,16 +63,18 @@
                                     <thead>
                                         <tr class="table__title">
                                             <th>#</th>
-                                            <th>Leave Type</th>
+                                            <th>Assets Name</th>
+                                            <th>Assets Img</th>
+                                            <th>Assets Type</th>
                                             <th>Days</th>
                                             <th>Created at Date</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table__body">
-                                    <?php if (!empty($leavetype)) : ?>
+                                    <?php if (!empty($assets)) : ?>
                                         <?php $i = 1; ?>
-                                        <?php foreach ($leavetype as $value) : ?>
+                                        <?php foreach ($assets as $value) : ?>
                                             <tr>
                                                 <td><?= $i++ ?></td>
                                                 <td><?= $value['leavetype'] ?></td>
