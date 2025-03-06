@@ -128,31 +128,57 @@
                                             <th>Employee Name</th>
                                             <th>Designation</th>
                                             <th>Leave Type</th>
+                                            <th>Date & Time</th>
                                             <th>Leave Duration</th>
-                                            <th>Days</th>
                                             <th>Reason</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table__body">
-
+                                    <?php
+                                        if (empty($leaves)) {
+                                        ?>
+                                            <h4>Data Not Found</h4>
+                                            <?php
+                                        } else {
+                                            $srno = 1;
+                                            foreach ($leaves as $item) {
+                                            ?>
                                         <tr>
-                                            <td>#</td>
+                                            <td><?= $srno; ?></td>
                                             <td>
                                                 <div class="table-avatar">
-                                                    <a class="employee__avatar mr-5" href="profile.html"><img
-                                                            class="img-48 border-circle"
-                                                            src="assets/images/avatar/avatar12.png"
-                                                            alt="User Image"></a>
-                                                    <a href="profile.html">James White</a>
+                                                <?php
+                                                    $emp_id = $item->employee_id;
+                                                    $empdata = $this->db->get_where("employee", array("id" => $emp_id))->row();
+                                                    $name = isset($empdata->name) ? $empdata->name : 'N/A';
+                                                    $leavetypedata = $this->db->get_where("tbl_leavetype", array("id" => $item->leavetype_id))->row();
+                                                    $leavetype = isset($leavetypedata->leavetype) ? $leavetypedata->leavetype : 'N/A';
+                                                    ?>
+                                                    <a href="profile.html"><?= $name; ?></a>
                                                 </div>
                                             </td>
                                             <td class="table__employee-position">Product Manager</td>
-                                            <td class="table__leave-type">Parental Leave</td>
-                                            <td class="table__leave-duration">20 February 2024 - 20 March 2024</td>
-                                            <td class="table__leave-">30</td>
-                                            <td class="table__leave-rason">New Child</td>
+                                            <td class="table__leave-type"><?= $leavetype; ?></td>
+                                            <td class="table__leave-duration">from: <span class="text-dark">
+                                                    <?php
+                                                    $fromdate = $item->from_date;
+                                                    $todate = $item->to_date;
+                                                    $date = new DateTime($fromdate);
+                                                    $date2 = new DateTime($todate);
+                                                    $from_date = $date->format('d M, y');
+                                                    $to_date = $date2->format('d M, y');
+                                                    echo $from_date;
+                                                    $startDate = new DateTime($fromdate);
+                                                    $endDate = new DateTime($todate);
+                                                    $daysDifference = $endDate->diff($startDate)->days + 1;
+                                                    ?>
+                                                </span> <br>
+                                                to: <span class="text-dark"><?= $to_date; ?></span>
+                                            </td>
+                                            <td><?= $daysDifference; ?> Days</td>
+                                            <td class="table__leave-rason"><?= isset($item->reason) ? $item->reason : ''; ?></td>
                                             <td class="table__delivery"><span
                                                     class="bd-badge bg-success">Approved</span></td>
                                             <td class="table__icon-box">
@@ -165,7 +191,11 @@
                                                 </div>
                                             </td>
                                         </tr>
-
+                                        <?php
+                                                $srno++;
+                                            }
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>

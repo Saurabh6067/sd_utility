@@ -412,7 +412,8 @@ class Admin extends CI_Controller
 
     public function Leave()
     {
-        if ($this->uri->segment(3)) {
+        if ($this->uri->segment(3)) 
+        {
             $action = $this->uri->segment(3);
             if ($this->uri->segment(4)) {
                 $id = $this->uri->segment(4);
@@ -441,9 +442,6 @@ class Admin extends CI_Controller
                         'created_at_time' => date('h:i A'),
                         'leave_status' => 'pending'
                     ];
-                    // echo "<pre>";
-                    // print_r($insertdata);
-                    // die();
 
                     $ins = $this->db->insert("emp_leave_request", $insertdata);
                     if ($ins) {
@@ -470,7 +468,9 @@ class Admin extends CI_Controller
                     redirect(base_url('Admin/Leave'));
                 }
             }
-        } else {
+        } 
+        else 
+        {
             $data['leaves'] = $this->db->order_by("id", "DESC")->get_where("emp_leave_request", array("employee_id" => $this->user_id))->result();
             $this->load->view("Home/admin_leave", $data);
         }
