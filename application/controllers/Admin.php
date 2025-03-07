@@ -471,8 +471,18 @@ class Admin extends CI_Controller
         } 
         else 
         {
-            $data['leaves'] = $this->db->order_by("id", "DESC")->get_where("emp_leave_request", array("employee_id" => $this->user_id))->result();
+            // $data['leaves'] = $this->db->order_by("id", "DESC")->get_where("emp_leave_request", array("employee_id" => $this->user_id))->result();
+            // $this->load->view("Home/admin_leave", $data);
+
+            $this->db->order_by("id", "DESC");
+            if ($this->session_role == 'branch_manager') {
+                $this->db->where("bank_branch_name", $this->sessiondata->bank_branch_name);
+            } elseif ($this->session_role == 'supervisor') {
+                $this->db->where("supervisor_name", $this->sessiondata->supervisor_name);
+            }
+            $data['leaves'] = $this->db->get("emp_leave_request")->result();
             $this->load->view("Home/admin_leave", $data);
+
         }
     }
 
