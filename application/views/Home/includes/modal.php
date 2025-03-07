@@ -284,7 +284,7 @@
                         class="fa-solid fa-xmark-large"></i></button>
             </div>
             <div class="modal-body">
-                <form id="form_addassets" enctype="multipart/form-data" action="#" method="post">
+                <form id="form_addassets" enctype="multipart/form-data"  method="post">
                     <div class="card__wrapper">
                         <div class="row gy-20">
                             <div class="col-lg-6">
