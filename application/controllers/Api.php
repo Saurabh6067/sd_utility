@@ -365,7 +365,7 @@ class Api extends CI_Controller
         echo json_encode(['res' => 'success', 'data' => $leavetype, 'msg' => 'Leave retrieved successfully.']);
     }
 
-    public function Adduserpayment()
+    public function asseetComplain()
     {
         $input = $this->getJsonInput();
         $opeartion = $input['opeartion'] ?? null;
