@@ -197,41 +197,41 @@
                                                     //         break;
                                                     // }
                                                     ?>
-                                                    <!-- <td class=""><button class="<?= $buttonClass ?>"><?= $leave_status ?></button></td> -->
+                                                    <!-- <td class=""><button class="<?//= $buttonClass ?>"><?//= $leave_status ?></button></td> -->
 
 
                                                     <td>
-    <?php
-    $leave_status = $item->leave_status;
-    $buttonClass = 'btn btn-sm btn-pill';
+                                                        <?php
+                                                        $leave_status = $item->leave_status;
+                                                        $buttonClass = 'btn btn-sm btn-pill';
 
-    switch ($leave_status) {
-        case 'pending':
-            $buttonClass .= ' btn-primary';
-            break;
-        case 'approved':
-            $buttonClass .= ' btn-success';
-            break;
-        case 'rejected':
-            $buttonClass .= ' btn-danger';
-            break;
-        default:
-            $buttonClass .= ' btn-secondary';
-            break;
-    }
-    ?>
+                                                        switch ($leave_status) {
+                                                            case 'pending':
+                                                                $buttonClass .= ' btn-primary';
+                                                                break;
+                                                            case 'approved':
+                                                                $buttonClass .= ' btn-success';
+                                                                break;
+                                                            case 'rejected':
+                                                                $buttonClass .= ' btn-danger';
+                                                                break;
+                                                            default:
+                                                                $buttonClass .= ' btn-secondary';
+                                                                break;
+                                                        }
+                                                        ?>
 
-    <?php if ($leave_status == 'pending') : ?>
-        <div class="dropdown-menu custom-dropdown" id="dropdown-<?= $item->id ?>">
-            <a class="dropdown-item approved-button <?= $buttonClass ?>" data-id="<?= $item->id ?>" style="cursor: pointer;">Approved</a>
-            <a class="dropdown-item rejected-button <?= $buttonClass ?>" data-id="<?= $item->id ?>" style="cursor: pointer;">Rejected</a>
-        </div>
-    <?php else : ?>
-        <button class="<?= $buttonClass ?> leave-status-btn" data-id="<?= $item->id ?>">
-            <?= ucfirst($leave_status) ?>
-        </button>
-    <?php endif; ?>
-</td>
+                                                        <?php if ($leave_status == 'pending') : ?>
+                                                            <div class="dropdown-menu custom-dropdown" id="dropdown-<?= $item->id ?>">
+                                                                <a class="dropdown-item approved-button <?= $buttonClass ?>" data-id="<?= $item->id ?>" style="cursor: pointer;">Approved</a>
+                                                                <a class="dropdown-item rejected-button <?= $buttonClass ?>" data-id="<?= $item->id ?>" style="cursor: pointer;">Rejected</a>
+                                                            </div>
+                                                        <?php else : ?>
+                                                            <button class="<?= $buttonClass ?> leave-status-btn" data-id="<?= $item->id ?>">
+                                                                <?= ucfirst($leave_status) ?>
+                                                            </button>
+                                                        <?php endif; ?>
+                                                    </td>
 
 
 
@@ -282,14 +282,14 @@
 
     <script>
       $(document).ready(function() {
-    $(document).on('click', '.leave-status-btn', function() {
-        var leaveId = $(this).data('id');
-        var dropdown = $("#dropdown-" + leaveId);
+    // $(document).on('click', '.leave-status-btn', function() {
+    //     var leaveId = $(this).data('id');
+    //     var dropdown = $("#dropdown-" + leaveId);
 
-        if (dropdown.length > 0) {
-            dropdown.toggleClass("d-none"); // Dropdown show/hide karega
-        }
-    });
+    //     if (dropdown.length > 0) {
+    //         dropdown.toggleClass("d-none"); // Dropdown show/hide karega
+    //     }
+    // });
 
     // Approve Button Click
     $(document).on('click', '.approved-button', function() {
