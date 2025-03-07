@@ -64,10 +64,11 @@
                                         <tr class="table__title">
                                             <th>#</th>
                                             <th>Assets Name</th>
-                                            <th>Assets Img</th>
                                             <th>Assets Type</th>
-                                            <th>Days</th>
-                                            <th>Created at Date</th>
+                                            <th>Assets Img</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
+                                            <th>Description</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -77,9 +78,12 @@
                                             <?php foreach ($assets as $value): ?>
                                                 <tr>
                                                     <td><?= $i++ ?></td>
-                                                    <td><?= $value['leavetype'] ?></td>
-                                                    <td><?= $value['day'] ?></td>
-                                                    <td><?= $value['created_at_date'] ?></td>
+                                                    <td><?= $value['asset_name'] ?></td>
+                                                    <td><?= $value['asset_type'] ?></td>
+                                                    <td><img src="<?= base_url('uploads/assets/' . $value['asset_type']) ?>" alt=""></td>
+                                                    <td><?= $value['asset_quantity'] ?></td>
+                                                    <td><?= $value['asset_price'] ?></td>
+                                                    <td><?= $value['asset_description'] ?></td>
                                                     <td>
                                                         <div class="d-flex align-items-center justify-content-start gap-10">
                                                             <button type="button" class="table__icon edit"
