@@ -280,110 +280,96 @@
     <?php include 'includes/footer_link.php'; ?>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script>
-        $(document).ready(function() {
-            // Approved 
-            $('.approved-button').on('click', function() {
-                var leaveId = $(this).data('id');
-                alert(leaveId);
-                swal({
-                    title: 'Are you sure?',
-                    text: "Do you want to Approved this leave?",
-                    icon: 'warning',
-                    buttons: true,
-                    dangerMode: true,
-                }).then((willApprove) => {
-                    if (willApprove) {
-                        // If user confirmed, proceed with the AJAX request
-                        $.ajax({
-                            url: "<?= base_url('Manager/Approved') ?>",
-                            type: 'POST',
-                            data: {
-                                id: leaveId
-                            },
-                            success: function(response) {
-                                response = JSON.parse(response);
-                                if (response.status === 'success') {
-                                    swal({
-                                        icon: 'success',
-                                        title: response.msg,
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    }).then(() => {
-                                        location.reload();
-                                    });
-                                } else {
-                                    swal({
-                                        icon: 'error',
-                                        title: 'Error',
-                                        text: response.msg
-                                    });
-                                }
-                            }
-                        });
-                    } else {
-                        swal("Action cancelled", {
-                            icon: "info",
-                            showConfirmButton: false,
-                            timer: 1500
-                        }).then(() => {
-                            location.reload();
-                        });
+      $(document).ready(function() {
+    $(document).on('click', '.leave-status-btn', function() {
+        var leaveId = $(this).data('id');
+        var dropdown = $("#dropdown-" + leaveId);
+
+        if (dropdown.length > 0) {
+            dropdown.toggleClass("d-none"); // Dropdown show/hide karega
+        }
+    });
+
+    // Approve Button Click
+    $(document).on('click', '.approved-button', function() {
+        var leaveId = $(this).data('id');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to approve this leave?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Approve it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "<?= base_url('Manager/Approved') ?>",
+                    type: 'POST',
+                    data: { id: leaveId },
+                    success: function(response) {
+                        response = JSON.parse(response);
+                        if (response.status === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: response.msg,
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => location.reload());
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.msg
+                            });
+                        }
                     }
                 });
-            });
-
-            // Rejected 
-            $('.rejected-button').on('click', function() {
-                var leaveId = $(this).data('id');
-
-                // Show confirmation dialog
-                swal({
-                    title: 'Are you sure?',
-                    text: "Do you want to Rejected this leave?",
-                    icon: 'warning',
-                    buttons: true,
-                    dangerMode: true,
-                }).then((willApprove) => {
-                    if (willApprove) {
-                        // If user confirmed, proceed with the AJAX request
-                        $.ajax({
-                            url: "<?= base_url('Manager/Rejected') ?>",
-                            type: 'POST',
-                            data: {
-                                id: leaveId
-                            },
-                            success: function(response) {
-                                response = JSON.parse(response);
-                                if (response.status === 'success') {
-                                    swal({
-                                        icon: 'success',
-                                        title: response.msg,
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    }).then(() => {
-                                        location.reload();
-                                    });
-                                } else {
-                                    swal({
-                                        icon: 'error',
-                                        title: 'Error',
-                                        text: response.msg
-                                    });
-                                }
-                            }
-                        });
-                    } else {
-                        swal("Action cancelled", {
-                            icon: "info",
-                            showConfirmButton: false,
-                            timer: 1500
-                        }).then(() => {
-                            location.reload();
-                        });
-                    }
-                });
-            });
+            }
         });
+    });
+
+    // Reject Button Click
+    $(document).on('click', '.rejected-button', function() {
+        var leaveId = $(this).data('id');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to reject this leave?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, Reject it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "<?= base_url('Manager/Rejected') ?>",
+                    type: 'POST',
+                    data: { id: leaveId },
+                    success: function(response) {
+                        response = JSON.parse(response);
+                        if (response.status === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: response.msg,
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => location.reload());
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.msg
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    });
+});
     </script>
 </body>
 
