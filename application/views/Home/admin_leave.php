@@ -193,15 +193,10 @@
 
                     <td>
                         <?php if ($leave_status === 'pending') : ?>
-                            <div class="dropdown">
-                                <button class="<?php echo $buttonClass ?> dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <?php echo ucfirst($leave_status); ?>
-                                </button>
                                 <div class="dropdown">
                                     <a class=" approved-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Approve</a>
                                     <a class="rejected-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Reject</a>
                                 </div>
-                            </div>
                         <?php else : ?>
                             <button class="<?php echo $buttonClass; ?> leave-status-btn" data-id="<?php echo $item->id; ?>">
                                 <?php echo ucfirst($leave_status); ?>
@@ -254,8 +249,6 @@
 
     <script>
      $(document).ready(function() {
-    $('.dropdown-toggle').dropdown(); // Ensure dropdown is initialized
-
     // Approved
     $('.approved-button').on('click', function() {
         var leaveId = $(this).data('id');
