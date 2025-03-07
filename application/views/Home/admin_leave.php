@@ -220,15 +220,14 @@
                                                                 break;
                                                         }
                                                         ?>
-                <?php
-                    var_dump($leave_status); // Debugging ke liye
-                ?>
+               
 
-                                                        <?php if ($leave_status == 'pending') : ?>
+                                                        <?php if ($leave_status === 'pending') : ?>
                                                             <div class="dropdown-menu custom-dropdown" id="dropdown-<?= $item->id ?>">
                                                                 <a class="dropdown-item approved-button <?= $buttonClass ?>" data-id="<?= $item->id ?>" style="cursor: pointer;">Approved</a>
                                                                 <a class="dropdown-item rejected-button <?= $buttonClass ?>" data-id="<?= $item->id ?>" style="cursor: pointer;">Rejected</a>
                                                             </div>
+
                                                         <?php else : ?>
                                                             <button class="<?= $buttonClass ?> leave-status-btn" data-id="<?= $item->id ?>">
                                                                 <?= ucfirst($leave_status) ?>
