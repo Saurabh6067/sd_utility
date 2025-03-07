@@ -895,6 +895,9 @@ class Admin extends CI_Controller
             $asset_quantity = $this->input->post('asset_quantity');
             $asset_price = $this->input->post('asset_price');
             $asset_description = $this->input->post('asset_description');
+
+            print_r($asset_name);
+            die() ;
     
             // Validate required fields
             if (empty($asset_name) || empty($asset_type) || empty($asset_quantity) || empty($asset_price) || empty($asset_description)) {
