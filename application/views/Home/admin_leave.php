@@ -221,7 +221,7 @@
                                                         }
                                                         ?>
                                                         <!-- Status Button -->
-                                                        <button class="<?= $buttonClass ?> leave-status-btn" data-id="<?= $item->id ?>">
+                                                        <button class="<?= $buttonClass ?> leave-status-btn approved-button" data-id="<?= $item->id ?>">
                                                             <?= ucfirst($leave_status) ?>
                                                         </button>
                                                         <!-- Dropdown (Only for Pending Status) -->
