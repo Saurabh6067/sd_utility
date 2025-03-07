@@ -121,138 +121,112 @@
                     <div class="col-xxl-12">
                         <div class="card__wrapper">
                             <div class="table__wrapper table-responsive">
-                                <table class="table mb-20" id="dataTableDefualt">
-                                    <thead>
-                                        <tr class="table__title">
-                                            <th>Sr</th>
-                                            <th>Employee Name</th>
-                                            <th>Designation</th>
-                                            <th>Leave Type</th>
-                                            <th>Date & Time</th>
-                                            <th>Leave Duration</th>
-                                            <th>Reason</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="table__body">
-                                    <?php
-                                        if (empty($leaves)) {
-                                        ?>
-                                            <h4>Data Not Found</h4>
-                                            <?php
-                                        } else {
-                                            $srno = 1;
-                                            foreach ($leaves as $item) {
-                                            ?>
-                                        <tr>
-                                            <td><?= $srno; ?></td>
-                                            <td>
-                                                <div class="table-avatar">
-                                                <?php
-                                                    $emp_id = $item->employee_id;
-                                                    $empdata = $this->db->get_where("employee", array("empid" => $emp_id))->row();
-                                                    $name = isset($empdata->name) ? $empdata->name : 'N/A';
-                                                    $leavetypedata = $this->db->get_where("tbl_leavetype", array("id" => $item->leavetype_id))->row();
-                                                    $leavetype = isset($leavetypedata->leavetype) ? $leavetypedata->leavetype : 'N/A';
-                                                    ?>
-                                                    <a href="profile.html"><?= $name; ?></a>
-                                                </div>
-                                            </td>
-                                            <td class="table__employee-position">Product Manager</td>
-                                            <td class="table__leave-type"><?= $leavetype; ?></td>
-                                            <td class="table__leave-duration">from: <span class="text-dark">
-                                                    <?php
-                                                    $fromdate = $item->from_date;
-                                                    $todate = $item->to_date;
-                                                    $date = new DateTime($fromdate);
-                                                    $date2 = new DateTime($todate);
-                                                    $from_date = $date->format('d M, y');
-                                                    $to_date = $date2->format('d M, y');
-                                                    echo $from_date;
-                                                    $startDate = new DateTime($fromdate);
-                                                    $endDate = new DateTime($todate);
-                                                    $daysDifference = $endDate->diff($startDate)->days + 1;
-                                                    ?>
-                                                </span> <br>
-                                                to: <span class="text-dark"><?= $to_date; ?></span>
-                                            </td>
-                                            <td><?= $daysDifference; ?> Days</td>
-                                            <td class="table__leave-rason"><?= isset($item->reason) ? $item->reason : ''; ?></td>
-                                                    <?php
-                                                    // $leave_status = $item->leave_status;
-                                                    // $buttonClass = 'btn btn-sm btn-pill';
-                                                    // switch ($leave_status) {
-                                                    //     case 'pending':
-                                                    //         $buttonClass .= ' btn-primary';
-                                                    //         break;
-                                                    //     case 'approved':
-                                                    //         $buttonClass .= ' btn-success'; 
-                                                    //         break;
-                                                    //     case 'rejected':
-                                                    //         $buttonClass .= ' btn-danger';
-                                                    //         break;
-                                                    //     default:
-                                                    //         $buttonClass .= ' btn-secondary'; 
-                                                    //         break;
-                                                    // }
-                                                    ?>
-                                                    <!-- <td class=""><button class="<?= $buttonClass ?>"><?= $leave_status ?></button></td> -->
+                            <table class="table mb-20" id="dataTableDefualt">
+    <thead>
+        <tr class="table__title">
+            <th>Sr</th>
+            <th>Employee Name</th>
+            <th>Designation</th>
+            <th>Leave Type</th>
+            <th>Date & Time</th>
+            <th>Leave Duration</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody class="table__body">
+        <?php if (empty($leaves)) : ?>
+            <tr>
+                <td colspan="9" class="text-center"><h4>Data Not Found</h4></td>
+            </tr>
+        <?php else : ?>
+            <?php $srno = 1; ?>
+            <?php foreach ($leaves as $item) : ?>
+                <?php
+                $emp_id = $item->employee_id;
+                $empdata = $this->db->get_where("employee", ["empid" => $emp_id])->row();
+                $name = isset($empdata->name) ? $empdata->name : 'N/A';
+
+                $leavetypedata = $this->db->get_where("tbl_leavetype", ["id" => $item->leavetype_id])->row();
+                $leavetype = isset($leavetypedata->leavetype) ? $leavetypedata->leavetype : 'N/A';
+
+                $fromdate = new DateTime($item->from_date);
+                $todate = new DateTime($item->to_date);
+                $from_date = $fromdate->format('d M, y');
+                $to_date = $todate->format('d M, y');
+
+                $daysDifference = $todate->diff($fromdate)->days + 1;
+
+                $leave_status = $item->leave_status;
+                $buttonClass = 'btn btn-sm btn-pill';
+                switch ($leave_status) {
+                    case 'pending':
+                        $buttonClass .= ' btn-primary';
+                        break;
+                    case 'approved':
+                        $buttonClass .= ' btn-success';
+                        break;
+                    case 'rejected':
+                        $buttonClass .= ' btn-danger';
+                        break;
+                    default:
+                        $buttonClass .= ' btn-secondary';
+                        break;
+                }
+                ?>
+                <tr>
+                    <td><?php echo $srno; ?></td>
+                    <td>
+                        <div class="table-avatar">
+                            <a href="profile.html"><?php echo $name; ?></a>
+                        </div>
+                    </td>
+                    <td class="table__employee-position">Product Manager</td>
+                    <td class="table__leave-type"><?php echo $leavetype; ?></td>
+                    <td class="table__leave-duration">
+                        From: <span class="text-dark"><?php echo $from_date; ?></span><br>
+                        To: <span class="text-dark"><?php echo $to_date; ?></span>
+                    </td>
+                    <td><?php echo $daysDifference; ?> Days</td>
+                    <td class="table__leave-reason"><?php echo isset($item->reason) ? $item->reason : 'N/A'; ?></td>
+
+                    <td>
+                        <?php if ($leave_status === 'pending') : ?>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Pending
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item approved-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Approve</a>
+                                    <a class="dropdown-item rejected-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Reject</a>
+                                </div>
+                            </div>
+                        <?php else : ?>
+                            <button class="<?php echo $buttonClass; ?> leave-status-btn" data-id="<?php echo $item->id; ?>">
+                                <?php echo ucfirst($leave_status); ?>
+                            </button>
+                        <?php endif; ?>
+                    </td>
 
 
-                                                    <td>
-                                                        <?php
-                                                        $leave_status = $item->leave_status;
-                                                        $buttonClass = 'btn btn-sm btn-pill';
+                    <td class="table__icon-box">
+                        <div class="d-flex align-items-center justify-content-start gap-10">
+                            <a href="#" class="table__icon edit">
+                                <i class="fa-sharp fa-light fa-pen"></i>
+                            </a>
+                            <button class="removeBtn table__icon delete">
+                                <i class="fa-regular fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <?php $srno++; ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </tbody>
+</table>
 
-                                                        switch ($leave_status) {
-                                                            case 'pending':
-                                                                $buttonClass .= ' btn-primary';
-                                                                break;
-                                                            case 'approved':
-                                                                $buttonClass .= ' btn-success';
-                                                                break;
-                                                            case 'rejected':
-                                                                $buttonClass .= ' btn-danger';
-                                                                break;
-                                                            default:
-                                                                $buttonClass .= ' btn-secondary';
-                                                                break;
-                                                        }
-                                                        ?>
-                                                        <!-- Status Button -->
-                                                        <button class="<?= $buttonClass ?> leave-status-btn approved-button" data-id="<?= $item->id ?>">
-                                                            <?= ucfirst($leave_status) ?>
-                                                        </button>
-                                                        <!-- Dropdown (Only for Pending Status) -->
-                                                        <?php if ($leave_status === 'pending') : ?>
-                                                            <div class="dropdown-menu custom-dropdown d-none" id="dropdown-<?= $item->id ?>">
-                                                                <a class="dropdown-item approved-button" data-id="<?= $item->id ?>" style="cursor: pointer;">Approved</a>
-                                                                <a class="dropdown-item rejected-button" data-id="<?= $item->id ?>" style="cursor: pointer;">Rejected</a>
-                                                            </div>
-                                                        <?php endif; ?>
-                                                    </td>
-
-
-
-                                            <td class="table__icon-box">
-                                                <div class="d-flex align-items-center justify-content-start gap-10">
-                                                    <a href="#" class="table__icon edit">
-                                                        <i class="fa-sharp fa-light fa-pen"></i>
-                                                    </a>
-                                                    <button class="removeBtn table__icon delete">
-                                                        <i class="fa-regular fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <?php
-                                                $srno++;
-                                            }
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                     </div>
@@ -278,34 +252,57 @@
 
     <!-- JS here -->
     <?php include 'includes/footer_link.php'; ?>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
-      $(document).ready(function() {
-    $(document).on('click', '.leave-status-btn', function() {
-        var leaveId = $(this).data('id');
-        var dropdown = $("#dropdown-" + leaveId);
+    <!-- HTML Structure -->
+<div class="dropdown">
+    <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Pending
+    </button>
+    <div class="dropdown-menu">
+        <a class="dropdown-item approved-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Approve</a>
+        <a class="dropdown-item rejected-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Reject</a>
+    </div>
+</div>
 
-        if (dropdown.length > 0) {
-            dropdown.toggleClass("d-none"); // Dropdown show/hide karega
+<!-- JavaScript/jQuery Code -->
+<script>
+$(document).ready(function() {
+    // Initialize all dropdowns
+    $('.dropdown-toggle').dropdown();
+    
+    // Manual dropdown toggle if Bootstrap dropdown isn't working
+    $(document).on('click', '.dropdown-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).parent().toggleClass('show');
+        $(this).next('.dropdown-menu').toggleClass('show');
+    });
+    
+    // Close dropdown when clicking outside
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.dropdown').length) {
+            $('.dropdown-menu').removeClass('show');
+            $('.dropdown').removeClass('show');
         }
     });
 
-    // Approve Button Click
+    // Approved
     $(document).on('click', '.approved-button', function() {
         var leaveId = $(this).data('id');
+        alert(leaveId);
         Swal.fire({
             title: 'Are you sure?',
             text: "Do you want to approve this leave?",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#28a745',
+            confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, Approve it!',
-            cancelButtonText: 'Cancel'
+            confirmButtonText: 'Yes, Approve it!'
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "<?= base_url('Manager/Approved') ?>",
+                    url: "<?php echo base_url('Manager/Approved')?>",
                     type: 'POST',
                     data: { id: leaveId },
                     success: function(response) {
@@ -316,7 +313,9 @@
                                 title: response.msg,
                                 showConfirmButton: false,
                                 timer: 1500
-                            }).then(() => location.reload());
+                            }).then(() => {
+                                location.reload();
+                            });
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -330,22 +329,22 @@
         });
     });
 
-    // Reject Button Click
+    // Rejected
     $(document).on('click', '.rejected-button', function() {
         var leaveId = $(this).data('id');
+
         Swal.fire({
             title: 'Are you sure?',
             text: "Do you want to reject this leave?",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#dc3545',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Yes, Reject it!',
-            cancelButtonText: 'Cancel'
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Reject it!'
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "<?= base_url('Manager/Rejected') ?>",
+                    url: "<?php echo base_url('Manager/Rejected')?>",
                     type: 'POST',
                     data: { id: leaveId },
                     success: function(response) {
@@ -356,7 +355,9 @@
                                 title: response.msg,
                                 showConfirmButton: false,
                                 timer: 1500
-                            }).then(() => location.reload());
+                            }).then(() => {
+                                location.reload();
+                            });
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -370,6 +371,7 @@
         });
     });
 });
+</script>
     </script>
 </body>
 
