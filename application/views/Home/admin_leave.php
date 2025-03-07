@@ -192,17 +192,23 @@
                     <td class="table__leave-reason"><?php echo isset($item->reason) ? $item->reason : 'N/A'; ?></td>
 
                     <td>
-                        <?php if ($leave_status === 'pending') : ?>
-                                <div class="dropdown">
-                                    <a class=" approved-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Approve</a>
-                                    <a class="rejected-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Reject</a>
-                                </div>
-                        <?php else : ?>
-                            <button class="<?php echo $buttonClass; ?> leave-status-btn" data-id="<?php echo $item->id; ?>">
-                                <?php echo ucfirst($leave_status); ?>
-                            </button>
-                        <?php endif; ?>
-                    </td>
+    <?php if ($leave_status === 'pending') : ?>
+        <div class="dropdown">
+            <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Pending
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item approved-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Approve</a>
+                <a class="dropdown-item rejected-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Reject</a>
+            </div>
+        </div>
+    <?php else : ?>
+        <button class="<?php echo $buttonClass; ?> leave-status-btn" data-id="<?php echo $item->id; ?>">
+            <?php echo ucfirst($leave_status); ?>
+        </button>
+    <?php endif; ?>
+</td>
+
 
                     <td class="table__icon-box">
                         <div class="d-flex align-items-center justify-content-start gap-10">
