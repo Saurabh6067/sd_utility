@@ -290,7 +290,7 @@ $(document).ready(function() {
     // Approved
     $(document).on('click', '.approved-button', function() {
         var leaveId = $(this).data('id');
-        
+        alert(leaveId);
         Swal.fire({
             title: 'Are you sure?',
             text: "Do you want to approve this leave?",
