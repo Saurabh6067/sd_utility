@@ -221,18 +221,17 @@
                                                         }
                                                         ?>
                                                         <!-- Status Button -->
-    <button class="<?= $buttonClass ?> leave-status-btn" data-id="<?= $item->id ?>">
-        <?= ucfirst($leave_status) ?>
-    </button>
-
-    <!-- Dropdown (Only for Pending Status) -->
-    <?php if ($leave_status === 'pending') : ?>
-        <div class="dropdown-menu custom-dropdown d-none" id="dropdown-<?= $item->id ?>">
-            <a class="dropdown-item approved-button" data-id="<?= $item->id ?>" style="cursor: pointer;">Approved</a>
-            <a class="dropdown-item rejected-button" data-id="<?= $item->id ?>" style="cursor: pointer;">Rejected</a>
-        </div>
-    <?php endif; ?>
-</td>
+                                                        <button class="<?= $buttonClass ?> leave-status-btn" data-id="<?= $item->id ?>">
+                                                            <?= ucfirst($leave_status) ?>
+                                                        </button>
+                                                        <!-- Dropdown (Only for Pending Status) -->
+                                                        <?php if ($leave_status === 'pending') : ?>
+                                                            <div class="dropdown-menu custom-dropdown d-none" id="dropdown-<?= $item->id ?>">
+                                                                <a class="dropdown-item approved-button" data-id="<?= $item->id ?>" style="cursor: pointer;">Approved</a>
+                                                                <a class="dropdown-item rejected-button" data-id="<?= $item->id ?>" style="cursor: pointer;">Rejected</a>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    </td>
 
 
 
@@ -279,7 +278,113 @@
 
     <!-- JS here -->
     <?php include 'includes/footer_link.php'; ?>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            // Approved 
+            $('.approved-button').on('click', function() {
+                var leaveId = $(this).data('id');
+                alert(leaveId);
+                swal({
+                    title: 'Are you sure?',
+                    text: "Do you want to Approved this leave?",
+                    icon: 'warning',
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willApprove) => {
+                    if (willApprove) {
+                        // If user confirmed, proceed with the AJAX request
+                        $.ajax({
+                            url: "<?= base_url('Manager/Approved') ?>",
+                            type: 'POST',
+                            data: {
+                                id: leaveId
+                            },
+                            success: function(response) {
+                                response = JSON.parse(response);
+                                if (response.status === 'success') {
+                                    swal({
+                                        icon: 'success',
+                                        title: response.msg,
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    swal({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: response.msg
+                                    });
+                                }
+                            }
+                        });
+                    } else {
+                        swal("Action cancelled", {
+                            icon: "info",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }
+                });
+            });
 
+            // Rejected 
+            $('.rejected-button').on('click', function() {
+                var leaveId = $(this).data('id');
+
+                // Show confirmation dialog
+                swal({
+                    title: 'Are you sure?',
+                    text: "Do you want to Rejected this leave?",
+                    icon: 'warning',
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willApprove) => {
+                    if (willApprove) {
+                        // If user confirmed, proceed with the AJAX request
+                        $.ajax({
+                            url: "<?= base_url('Manager/Rejected') ?>",
+                            type: 'POST',
+                            data: {
+                                id: leaveId
+                            },
+                            success: function(response) {
+                                response = JSON.parse(response);
+                                if (response.status === 'success') {
+                                    swal({
+                                        icon: 'success',
+                                        title: response.msg,
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    swal({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: response.msg
+                                    });
+                                }
+                            }
+                        });
+                    } else {
+                        swal("Action cancelled", {
+                            icon: "info",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
