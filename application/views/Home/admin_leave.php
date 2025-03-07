@@ -220,6 +220,9 @@
                                                                 break;
                                                         }
                                                         ?>
+                <?php
+                    var_dump($leave_status); // Debugging ke liye
+                ?>
 
                                                         <?php if ($leave_status == 'pending') : ?>
                                                             <div class="dropdown-menu custom-dropdown" id="dropdown-<?= $item->id ?>">
