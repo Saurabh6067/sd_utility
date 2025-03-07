@@ -197,9 +197,9 @@
                                 <button class="<?php echo $buttonClass ?> dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <?php echo ucfirst($leave_status); ?>
                                 </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item approved-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Approve</a>
-                                    <a class="dropdown-item rejected-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Reject</a>
+                                <div class="dropdown">
+                                    <a class=" approved-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Approve</a>
+                                    <a class="rejected-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Reject</a>
                                 </div>
                             </div>
                         <?php else : ?>
