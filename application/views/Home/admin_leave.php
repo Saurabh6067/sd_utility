@@ -201,39 +201,43 @@
 
 
                                                     <td>
-                                                        <?php
-                                                        $leave_status = $item->leave_status;
-                                                        $buttonClass = 'btn btn-sm btn-pill';
+    <?php
+    $leave_status = $item->leave_status;
+    $buttonClass = 'btn btn-sm btn-pill';
 
-                                                        switch ($leave_status) {
-                                                            case 'pending':
-                                                                $buttonClass .= ' btn-primary';
-                                                                break;
-                                                            case 'approved':
-                                                                $buttonClass .= ' btn-success';
-                                                                break;
-                                                            case 'rejected':
-                                                                $buttonClass .= ' btn-danger';
-                                                                break;
-                                                            default:
-                                                                $buttonClass .= ' btn-secondary';
-                                                                break;
-                                                        }
-                                                        ?>
-               
+    switch ($leave_status) {
+        case 'pending':
+            $buttonClass .= ' btn-primary';
+            break;
+        case 'approved':
+            $buttonClass .= ' btn-success';
+            break;
+        case 'rejected':
+            $buttonClass .= ' btn-danger';
+            break;
+        default:
+            $buttonClass .= ' btn-secondary';
+            break;
+    }
+    ?>
 
-                                                        <?php if ($leave_status === 'pending') : ?>
-                                                            <div class="dropdown-menu">
-                                                                    <a class="dropdown-item approved-button" data-id="<?= $item->id ?>" style="display: <?= $item->leave_status === 'approved' ? 'none;' : 'block;' ?> cursor: pointer;">Approved</a>
-                                                                    <a class="dropdown-item rejected-button" data-id="<?= $item->id ?>" style="display: <?= $item->leave_status === 'rejected' ? 'none;' : 'block;' ?> cursor: pointer;">Rejected</a>
-                                                                </div>
-                                                            <?= ucfirst($leave_status) ?>
-                                                        <?php else : ?>
-                                                            <button class="<?= $buttonClass ?> leave-status-btn" data-id="<?= $item->id ?>">
-                                                                <?= ucfirst($leave_status) ?>
-                                                            </button>
-                                                        <?php endif; ?>
-                                                    </td>
+    <?php if ($leave_status === 'pending') : ?>
+        <div class="dropdown">
+            <button class="<?= $buttonClass ?> dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <?= ucfirst($leave_status) ?>
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item approved-button" data-id="<?= $item->id ?>" style="display: <?= $leave_status === 'approved' ? 'none' : 'block' ?>; cursor: pointer;">Approved</a>
+                <a class="dropdown-item rejected-button" data-id="<?= $item->id ?>" style="display: <?= $leave_status === 'rejected' ? 'none' : 'block' ?>; cursor: pointer;">Rejected</a>
+            </div>
+        </div>
+    <?php else : ?>
+        <button class="<?= $buttonClass ?> leave-status-btn" data-id="<?= $item->id ?>">
+            <?= ucfirst($leave_status) ?>
+        </button>
+    <?php endif; ?>
+</td>
+
 
 
 
@@ -283,30 +287,21 @@
     <?php include 'includes/footer_link.php'; ?>
 
     <script>
-      $(document).ready(function() {
-    // $(document).on('click', '.leave-status-btn', function() {
-    //     var leaveId = $(this).data('id');
-    //     var dropdown = $("#dropdown-" + leaveId);
+     $(document).ready(function() {
+    $('.dropdown-toggle').dropdown(); // Ensure dropdown is initialized
 
-    //     if (dropdown.length > 0) {
-    //         dropdown.toggleClass("d-none"); // Dropdown show/hide karega
-    //     }
-    // });
-
-    // Approve Button Click
-    $(document).on('click', '.approved-button', function() {
+    // Approved 
+    $('.approved-button').on('click', function() {
         var leaveId = $(this).data('id');
-        Swal.fire({
+
+        swal({
             title: 'Are you sure?',
-            text: "Do you want to approve this leave?",
+            text: "Do you want to Approve this leave?",
             icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#28a745',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, Approve it!',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
+            buttons: true,
+            dangerMode: true,
+        }).then((willApprove) => {
+            if (willApprove) {
                 $.ajax({
                     url: "<?= base_url('Manager/Approved') ?>",
                     type: 'POST',
@@ -314,14 +309,16 @@
                     success: function(response) {
                         response = JSON.parse(response);
                         if (response.status === 'success') {
-                            Swal.fire({
+                            swal({
                                 icon: 'success',
                                 title: response.msg,
                                 showConfirmButton: false,
                                 timer: 1500
-                            }).then(() => location.reload());
+                            }).then(() => {
+                                location.reload();
+                            });
                         } else {
-                            Swal.fire({
+                            swal({
                                 icon: 'error',
                                 title: 'Error',
                                 text: response.msg
@@ -329,24 +326,30 @@
                         }
                     }
                 });
+            } else {
+                swal("Action cancelled", {
+                    icon: "info",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    location.reload();
+                });
             }
         });
     });
 
-    // Reject Button Click
-    $(document).on('click', '.rejected-button', function() {
+    // Rejected 
+    $('.rejected-button').on('click', function() {
         var leaveId = $(this).data('id');
-        Swal.fire({
+
+        swal({
             title: 'Are you sure?',
-            text: "Do you want to reject this leave?",
+            text: "Do you want to Reject this leave?",
             icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#dc3545',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Yes, Reject it!',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
+            buttons: true,
+            dangerMode: true,
+        }).then((willReject) => {
+            if (willReject) {
                 $.ajax({
                     url: "<?= base_url('Manager/Rejected') ?>",
                     type: 'POST',
@@ -354,14 +357,16 @@
                     success: function(response) {
                         response = JSON.parse(response);
                         if (response.status === 'success') {
-                            Swal.fire({
+                            swal({
                                 icon: 'success',
                                 title: response.msg,
                                 showConfirmButton: false,
                                 timer: 1500
-                            }).then(() => location.reload());
+                            }).then(() => {
+                                location.reload();
+                            });
                         } else {
-                            Swal.fire({
+                            swal({
                                 icon: 'error',
                                 title: 'Error',
                                 text: response.msg
@@ -369,10 +374,19 @@
                         }
                     }
                 });
+            } else {
+                swal("Action cancelled", {
+                    icon: "info",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    location.reload();
+                });
             }
         });
     });
 });
+
     </script>
 </body>
 
