@@ -223,10 +223,10 @@
                
 
                                                         <?php if ($leave_status === 'pending') : ?>
-                                                            <!-- <div class="dropdown-menu custom-dropdown" id="dropdown-<?= $item->id ?>">
-                                                                <a class="dropdown-item approved-button <?= $buttonClass ?>" data-id="<?= $item->id ?>" style="cursor: pointer;">Approved</a>
-                                                                <a class="dropdown-item rejected-button <?= $buttonClass ?>" data-id="<?= $item->id ?>" style="cursor: pointer;">Rejected</a>
-                                                            </div> -->
+                                                            <div class="dropdown-menu">
+                                                                    <a class="dropdown-item approved-button" data-id="<?= $item->id ?>" style="display: <?= $item->status === 'Approved' ? 'none;' : 'block;' ?> cursor: pointer;">Approved</a>
+                                                                    <a class="dropdown-item rejected-button" data-id="<?= $item->id ?>" style="display: <?= $item->status === 'Rejected' ? 'none;' : 'block;' ?> cursor: pointer;">Rejected</a>
+                                                                </div>
                                                             <?= ucfirst($leave_status) ?>
                                                         <?php else : ?>
                                                             <button class="<?= $buttonClass ?> leave-status-btn" data-id="<?= $item->id ?>">
