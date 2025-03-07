@@ -80,7 +80,7 @@
                                                     <td><?= $i++ ?></td>
                                                     <td><?= $value['asset_name'] ?></td>
                                                     <td><?= $value['asset_type'] ?></td>
-                                                    <td><img src="<?= base_url('uploads/assets/' . $value['asset_type']) ?>" alt=""></td>
+                                                    <td><img class="w-50" src="<?= base_url('uploads/assets/' . $value['asset_img']) ?>" alt=""></td>
                                                     <td><?= $value['asset_quantity'] ?></td>
                                                     <td><?= $value['asset_price'] ?></td>
                                                     <td><?= $value['asset_description'] ?></td>
