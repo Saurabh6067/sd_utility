@@ -248,19 +248,22 @@
     <?php include 'includes/footer_link.php'; ?>
 
     <script>
-     $(document).ready(function() {
+    $(document).ready(function() {
     // Approved
-    $('.approved-button').on('click', function() {
+    $(document).on('click', '.approved-button', function() {
         var leaveId = $(this).data('id');
+        alert(leaveId);
 
-        swal({
+        Swal.fire({
             title: 'Are you sure?',
-            text: "Do you want to Approve this leave?",
+            text: "Do you want to approve this leave?",
             icon: 'warning',
-            buttons: true,
-            dangerMode: true,
-        }).then((willApprove) => {
-            if (willApprove) {
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Approve it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
                 $.ajax({
                     url: "<?php echo base_url('Manager/Approved')?>",
                     type: 'POST',
@@ -268,7 +271,7 @@
                     success: function(response) {
                         response = JSON.parse(response);
                         if (response.status === 'success') {
-                            swal({
+                            Swal.fire({
                                 icon: 'success',
                                 title: response.msg,
                                 showConfirmButton: false,
@@ -277,7 +280,7 @@
                                 location.reload();
                             });
                         } else {
-                            swal({
+                            Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
                                 text: response.msg
@@ -285,30 +288,24 @@
                         }
                     }
                 });
-            } else {
-                swal("Action cancelled", {
-                    icon: "info",
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(() => {
-                    location.reload();
-                });
             }
         });
     });
 
     // Rejected
-    $('.rejected-button').on('click', function() {
+    $(document).on('click', '.rejected-button', function() {
         var leaveId = $(this).data('id');
 
-        swal({
+        Swal.fire({
             title: 'Are you sure?',
-            text: "Do you want to Reject this leave?",
+            text: "Do you want to reject this leave?",
             icon: 'warning',
-            buttons: true,
-            dangerMode: true,
-        }).then((willReject) => {
-            if (willReject) {
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Reject it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
                 $.ajax({
                     url: "<?php echo base_url('Manager/Rejected')?>",
                     type: 'POST',
@@ -316,7 +313,7 @@
                     success: function(response) {
                         response = JSON.parse(response);
                         if (response.status === 'success') {
-                            swal({
+                            Swal.fire({
                                 icon: 'success',
                                 title: response.msg,
                                 showConfirmButton: false,
@@ -325,21 +322,13 @@
                                 location.reload();
                             });
                         } else {
-                            swal({
+                            Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
                                 text: response.msg
                             });
                         }
                     }
-                });
-            } else {
-                swal("Action cancelled", {
-                    icon: "info",
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(() => {
-                    location.reload();
                 });
             }
         });
