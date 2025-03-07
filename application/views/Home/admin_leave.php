@@ -192,22 +192,22 @@
                     <td class="table__leave-reason"><?php echo isset($item->reason) ? $item->reason : 'N/A'; ?></td>
 
                     <td>
-    <?php if ($leave_status === 'pending') : ?>
-        <div class="dropdown">
-            <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Pending
-            </button>
-            <div class="dropdown-menu">
-                <a class="dropdown-item approved-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Approve</a>
-                <a class="dropdown-item rejected-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Reject</a>
-            </div>
-        </div>
-    <?php else : ?>
-        <button class="<?php echo $buttonClass; ?> leave-status-btn" data-id="<?php echo $item->id; ?>">
-            <?php echo ucfirst($leave_status); ?>
-        </button>
-    <?php endif; ?>
-</td>
+                        <?php if ($leave_status === 'pending') : ?>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Pending
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item approved-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Approve</a>
+                                    <a class="dropdown-item rejected-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Reject</a>
+                                </div>
+                            </div>
+                        <?php else : ?>
+                            <button class="<?php echo $buttonClass; ?> leave-status-btn" data-id="<?php echo $item->id; ?>">
+                                <?php echo ucfirst($leave_status); ?>
+                            </button>
+                        <?php endif; ?>
+                    </td>
 
 
                     <td class="table__icon-box">
@@ -254,12 +254,43 @@
     <?php include 'includes/footer_link.php'; ?>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
-    $(document).ready(function() {
+    <!-- HTML Structure -->
+<div class="dropdown">
+    <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Pending
+    </button>
+    <div class="dropdown-menu">
+        <a class="dropdown-item approved-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Approve</a>
+        <a class="dropdown-item rejected-button" data-id="<?php echo $item->id; ?>" style="cursor: pointer;">Reject</a>
+    </div>
+</div>
+
+<!-- JavaScript/jQuery Code -->
+<script>
+$(document).ready(function() {
+    // Initialize all dropdowns
+    $('.dropdown-toggle').dropdown();
+    
+    // Manual dropdown toggle if Bootstrap dropdown isn't working
+    $(document).on('click', '.dropdown-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).parent().toggleClass('show');
+        $(this).next('.dropdown-menu').toggleClass('show');
+    });
+    
+    // Close dropdown when clicking outside
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.dropdown').length) {
+            $('.dropdown-menu').removeClass('show');
+            $('.dropdown').removeClass('show');
+        }
+    });
+
     // Approved
     $(document).on('click', '.approved-button', function() {
         var leaveId = $(this).data('id');
-        alert(leaveId);
-
+        
         Swal.fire({
             title: 'Are you sure?',
             text: "Do you want to approve this leave?",
@@ -340,7 +371,7 @@
         });
     });
 });
-
+</script>
     </script>
 </body>
 
