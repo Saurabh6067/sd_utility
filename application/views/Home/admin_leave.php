@@ -200,9 +200,11 @@
                                                     <!-- <td class=""><button class="<?= $buttonClass ?>"><?= $leave_status ?></button></td> -->
 
 
-                                                    <?php
+                                                    <td>
+                                                        <?php
                                                         $leave_status = $item->leave_status;
                                                         $buttonClass = 'btn btn-sm btn-pill';
+
                                                         switch ($leave_status) {
                                                             case 'pending':
                                                                 $buttonClass .= ' btn-primary';
@@ -217,18 +219,23 @@
                                                                 $buttonClass .= ' btn-secondary';
                                                                 break;
                                                         }
-                                                    ?>
-                                                        <td class="">
-                                                            <button class="<?= $buttonClass ?>"><?= ucfirst($leave_status) ?></button>
-                                                            <?php if ($leave_status === 'pending') : ?>
-                                                                <div class="dropdown-menu">
-                                                                    <a class="dropdown-item approved-button" data-id="<?= $item->id ?>" style="cursor: pointer;">Approved</a>
-                                                                    <a class="dropdown-item rejected-button" data-id="<?= $item->id ?>" style="cursor: pointer;">Rejected</a>
-                                                                </div>
-                                                            <?php endif; ?>
-                                                        </td>
+                                                        ?>
+                                                        <button class="<?= $buttonClass ?>"><?= ucfirst($leave_status) ?></button>
+                                                        <?php if ($leave_status === 'pending') : ?>
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    Change Status
+                                                                </button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li><a class="dropdown-item approved-button" data-id="<?= $item->id ?>" style="cursor: pointer;">Approved</a></li>
+                                                                    <li><a class="dropdown-item rejected-button" data-id="<?= $item->id ?>" style="cursor: pointer;">Rejected</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    </td>
 
-                                                        
+
+
                                             <td class="table__icon-box">
                                                 <div class="d-flex align-items-center justify-content-start gap-10">
                                                     <a href="#" class="table__icon edit">
