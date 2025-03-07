@@ -220,19 +220,19 @@
                                                                 break;
                                                         }
                                                         ?>
-                                                        <button class="<?= $buttonClass ?>"><?= ucfirst($leave_status) ?></button>
-                                                        <?php if ($leave_status === 'pending') : ?>
-                                                            <div class="dropdown">
-                                                                <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                    Change Status
-                                                                </button>
-                                                                <ul class="dropdown-menu">
-                                                                    <li><a class="dropdown-item approved-button" data-id="<?= $item->id ?>" style="cursor: pointer;">Approved</a></li>
-                                                                    <li><a class="dropdown-item rejected-button" data-id="<?= $item->id ?>" style="cursor: pointer;">Rejected</a></li>
-                                                                </ul>
-                                                            </div>
-                                                        <?php endif; ?>
-                                                    </td>
+                                                        <!-- Status Button -->
+    <button class="<?= $buttonClass ?> leave-status-btn" data-id="<?= $item->id ?>">
+        <?= ucfirst($leave_status) ?>
+    </button>
+
+    <!-- Dropdown (Only for Pending Status) -->
+    <?php if ($leave_status === 'pending') : ?>
+        <div class="dropdown-menu custom-dropdown d-none" id="dropdown-<?= $item->id ?>">
+            <a class="dropdown-item approved-button" data-id="<?= $item->id ?>" style="cursor: pointer;">Approved</a>
+            <a class="dropdown-item rejected-button" data-id="<?= $item->id ?>" style="cursor: pointer;">Rejected</a>
+        </div>
+    <?php endif; ?>
+</td>
 
 
 
