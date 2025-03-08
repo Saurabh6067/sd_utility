@@ -64,7 +64,7 @@
                                         <tr class="table__title">
                                             <th>#</th>
                                             <th>Category</th>
-                                            <th>Staus</th>
+                                            <th>Created At</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -75,19 +75,9 @@
                                             <tr>
                                                 <td><?= $i++ ?></td>
                                                 <td><?= $value['leavetype'] ?></td>
-                                                <td><?= $value['day'] ?></td>
                                                 <td><?= $value['created_at_date'] ?></td>
                                                 <td>
                                                     <div class="d-flex align-items-center justify-content-start gap-10">
-                                                        <!-- <button type="button" class="table__icon edit"
-                                                            data-bs-toggle="modal" data-bs-target="#meetingEdit"
-                                                            data-id="<?= $value['id'] ?>">
-                                                            <i class="fa-sharp fa-light fa-pen"></i>
-                                                        </button> -->
-                                                        <!-- <button class="removeBtn table__icon delete">
-                                                            <i class="fa-regular fa-trash"></i>
-                                                        </button> -->
-
                                                         <button class="btn btn-primary btn-sm" onclick="Edit('<?= $value['id']; ?>')"><i class="fa-sharp fa-light fa-pen"></i></button>
                                                         <button class="btn btn-sm btn-danger"
                                                             onclick="DeleteWithoutImage('<?= isset($value['id']) ? $value['id'] : ''; ?>', 'tbl_leavetype');">
