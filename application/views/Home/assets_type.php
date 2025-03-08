@@ -48,7 +48,7 @@
                             <div class="d-flex align-items-center justify-content-end gap-15">
                                 <div>
                                     <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
-                                        data-bs-target="#addassetsType">
+                                        data-bs-target="#addassetstype">
                                         Add Assets Type</button>
                                 </div>
                             </div>
@@ -127,7 +127,7 @@
                 e.preventDefault();
                 const formData = $(this).serialize();
                 $.ajax({
-                    url: "<?= base_url('Admin/AddLeaveType/add') ?>",
+                    url: "<?= base_url('Admin/AddAssetsType/add') ?>",
                     method: 'POST',
                     data: formData,
                     dataType: 'json',

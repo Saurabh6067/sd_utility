@@ -367,11 +367,11 @@
 <!--Add assets Modal-->
 
 <!-- Assists Category Modal -->
-<div class="modal fade" id="addleavetype" tabindex="-1" aria-labelledby="addNewEmployeeLabel" aria-hidden="true">
+<div class="modal fade" id="addassetstype" tabindex="-1" aria-labelledby="addNewEmployeeLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addNewEmployeeLabel">Add Assets Cate</h5>
+                <h5 class="modal-title" id="addNewEmployeeLabel">Add Assets Category</h5>
                 <button type="button" class="bd-btn-close" data-bs-dismiss="modal" aria-label="Close"><i
                         class="fa-solid fa-xmark-large"></i></button>
             </div>
@@ -382,21 +382,11 @@
                             <div class="col-lg-6">
                                 <div class="from__input-box">
                                     <div class="form__input-title">
-                                        <label for="circleName">Leave Type<span>*</span></label>
+                                        <label for="circleName">Assets Type<span>*</span></label>
                                     </div>
                                     <div class="form__input">
                                         <input class="form-control" name="leavetype" id="leavetype" type="text"
                                             required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="from__input-box">
-                                    <div class="form__input-title">
-                                        <label for="day">Day<span>*</span></label>
-                                    </div>
-                                    <div class="form__input">
-                                        <input class="form-control" name="day" id="day" type="number" required>
                                     </div>
                                 </div>
                             </div>
