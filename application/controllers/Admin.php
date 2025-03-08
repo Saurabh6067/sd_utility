@@ -367,7 +367,7 @@ class Admin extends CI_Controller
             } else {
                 $this->session->set_flashdata(['res' => 'error', 'msg' => 'Failed to update Leave Type.']);
             }
-            redirect(base_url('Admin/AddLeaveType'));                     
+            redirect(base_url('Admin/AddLeaveType'));
         }
         // Default view load
         else {
@@ -412,8 +412,7 @@ class Admin extends CI_Controller
 
     public function Leave()
     {
-        if ($this->uri->segment(3)) 
-        {
+        if ($this->uri->segment(3)) {
             $action = $this->uri->segment(3);
             if ($this->uri->segment(4)) {
                 $id = $this->uri->segment(4);
@@ -468,9 +467,7 @@ class Admin extends CI_Controller
                     redirect(base_url('Admin/Leave'));
                 }
             }
-        } 
-        else 
-        {
+        } else {
             // $data['leaves'] = $this->db->order_by("id", "DESC")->get_where("emp_leave_request", array("employee_id" => $this->user_id))->result();
             // $this->load->view("Home/admin_leave", $data);
 
@@ -897,46 +894,46 @@ class Admin extends CI_Controller
     public function addAssets()
     {
         $action = $this->uri->segment(3);
-    
+
         if ($action === 'add' && $this->input->server('REQUEST_METHOD') === 'POST') {
             $asset_name = $this->input->post('asset_name');
             $asset_type = $this->input->post('asset_type');
             $asset_quantity = $this->input->post('asset_quantity');
             $asset_price = $this->input->post('asset_price');
             $asset_description = $this->input->post('asset_description');
-    
+
             // Validate required fields
             if (empty($asset_name) || empty($asset_type) || empty($asset_quantity) || empty($asset_price) || empty($asset_description)) {
                 $this->output->set_content_type('application/json')
-                            ->set_output(json_encode(['status' => 'error', 'message' => 'All fields are required.']));
+                    ->set_output(json_encode(['status' => 'error', 'message' => 'All fields are required.']));
                 return;
             }
-    
+
             // Image Upload
             $upload_status = true;
             $imagePath = '';
             $upload_error = '';
-    
+
             if (!empty($_FILES['asset_img']['name'])) {
                 $ext = pathinfo($_FILES["asset_img"]["name"], PATHINFO_EXTENSION);
                 $filename = time() . "_asset." . $ext; // Unique file name
-    
+
                 // Make sure upload directory exists
                 if (!is_dir('./uploads/assets/')) {
                     mkdir('./uploads/assets/', 0777, true);
                 }
-    
+
                 $config['upload_path'] = './uploads/assets/';
                 $config['allowed_types'] = 'jpg|jpeg|png|gif';
                 $config['max_size'] = 2048; // 2MB
                 $config['file_name'] = $filename;
-    
+
                 $this->load->library('upload', $config);
                 $this->upload->initialize($config);
-    
+
                 if ($this->upload->do_upload('asset_img')) {
                     $uploadData = $this->upload->data();
-                    $imagePath = 'uploads/assets/' . $uploadData['file_name']; 
+                    $imagePath = 'uploads/assets/' . $uploadData['file_name'];
                 } else {
                     $upload_status = false;
                     $upload_error = $this->upload->display_errors('', ''); // Get error without HTML tags
@@ -945,7 +942,7 @@ class Admin extends CI_Controller
                 $upload_status = false;
                 $upload_error = "Please upload an image.";
             }
-    
+
             if ($upload_status) {
                 // Prepare data for database insertion
                 $data = [
@@ -959,31 +956,104 @@ class Admin extends CI_Controller
                     'created_at_time' => date('H:i:s'),
                     'created_at_date' => date('Y-m-d'),
                 ];
-    
+
                 $insert = $this->db->insert('assets', $data);
-    
+
                 if ($insert) {
                     $this->output->set_content_type('application/json')
-                                ->set_output(json_encode(['status' => 'success', 'message' => 'Asset added successfully.']));
+                        ->set_output(json_encode(['status' => 'success', 'message' => 'Asset added successfully.']));
                 } else {
                     $this->output->set_content_type('application/json')
-                                ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to add asset. Database error: ' . $this->db->error()['message']]));
+                        ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to add asset. Database error: ' . $this->db->error()['message']]));
                 }
             } else {
                 $this->output->set_content_type('application/json')
-                            ->set_output(json_encode(['status' => 'error', 'message' => $upload_error]));
+                    ->set_output(json_encode(['status' => 'error', 'message' => $upload_error]));
             }
         } else {
             $data['assets'] = $this->db->query("SELECT * FROM `assets` WHERE is_status = 'true'")->result_array();
             $this->load->view('Home/addassets', $data);
         }
     }
-    
+
+    public function AddAssetsType()
+    {
+        $action = $this->uri->segment(3);
+
+        // Handle Edit action
+        if ($this->uri->segment(4) == true) {
+            $id = $this->uri->segment(4);
+            $query = $this->db->get_where("tbl_leavetype", array('id' => $id));
+            if ($query->num_rows()) {
+                $data['list'] = $query->result();
+                if ($action == 'Edit') {
+                    $data['action'] = 'EditLeaveType';
+                    $this->load->view("Home/UpdateData", $data);
+                } else {
+                    redirect(base_url('Home/AddLeaveType'));
+                }
+            } else {
+                redirect(base_url('Home/add_assets_type'));
+            }
+        }
+        // Handle form submission for adding new leave type
+        else if ($action === 'add' && $this->input->server('REQUEST_METHOD') === 'POST') {
+            $leavetype = $this->input->post('leavetype');
+            $day = $this->input->post('day');
+
+            if (empty($leavetype) || empty($day)) {
+                echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
+                return;
+            }
+
+            $data = [
+                'leavetype' => $leavetype,
+                'day' => $day,
+                'created_at_time' => date('H:i:s'),
+                'created_at_date' => date('Y-m-d'),
+                'status' => 'true',
+            ];
+
+            $insert = $this->db->insert('tbl_leavetype', $data);
+
+            if ($insert) {
+                echo json_encode(['status' => 'success', 'message' => 'Leave Type save successfully.']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to save Leave Type.']);
+            }
+        }
+        // Handle update form submission
+        else if ($action === 'Update' && $this->input->server('REQUEST_METHOD') === 'POST') {
+            $id = $this->input->post('id');
+            $leavetype = $this->input->post('leavetype');
+            $day = $this->input->post('day');
+
+            $data = [
+                'leavetype' => $leavetype,
+                'day' => $day
+            ];
+
+            $this->db->where('id', $id);
+            $update = $this->db->update('tbl_leavetype', $data);
+            if ($update) {
+                $this->session->set_flashdata(['res' => 'success', 'msg' => 'Leave Type updated successfully.']);
+            } else {
+                $this->session->set_flashdata(['res' => 'error', 'msg' => 'Failed to update Leave Type.']);
+            }
+            redirect(base_url('Admin/AddLeaveType'));
+        }
+        // Default view load
+        else {
+            $data['leavetype'] = $this->db->query("Select * from `tbl_leavetype` where `status` = 'true'")->result_array();
+            $this->load->view('Home/assets_type', $data);
+        }
+    }
 
 
 
 
-  
+
+
 
 
 
