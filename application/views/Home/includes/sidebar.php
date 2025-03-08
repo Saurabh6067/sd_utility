@@ -55,7 +55,7 @@ $user_role = $user['role'];
                                 Type</a>
                         </li>
                         <li class="slide">
-                            <a class="sidebar__menu-item" href="<?= base_url('Admin/AddAssetsType') ?>">Add Leave
+                            <a class="sidebar__menu-item" href="<?= base_url('Admin/AddAssetsType') ?>">Add Assets
                                 Type</a>
                         </li>
 
